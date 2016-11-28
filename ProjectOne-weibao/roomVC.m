@@ -82,7 +82,8 @@
     [super viewWillAppear:animated];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+     MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [hud.label setText:@"正在加载"];
      NSDictionary *parameters = @{@"starttime":[NSString stringWithFormat:@"%@ %@",_date,_beginTime],@"endtime":[NSString stringWithFormat:@"%@ %@",_date,_endTime],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
     [manager POST:ROOMURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"网络连接成功！");
@@ -488,24 +489,6 @@
                 }];
             }
         }];
-
-//        if ([responseObject[@"result"] integerValue] == 1) {
-//            action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                [self.navigationController popToRootViewControllerAnimated:YES];
-//            }];
-//        }else{
-//            if (responseObject[@"msg"] && [responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
-//                action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                    [self.navigationController dismissViewControllerAnimated:YES completion:^{
-//                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zhanghao"];
-//                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"mima"];
-//                    }];
-//                }];
-//            }else{
-//                action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
-//            }
-//        }
-        
         [alert addAction:action];
         [self presentViewController:alert animated:YES completion:nil];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {

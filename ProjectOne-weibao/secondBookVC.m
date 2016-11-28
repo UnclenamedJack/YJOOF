@@ -209,20 +209,17 @@
         vc.useCause = self.label.text;
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
 }
 - (UIView *)createView:(UIImage *)image andLabel:(NSString *)detailText {
     UIView *view = [[UIView alloc] init];
     UITapGestureRecognizer *gestureRecongnizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jumpToCalendarPicer:)];
     [view addGestureRecognizer:gestureRecongnizer];
-    
     UIImageView *imgView = [[UIImageView alloc] initWithImage:image highlightedImage:nil];
     _detailLable = [[UILabel alloc] init];
     [_detailLable setTextColor:[UIColor hexChangeFloat:@"9fa0a0"]];
     [_detailLable setText:detailText];
     [view addSubview:imgView];
     [view addSubview:_detailLable];
-    
     [imgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(view).offset(20);
         make.centerY.equalTo(view);
@@ -449,10 +446,14 @@
     _pickerView.dataSource = self;
     [_view1 addSubview:_pickerView];
     [_pickerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_view1).offset(50);
-        make.centerX.equalTo(_view1);
-        make.height.equalTo(@120);
-        make.width.equalTo(@200);
+//        make.top.equalTo(_view1).offset(50);
+//        make.centerX.equalTo(_view1);
+//        make.height.equalTo(@120);
+//        make.width.equalTo(@200);
+        make.left.equalTo(_view1);
+        make.right.equalTo(_view1);
+        make.bottom.equalTo(_view1);
+        make.top.equalTo(_view1).offset(50*ScreenHeight/568.0);
     }];
 
 }
@@ -518,10 +519,14 @@
     _pickerView.dataSource = self;
     [_view1 addSubview:_pickerView];
     [_pickerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_view1).offset(50);
-        make.centerX.equalTo(_view1);
-        make.height.equalTo(@120);
-        make.width.equalTo(@200);
+//        make.top.equalTo(_view1).offset(50);
+//        make.centerX.equalTo(_view1);
+//        make.height.equalTo(@120);
+//        make.width.equalTo(@200);
+        make.left.equalTo(_view1);
+        make.right.equalTo(_view1);
+        make.bottom.equalTo(_view1);
+        make.top.equalTo(_view1).offset(50*ScreenHeight/568.0);
     }];
 }
 - (void)jumpToCalendarPicer:(UITapGestureRecognizer *)sender {
@@ -584,10 +589,14 @@
     _datePicker.locale = locale;
     [_view1 addSubview:_datePicker];
     [_datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_view1).offset(50);
-        make.centerX.equalTo(_view1).offset(12);
-        make.height.equalTo(@120);
-        make.width.equalTo(@240);
+//        make.top.equalTo(_view1).offset(50);
+//        make.centerX.equalTo(_view1).offset(12);
+//        make.height.equalTo(@120);
+//        make.width.equalTo(@240);
+        make.left.equalTo(_view1);
+        make.right.equalTo(_view1);
+        make.bottom.equalTo(_view1);
+        make.top.equalTo(_view1).offset(50*ScreenHeight/568.0);
     }];
     [_datePicker addTarget:self action:@selector(dateChanged:) forControlEvents:UIControlEventValueChanged];
 //    __weak secondBookVC *weakSelf = self;
@@ -665,7 +674,6 @@
             [_alertWindow resignKeyWindow];
             _alertWindow = nil;
         }
-       
     }
 }
 - (void)cancle2:(UIButton *)sender {
@@ -673,7 +681,6 @@
         [self.backgroundView removeFromSuperview];
         [_alertWindow resignKeyWindow];
         _alertWindow = nil;
-        
     }else if (sender.tag == 1){
         NSInteger row1 = [self.pickerView selectedRowInComponent:0];
         NSString *str1 = self.datas1[row1];
@@ -681,7 +688,6 @@
         NSString *str2 = self.datas2[row2];
         self.endBookTime = [NSString stringWithFormat:@"%@:%@",str1,str2];
         if (self.startBookTime && [self moreOrLess:self.startBookTime withTimeStr2:self.endBookTime] == NSOrderedSame) {
-            
             [self.backgroundView removeFromSuperview];
             [_alertWindow resignKeyWindow];
             _alertWindow = nil;
@@ -736,7 +742,6 @@
 //    NSLog(@"minute == %d",_minute);
     [formatter setDateFormat:@"yyyy年MM月dd日"];
     self.selectedDate = [formatter stringFromDate:[NSDate date]];
-    
 }
 - (void)makesure:(UIButton *)sender {
     NSDateFormatter *formatter =  [[NSDateFormatter alloc] init];
@@ -754,13 +759,11 @@
     if ([_label.text isEqualToString:@"使用原因"]) {
         [_label setText:@""];
     }
-    
 }
 - (void)textViewDidEndEditing:(UITextView *)textView {
     if (_label.text.length == 0) {
         [_label setText:@"使用原因"];
     }
-    
 }
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     return 3;
@@ -786,6 +789,10 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     //选中某一行后刷新 目的：在当前时段内分钟从当前分钟开始 选中非当前小时时，分钟从0开始，所以要刷新来展现从当前分钟开始和选中非当前小时分钟从0开始两种情况。
     [self getCurrentDate];
+    //如果点击的是第一个滚轮 那么设置第三个滚轮当前选中行为0，即从头开始.
+    if (component == 0 ) {
+        [pickerView selectRow:0 inComponent:2 animated:YES];
+    }
     [pickerView reloadAllComponents];
 }
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
