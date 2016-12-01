@@ -14,8 +14,8 @@
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
-//#import <CoreLocation/CoreLocation.h>
-//#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 #import "MengTextField.h" //自定义输入框（光标后移了一段距离）
 #import "MyBookRecordsVC.h"
 #import "secondBookVC.h"
@@ -41,7 +41,7 @@
 #define kHeight [UIScreen mainScreen].bounds.size.height
 #define kWidth [UIScreen mainScreen].bounds.size.width
 
-@interface HomeVC ()<UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate>
+@interface HomeVC ()<UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,CLLocationManagerDelegate>
 
 @property (strong, nonatomic) UILabel *TeacherName;
 @property (strong, nonatomic) UITextField *deviceNumber;
@@ -52,7 +52,7 @@
 @property (nonatomic,strong) NSTimer *timer;
 @property (nonatomic,strong) UILabel *littleLabel;//读秒显示
 @property (nonatomic) NSInteger a;//读秒时长
-//@property (nonatomic,strong) CLLocationManager *locationManager;
+@property (nonatomic,strong) CLLocationManager *locationManager;
 @property (nonatomic,strong) UIWindow *alertWindow;
 @property (nonatomic,strong) UIView *alertView;
 @property (nonatomic,strong) NSMutableArray *btnArr;
@@ -63,6 +63,9 @@
 @property (nonatomic,strong) UILabel *timeL2;
 @property (nonatomic,strong) UILabel *timeRight1;
 @property (nonatomic,strong) UITextField *timeInput;
+
+@property (nonatomic,assign) double longitude;
+@property (nonatomic,assign) double latitude;
 @end
 
 @implementation HomeVC
@@ -187,14 +190,11 @@
     [self.deviceNumber.layer setBorderColor:[UIColor hexChangeFloat:@"828587"].CGColor];
     
     if (kHeight == 480.0) {
-        self.deviceNumber.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请扫描二维码或手动输入设备编码" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.0]
-                                                                                                                              ,NSFontAttributeName:[UIFont systemFontOfSize:13.0]}];
+        self.deviceNumber.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请扫描二维码或手动输入设备编码" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.0],NSFontAttributeName:[UIFont systemFontOfSize:13.0]}];
     }else if (kHeight == 568.0){
-        self.deviceNumber.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请扫描二维码或手动输入设备编码" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.0]
-                                                                                                                              ,NSFontAttributeName:[UIFont systemFontOfSize:14.0]}];
+        self.deviceNumber.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请扫描二维码或手动输入设备编码" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.0],NSFontAttributeName:[UIFont systemFontOfSize:14.0]}];
     }else{
-        self.deviceNumber.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请扫描二维码或手动输入设备编码" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.0]
-                                                                                                                              ,NSFontAttributeName:[UIFont systemFontOfSize:15.0]}];
+        self.deviceNumber.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请扫描二维码或手动输入设备编码" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.0],NSFontAttributeName:[UIFont systemFontOfSize:15.0]}];
     }
     [self.deviceNumber setTextColor:[UIColor colorWithRed:188/255.0 green:188/255.0 blue:188/255.0 alpha:1.0]];
     [self.deviceNumber setBackgroundColor:[UIColor clearColor]];
@@ -333,7 +333,7 @@
 -(void)lookOutBookInformation {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-    NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
     [manager POST:CHECKBOOK parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"网络连接成功！");
         NSLog(@"%@",responseObject);
@@ -463,6 +463,8 @@
 }
 -(void)saoMiaoClick {
     [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:@"isCodeSuccess"];
+    //点击二维码扫描的时候开始定位，获取当前的经纬度
+    [self.locationManager startUpdatingLocation];
     UINavigationController *navc = [self.storyboard instantiateViewControllerWithIdentifier:@"coder"];
     [self.navigationController showViewController:navc sender:nil];
 }
@@ -498,10 +500,17 @@
 - (void)beginClick:(UIButton *)sender {
     [sender setBackgroundColor:[UIColor clearColor]];
     [sender setTitleColor:[UIColor hexChangeFloat:@"00a0e9"] forState:UIControlStateNormal];
-    
+    //点击开始按钮 开始定位获取当前经纬度
+    [self.locationManager startUpdatingLocation];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-    NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":_deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    NSDictionary *parameters;
+    if (_longitude && _latitude) {
+         parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":_deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
+    }else{
+        
+    }
+   
     NSLog(@"??%@",parameters);
     [manager POST:CHECKBOOK parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"网络连接成功！");
@@ -747,8 +756,6 @@
         imagePicker.delegate = self;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }else {
-       
-
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"警告" message:@"未检测到摄像头！" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
         [alert addAction:action];
@@ -759,12 +766,9 @@
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     [self.iconButton setImage:image forState:UIControlStateNormal];
     NSData *imageData = UIImagePNGRepresentation(image);
-//    [[NSUserDefaults standardUserDefaults] setObject:imageData forKey:@"icon"];
     [self dismissViewControllerAnimated:YES completion:nil];
-    
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager POST:UPLOADIMAGE parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyyMMddHHmmss"];
         NSString *string = [formatter stringFromDate:[NSDate date]];
@@ -849,16 +853,16 @@
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17.0],NSForegroundColorAttributeName:[UIColor whiteColor]}];
     
     //self.navigationItem.title = ![[NSUserDefaults standardUserDefaults] objectForKey:@"location"]?@"定位中":[[NSUserDefaults standardUserDefaults] objectForKey:@"location"];
-//    self.locationManager = [[CLLocationManager alloc] init];
-//    self.locationManager.delegate = self;
-//    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-//    [self.locationManager requestAlwaysAuthorization];
-//    self.locationManager.distanceFilter = kCLDistanceFilterNone;
-//    if ([[UIDevice currentDevice].systemVersion floatValue]>= 8.0) {
-//        [_locationManager requestAlwaysAuthorization];
-//    }
-//
-//     [self.locationManager startUpdatingLocation];
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationManager requestAlwaysAuthorization];
+    self.locationManager.distanceFilter = kCLDistanceFilterNone;
+    if ([[UIDevice currentDevice].systemVersion floatValue]>= 8.0) {
+        [_locationManager requestAlwaysAuthorization];
+    }
+
+     [self.locationManager startUpdatingLocation];
     
     
 //    int a = _iconButton.frame.size.height - _iconButton.frame.size.width > 0?_iconButton.frame.size.width/2.0:_iconButton.frame.size.height/2.0;
@@ -939,9 +943,6 @@
     }
     
     
-    
-    
-
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -951,15 +952,15 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"push"];
     //[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"location"];
 }
-
-//-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-//    
-//    CLLocation *newLocation = locations[0];
-//    CLLocationCoordinate2D oCoordinate = newLocation.coordinate;
-//    NSLog(@"旧的经度：%f,旧的纬度:%f",oCoordinate.longitude,oCoordinate.latitude);
-//    
-//    
-//    
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    
+    CLLocation *newLocation = locations[0];
+    CLLocationCoordinate2D oCoordinate = newLocation.coordinate;
+    NSLog(@"旧的经度：%f,旧的纬度:%f",oCoordinate.longitude,oCoordinate.latitude);
+    self.longitude = oCoordinate.longitude;
+    self.latitude = oCoordinate.latitude;
+    
+    
 //    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
 //    [geocoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
 //        for (CLPlacemark *place in placemarks) {
@@ -968,10 +969,10 @@
 //            self.navigationItem.title = [location objectForKey:@"Name"];
 //        }
 //    }];
-//    
-//    [self.locationManager stopUpdatingLocation];
-//
-//}
+    
+    [self.locationManager stopUpdatingLocation];
+
+}
 #pragma  marks OBSERVER
 
 -(void)addObserver {
