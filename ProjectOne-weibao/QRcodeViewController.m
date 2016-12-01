@@ -74,7 +74,6 @@
                 [self.session commitConfiguration];
                 self.LightIsON = YES;
             }
-
         }
         [self.session startRunning];
     }
