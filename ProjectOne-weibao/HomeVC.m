@@ -1510,7 +1510,7 @@
         [self showOkayCancelAlert];
     }];
 }
-
+//git分支学习测试
 -(void)dealloc {
     [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"next"];
 }
