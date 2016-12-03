@@ -501,15 +501,16 @@
     [sender setBackgroundColor:[UIColor clearColor]];
     [sender setTitleColor:[UIColor hexChangeFloat:@"00a0e9"] forState:UIControlStateNormal];
     //点击开始按钮 开始定位获取当前经纬度
-    [self.locationManager startUpdatingLocation];
+//    [self.locationManager startUpdatingLocation];
+    
+    
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-    NSDictionary *parameters;
-    if (_longitude && _latitude) {
-         parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":_deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
-    }else{
-        
-    }
+    NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":_deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
+;
+//    if (_longitude && _latitude) {
+//         parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":_deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
+//    }
    
     NSLog(@"??%@",parameters);
     [manager POST:CHECKBOOK parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -593,7 +594,22 @@
             }];
 
         }else if ([responseObject[@"usetype"] integerValue] == 4){
-            [self DIYAlert];
+            if ([responseObject[@"used"] isEqual: @1]) {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
+                    [[NSUserDefaults standardUserDefaults] setObject:[self getCurrentDate] forKey:@"beginTime"];
+                    [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
+                    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"TimerVC"];
+                    [self presentViewController:vc animated:YES completion:nil];
+                }];
+                [alert addAction:action];
+                [self presentViewController:alert animated:YES completion:^{
+                }];
+            }else{
+                [self DIYAlert];
+            }
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"警告" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -831,6 +847,7 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     [self.begin setHidden:NO];
     [self.book setHidden:YES];
+    [self.locationManager startUpdatingLocation];
 }
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self.deviceNumber resignFirstResponder];
@@ -862,7 +879,7 @@
         [_locationManager requestAlwaysAuthorization];
     }
 
-     [self.locationManager startUpdatingLocation];
+     //[self.locationManager startUpdatingLocation];
     
     
 //    int a = _iconButton.frame.size.height - _iconButton.frame.size.width > 0?_iconButton.frame.size.width/2.0:_iconButton.frame.size.height/2.0;

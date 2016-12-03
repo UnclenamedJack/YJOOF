@@ -226,6 +226,7 @@
         ClassRoomVC *vc = [[ClassRoomVC alloc] init];
         vc.roomDress = _datas[indexPath.row][@"name"];
         vc.capacity = _datas[indexPath.row][@"capacity"];
+        vc.assets = _datas[indexPath.row][@"assets"];
         [weakself.navigationController pushViewController:vc animated:YES];
     };
     cell.block2 = ^{

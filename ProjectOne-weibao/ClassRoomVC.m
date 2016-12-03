@@ -119,8 +119,13 @@
     [computer setFont:[UIFont systemFontOfSize:13.0]];
     [computer setTextAlignment:NSTextAlignmentCenter];
     [computer setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
-    [computer setText:@"苹果电脑 (编码XKAI1236586M)"];
-    //[computer setText:self.assets[0]];
+//    [computer setText:@"苹果电脑 (编码XKAI1236586M)"];
+    if (_assets.count >= 1) {
+        [computer setText:[NSString stringWithFormat:@"%@(编码%@)",_assets[0][@"name"],_assets[0][@"num"]]];
+    }else{
+        [computer setText:@"该项暂无设备"];
+    }
+    
     [bgView addSubview:computer];
     [computer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(devcie);
@@ -131,8 +136,13 @@
     
     UILabel *touyingyi = [[UILabel alloc] init];
     [touyingyi setFont:[UIFont systemFontOfSize:13.0]];
-    [touyingyi setText:@"投影仪 (编码MKI58H)"];
-    //[touyingyi setText:self.assets[1]];
+//    [touyingyi setText:@"投影仪 (编码MKI58H)"];
+    if (_assets.count >= 2) {
+        [touyingyi setText:[NSString stringWithFormat:@"%@(编码%@)",_assets[1][@"name"],_assets[1][@"num"]]];
+    }else{
+        [touyingyi setText:@"该项暂无设备"];
+    }
+    
     [touyingyi setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
     [touyingyi setTextAlignment:NSTextAlignmentCenter];
     [bgView addSubview:touyingyi];
@@ -144,8 +154,12 @@
     
     UILabel *speakDevice = [[UILabel alloc] init];
     [speakDevice setFont:[UIFont systemFontOfSize:13.0]];
-    [speakDevice setText:@"话筒 (编码NH1236987)"];
-    //[speakDevice setText:self.assets[2]];
+//    [speakDevice setText:@"话筒 (编码NH1236987)"];
+    if (_assets.count >= 3) {
+        [speakDevice setText:[NSString stringWithFormat:@"%@(编码%@)",_assets[2][@"name"],_assets[2][@"num"]]];
+    }else{
+        [speakDevice setText:@"该项暂无设备"];
+    }
     [speakDevice setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
     [speakDevice setTextAlignment:NSTextAlignmentCenter];
     [bgView addSubview:speakDevice];

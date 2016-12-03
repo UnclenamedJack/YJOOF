@@ -12,6 +12,6 @@
 @property(nonatomic,strong) UILabel *className;
 @property(nonatomic,strong) UILabel *classTime;
 @property(nonatomic,strong) UITapGestureRecognizer *gestureRecongnizer;
--(instancetype)initWithFrame:(CGRect)frame;
--(void)setGestureRecongnizer:(UITapGestureRecognizer *)gestureRecongnizer;
+- (instancetype)initWithFrame:(CGRect)frame;
+- (void)setGestureRecongnizer:(UITapGestureRecognizer *)gestureRecongnizer;
 @end
