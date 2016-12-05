@@ -41,7 +41,7 @@
 #define kHeight [UIScreen mainScreen].bounds.size.height
 #define kWidth [UIScreen mainScreen].bounds.size.width
 
-@interface HomeVC ()<UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,CLLocationManagerDelegate>
+@interface HomeVC ()<UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate,CLLocationManagerDelegate,MBProgressHUDDelegate>
 
 @property (strong, nonatomic) UILabel *TeacherName;
 @property (strong, nonatomic) UITextField *deviceNumber;
@@ -66,6 +66,8 @@
 
 @property (nonatomic,assign) double longitude;
 @property (nonatomic,assign) double latitude;
+
+@property (nonatomic,strong) MBProgressHUD *hud;
 @end
 
 @implementation HomeVC
@@ -717,31 +719,9 @@
 - (void)iconButtonClick {
     [self handExchangeHeadPortrait];
 }
-//-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary<NSString *,id> *)editingInfo {
-//    [self.iconButton setImage:image forState:UIControlStateNormal];
-//    //[self.iconButton setBackgroundImage:[UIImage imageNamed:@"pic@3x"] forState:UIControlStateNormal];
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
 -(void)handExchangeHeadPortrait {
-    
-    
     UIActionSheet *myActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"相册", nil];
     [myActionSheet showInView:self.view];
-//    UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [self pickImage];
-//    }];
-//    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        [self takePhotos];
-//    }];
-//    UIAlertAction *action3 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil];
-//
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-//    
-//    [alert addAction:action1];
-//    [alert addAction:action2];
-//    [alert addAction:action3];
-//  
-//    [self presentViewController:alert animated:YES completion:nil];
 }
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (buttonIndex) {
@@ -801,19 +781,32 @@
         [manager POST:SAVELOGO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"网络连接成功！");
             NSLog(@"%@",responseObject);
+            _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [_hud setMode:MBProgressHUDModeCustomView];
+            [_hud.label setText:@"头像上传成功"];
+            [_hud hideAnimated:YES afterDelay:2.0];
+            
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"网络连接失败！");
+            NSLog(@"网络连接失败");
             NSLog(@"%@",error);
-            [self showOkayCancelAlert];
+            _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [_hud setMode:MBProgressHUDModeCustomView];
+            [_hud.label setText:@"头像上传失败！"];
+            [_hud hideAnimated:YES afterDelay:2.0];
+            [_hud setRemoveFromSuperViewOnHide:YES];
+//            [self showOkayCancelAlert];
         }];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"网络连接失败！");
         NSLog(@"%@",error);
-        [self showOkayCancelAlert];
+        _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [_hud setMode:MBProgressHUDModeCustomView];
+        [_hud.label setText:@"头像上传失败！"];
+        [_hud hideAnimated:YES afterDelay:2.0];
+        [_hud setRemoveFromSuperViewOnHide:YES];
+//        [self showOkayCancelAlert];
     }];
-    
 }
-
 //解析失败之后的提示框
 - (void)showOkayCancelAlert {
     NSString *title = NSLocalizedString(@"抱歉", nil);
