@@ -14,7 +14,7 @@
 #import "Masonry.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
-
+#import "UIColor+Extend.h"
 
 #define BOOKDETAILINFO @"http://www.yjoof.com/ygapi/myBespeaks?"
 #define DELETBOOKINFO @"http://www.yjoof.com/ygapi/deletemyBespeaks?"
@@ -175,16 +175,8 @@
         }
         [self.selectedInterms removeAllObjects];
     }
-   
 }
-//-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-//    for (BookCell *cell in self.tabView.visibleCells) {
-//        [cell.status setTextColor:[UIColor grayColor]];
-//        [cell.cancleBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-//        [cell.cancleBtn.layer setBorderColor:[UIColor grayColor].CGColor];
-//    }
-//
-//}
+
 #pragma mark ----UITableViewDelegate && UITableViewDataSource----
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 5;
@@ -210,7 +202,7 @@
     if (!cell) {
          cell = [[BookCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
-    //cell不能设置样式为none 因为设置为none之后就无法出现选中后的对勾.
+//    cell不能设置样式为none 因为设置为none之后就无法出现选中后的对勾.
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     cell.classRoom.text = self.datas[indexPath.section][@"roomname"];
@@ -224,17 +216,18 @@
     __weak BookCell *weakcell = cell;
     //block的精髓
     cell.block1 = ^(NSString *str){
-        [weakSelf.datas removeObjectAtIndex:indexPath.section];
-        [tableView reloadData];
-        
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                if (weakSelf.datas.count == 0){
-                    [weakSelf.navigationController popViewControllerAnimated:YES];
-                }
-            }];
-            [alert addAction:action];
-            [weakSelf presentViewController:alert animated:YES completion:nil];
+//        [weakSelf.datas removeObjectAtIndex:indexPath.section];
+//        [tableView reloadData];
+        [weakcell.status setText:@"预约已取消"];
+        [weakcell.status setTextColor:[UIColor hexChangeFloat:@"9fa0a0"]];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            if (weakSelf.datas.count == 0){
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+            }
+        }];
+        [alert addAction:action];
+        [weakSelf presentViewController:alert animated:YES completion:nil];
         
     };
     
@@ -419,10 +412,10 @@
             [cell.status setText:@"通过"];
             [cell.status setTextColor:[UIColor colorWithRed:28/255.0 green:181/255.0 blue:235/255.0 alpha:1.0]];
             break;
-//        case 2:
-//            [cell.status setText:@"预约已取消"];
-//            [cell.status setTextColor:[UIColor colorWithRed:193/255.0 green:193/255.0 blue:193/255.0 alpha:1.0]];
-//            break;
+        case -2:
+            [cell.status setText:@"预约已取消"];
+            [cell.status setTextColor:[UIColor colorWithRed:193/255.0 green:193/255.0 blue:193/255.0 alpha:1.0]];
+            break;
         default:
             break;
     }

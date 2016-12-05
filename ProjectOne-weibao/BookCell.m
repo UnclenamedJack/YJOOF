@@ -13,6 +13,7 @@
 #import "MBProgressHUD.h"
 
 #define DELETBOOKINFO @"http://www.yjoof.com/ygapi/deletemyBespeaks?"
+#define CANCLEBOOKINFO @"http://www.yjoof.com/ygapi/cancelmyBespeaks?"
 
 @interface BookCell ()
 
@@ -146,6 +147,7 @@
     [self.status setTextColor:[UIColor grayColor]];
     [self.cancleBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.cancleBtn.layer setBorderColor:[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0].CGColor];
+    //???
     [self.cancleBtn setEnabled:NO];
     [self setNeedsDisplay];
     [self layoutIfNeeded];
@@ -160,14 +162,15 @@
     [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 }
 - (void)cancleButtonClick:(UIButton *)sender{
-    NSLog(@"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     [sender setEnabled:NO];
-    [sender setBackgroundColor:[UIColor clearColor]];
-    [sender setTitleColor:[UIColor colorWithRed:28/255.0 green:181/255.0 blue:235/255.0 alpha:1.0] forState:UIControlStateNormal];
+//    [sender setBackgroundColor:[UIColor clearColor]];
+//    [sender setTitleColor:[UIColor colorWithRed:28/255.0 green:181/255.0 blue:235/255.0 alpha:1.0] forState:UIControlStateNormal];
+    [sender setHidden:YES];
+    
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
     NSDictionary *parameters = @{@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"ids":[NSString stringWithFormat:@"%zd",self.ids],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
-    [manager POST:DELETBOOKINFO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:CANCLEBOOKINFO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"%@",responseObject);
         if(self.block1 && [responseObject[@"result"] isEqual:@1]      ){
             self.block1(responseObject[@"msg"]);
