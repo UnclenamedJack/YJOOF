@@ -318,6 +318,9 @@
 -(void)MyBookRecords{
     MyBookRecordsVC *bookvc = [[MyBookRecordsVC alloc] init];
     bookvc.view.frame = [UIScreen mainScreen].bounds;
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] init];
+    [item setTitle:@""];
+    self.navigationItem.backBarButtonItem = item;
     [self.navigationController pushViewController:bookvc animated:YES];
 }
 -(void)bookClassTouchDown:(UIButton *)sender {

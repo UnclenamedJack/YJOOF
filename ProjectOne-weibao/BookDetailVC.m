@@ -100,7 +100,7 @@
     [statusL mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(statusView.mas_right).offset(5*ScreenWidth/320.0);
         make.centerY.equalTo(statusView);
-        make.right.equalTo(statusView).offset(80*ScreenWidth/320.0);
+        make.right.equalTo(statusView).offset(90*ScreenWidth/320.0);
     }];
     switch (self.state) {
         case -1:
@@ -118,11 +118,11 @@
             [statusL setTextColor:[UIColor colorWithRed:0/255.0 green:119/255.0 blue:176/255.0 alpha:1.0]];
             [statusL setText:@"通过审核"];
             break;
-//        case 2:
-//            [statusView setImage:[UIImage imageNamed:@"back"]];
-//            [statusL setTextColor:[UIColor colorWithRed:193/255.0 green:193/255.0 blue:193/255.0 alpha:1.0]];
-//            [statusL setText:@"预约已取消"];
-//            break;
+        case -2:
+            [statusView setImage:[UIImage imageNamed:@"back"]];
+            [statusL setTextColor:[UIColor colorWithRed:193/255.0 green:193/255.0 blue:193/255.0 alpha:1.0]];
+            [statusL setText:@"预约已取消"];
+            break;
         default:
             break;
     }
@@ -133,7 +133,7 @@
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     [tableView setAllowsSelection:YES];
     [tableView setScrollEnabled:NO];
-    [tableView setRowHeight:30];
+    [tableView setRowHeight:30*ScreenHeight/568.0];
     
     tableView.delegate = self;
     tableView.dataSource = self;
@@ -144,21 +144,22 @@
 //        make.right.equalTo(self.view);
 //        make.height.equalTo(@180);
 //    }];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btn setTitle:@"取消预约" forState:UIControlStateNormal];
-    [btn setTintColor:[UIColor colorWithRed:239/255.0 green:249/255.0 blue:253/255.0 alpha:1.0]];
-    [btn setBackgroundColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:227/255.0 alpha:1.0]];
-    [btn.layer setCornerRadius:15.0];
-    [self.view addSubview:btn];
-    [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-        //make.top.equalTo(tableView.mas_bottom).offset(10);
-        make.left.equalTo(self.view).offset(20*ScreenWidth/320.0);
-        make.right.equalTo(self.view).offset(-20*ScreenWidth/320.0);
-        make.bottom.equalTo(self.view).offset(-30*ScreenHeight/568.0);
-    }];
-    [btn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
-    [btn addTarget:self action:@selector(cancleBook:) forControlEvents:UIControlEventTouchUpInside];
+    if (self.state != -2) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btn setTitle:@"取消预约" forState:UIControlStateNormal];
+        [btn setTintColor:[UIColor colorWithRed:239/255.0 green:249/255.0 blue:253/255.0 alpha:1.0]];
+        [btn setBackgroundColor:[UIColor colorWithRed:0/255.0 green:153/255.0 blue:227/255.0 alpha:1.0]];
+        [btn.layer setCornerRadius:15.0];
+        [self.view addSubview:btn];
+        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+            //make.top.equalTo(tableView.mas_bottom).offset(10);
+            make.left.equalTo(self.view).offset(20*ScreenWidth/320.0);
+            make.right.equalTo(self.view).offset(-20*ScreenWidth/320.0);
+            make.bottom.equalTo(self.view).offset(-30*ScreenHeight/568.0);
+        }];
+        [btn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
+        [btn addTarget:self action:@selector(cancleBook:) forControlEvents:UIControlEventTouchUpInside];
+    }
     // Do any additional setup after loading the view.
 }
 -(void)clickDown:(UIButton *)sender {
@@ -241,9 +242,13 @@
     if (indexPath.section == 0 && indexPath.row == 0) {
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         [cell setSelected:NO];
-        
         ClassRoomVC *vc = [[ClassRoomVC alloc] init];
         vc.roomDress = [cell.textLabel.text substringFromIndex:5] ;
+        vc.capacity = self.classRoomCapacity;
+        vc.assets = self.deviceArr;
+        UIBarButtonItem *returnItem = [[UIBarButtonItem alloc] init];
+        [returnItem setTitle:@""];
+        self.navigationItem.backBarButtonItem = returnItem;
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -251,7 +256,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 /*
 #pragma mark - Navigation
 

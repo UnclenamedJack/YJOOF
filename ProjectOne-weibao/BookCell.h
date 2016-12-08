@@ -19,13 +19,10 @@
 @property(nonatomic,strong) UILabel *time;
 @property(nonatomic,strong) UILabel *classCount;
 
-
 @property(nonatomic,copy)NSString *roomName;
 @property(nonatomic,copy)NSString *startDate;
 @property(nonatomic,copy)NSString *startTime;
 @property(nonatomic,assign)NSNumber *classNum;
 @property(nonatomic,assign)NSInteger ids;
-
-
 -(void)deleteOneSectionOnServer;
 @end

@@ -26,7 +26,6 @@
 @property(nonatomic,strong)NSMutableArray *datas;
 @property(nonatomic,strong)NSMutableArray *indexPathArr;
 @property(nonatomic,strong)NSMutableArray *selectedInterms;
-
 @property(nonatomic,strong)UIButton *downLeftBtn;
 @property(nonatomic,strong)UIButton *downRightBtn;
 @end
@@ -61,7 +60,7 @@
     _tabView.delegate = self;
     _tabView.dataSource = self;
     _tabView.allowsSelection = NO;
-    [_tabView setRowHeight:240/2.0];
+    [_tabView setRowHeight:120];
     // Do any additional setup after loading the view.
 }
 //编辑
@@ -201,10 +200,11 @@
     BookCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
          cell = [[BookCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        //把下面的代码移动到这里 原理是 新创建的cell才需要设置以下代码，从复用池中复用的cell则不用设置 从而解决了 点击取消预约按钮改变状态、隐藏取消预约按钮后上下滚动转态又变回来的bug
+        //上面no
     }
 //    cell不能设置样式为none 因为设置为none之后就无法出现选中后的对勾.
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     cell.classRoom.text = self.datas[indexPath.section][@"roomname"];
     cell.date.text = [NSString stringWithFormat:@"预约日期：%@",[self dateFromTimeInterval:[self.datas[indexPath.section][@"starttime"] doubleValue]]];
     
@@ -212,14 +212,24 @@
     cell.classCount.text = [NSString stringWithFormat:@"预约课时：%@",self.datas[indexPath.section][@"classname"]];
     [self changeColorByState:[self.datas[indexPath.section][@"state"] integerValue] cell:cell];
     cell.ids = [self.datas[indexPath.section][@"bespeakid"] integerValue];
-    __weak MyBookRecordsVC *weakSelf = self;
+    
+        __weak MyBookRecordsVC *weakSelf = self;
     __weak BookCell *weakcell = cell;
     //block的精髓
     cell.block1 = ^(NSString *str){
 //        [weakSelf.datas removeObjectAtIndex:indexPath.section];
 //        [tableView reloadData];
         [weakcell.status setText:@"预约已取消"];
-        [weakcell.status setTextColor:[UIColor hexChangeFloat:@"9fa0a0"]];
+        [weakcell.status setTextColor:[UIColor colorWithRed:193/255.0 green:193/255.0 blue:193/255.0 alpha:1.0]];
+        
+        NSMutableDictionary *mutDict = [NSMutableDictionary dictionaryWithDictionary:weakSelf.datas[indexPath.section]];
+        [mutDict setValue:@"-2" forKey:@"state"];
+        [weakSelf.datas replaceObjectAtIndex:indexPath.section withObject:mutDict];
+//        NSDictionary *dict = weakSelf.datas[indexPath.section];
+//        [dict setValue:@"-2" forKey:@"state"];
+//        [weakSelf.datas replaceObjectAtIndex:indexPath.section withObject:dict];
+        [tableView reloadData];
+        
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             if (weakSelf.datas.count == 0){
@@ -230,7 +240,6 @@
         [weakSelf presentViewController:alert animated:YES completion:nil];
         
     };
-    
     cell.block = ^{
         
         NSMutableArray *arry = [NSMutableArray arrayWithObjects:[NSString stringWithFormat:@"预约教室：%@",weakcell.classRoom.text],weakcell.date.text,weakcell.time.text,weakcell.classCount.text, nil];
@@ -240,7 +249,7 @@
         NSMutableArray *arry2 = [NSMutableArray array];
         [arry2 addObject:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"createtime"] doubleValue]]];
         if ([[weakSelf.datas[indexPath.section] allKeys] containsObject:@"checktime"] ) {
-            [arry2 addObject:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"checktime"] doubleValue]]];
+            [arry2 addObject:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"checktime"] doubleValue] byState:[weakSelf.datas[indexPath.section][@"state"] integerValue]]];
         }
 //        NSMutableArray *arry2 = [NSMutableArray arrayWithObjects:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"creattime"] doubleValue]],, nil];
         BookDetailVC *vc = [[BookDetailVC alloc] init];
@@ -248,9 +257,16 @@
         vc.data = arry;
         vc.bookId = weakSelf.datas[indexPath.section][@"bespeakid"];
         vc.data2 = arry2;
+        vc.classRoomCapacity = weakSelf.datas[indexPath.section][@"capacity"];
+        vc.deviceArr = weakSelf.datas[indexPath.section][@"assets"];
         
+        UIBarButtonItem *returnItem = [[UIBarButtonItem alloc] init];
+        [returnItem setTitle:@""];
+        self.navigationItem.backBarButtonItem = returnItem;
         [weakSelf.navigationController pushViewController:vc animated:YES];
     };
+
+    
     cell.block2 = ^(NSString *str){
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -259,8 +275,8 @@
         [alert addAction:action];
         [weakSelf presentViewController:alert animated:YES completion:nil];
     };
-    //原来是想通过button的tag来保存indexPath.section,以备需要的地方取到.
-    //cell.cancleBtn.tag = indexPath.section;
+//    原来是想通过button的tag来保存indexPath.section,以备需要的地方取到.
+//    cell.cancleBtn.tag = indexPath.section;
 //    [cell.cancleBtn addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
     [cell setEditing:NO animated:YES];
 //    if (cell.editing) {
@@ -268,14 +284,13 @@
 //        
 //    }
     
-    //[self.indexPathArr addObject:indexPath];
+//    [self.indexPathArr addObject:indexPath];
     return cell;
-    
 }
--(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"删除";
 }
--(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!tableView.editing) {
         return UITableViewCellEditingStyleDelete;
     }else{
@@ -290,16 +305,11 @@
         //删除服务器中的数据
         BookCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         [cell deleteOneSectionOnServer];
-    
         //删除本地列表中得数据
         NSLog(@"~~~~~~~~~~~~~~~~~~~~~~~%@",self.datas);
         [self.datas removeObjectAtIndex:indexPath.section];
         [tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationRight];
-        
-
     }
-   
-    
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.selectedInterms addObject:self.datas[indexPath.section]];
@@ -308,7 +318,6 @@
     [self.downLeftBtn setTitleColor:[UIColor colorWithRed:25/255.0 green:158/255.0 blue:230/255.0 alpha:1.0] forState:UIControlStateNormal];
     [self.downRightBtn setEnabled:YES];
     [self.downRightBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    
 }
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.selectedInterms removeObject:self.datas[indexPath.section]];
@@ -325,7 +334,6 @@
     if (self.selectedInterms.count != self.datas.count) {
         [self.navigationItem.rightBarButtonItem setTitle:@"全选"];
     }
-    
 }
 -(void)viewWillAppear:(BOOL)animated {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -388,11 +396,33 @@
     NSString *str = [[NSString stringWithFormat:@"预约时间：%@",str1] stringByAppendingString:@"~"];
     return [str stringByAppendingString:str2];
 }
--(NSString *)produceBookInfoTime:(double)timeInterval {
+- (NSString *)produceBookInfoTime:(double)timeInterval {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval/1000];
-    NSString *str = [NSString stringWithFormat:@"申请预约时间：%@",[formatter stringFromDate:date]];
+    return [NSString stringWithFormat:@"申请预约时间：%@",[formatter stringFromDate:date]];
+}
+- (NSString *)produceBookInfoTime:(double)timeInterval byState:(NSInteger)state {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval/1000];
+    NSString *str;
+    switch (state) {
+        case -2:
+            str = [NSString stringWithFormat:@"取消预约时间：%@",[formatter stringFromDate:date]];
+            break;
+        case -1:
+            str = [NSString stringWithFormat:@"审核时间：%@",[formatter stringFromDate:date]];
+            break;
+        case 0:
+            break;
+        case 1:
+            str = [NSString stringWithFormat:@"审核时间：%@",[formatter stringFromDate:date]];
+            break;
+        default:
+            break;
+    };
+    
     return str;
 }
 -(void)changeColorByState:(NSInteger)nub cell:(BookCell *)cell {
@@ -403,18 +433,26 @@
         case -1:
             [cell.status setText:@"未通过"];
             [cell.status setTextColor:[UIColor redColor]];
+            [cell.cancleBtn setHidden:NO];
+            [cell.cancleBtn setEnabled:YES];
             break;
         case 0:
             [cell.status setText:@"等待审核"];
             [cell.status setTextColor:[UIColor colorWithRed:255/255.0 green:186/255.0 blue:90/255.0 alpha:1.0]];
+            [cell.cancleBtn setHidden:NO];
+            [cell.cancleBtn setEnabled:YES];
             break;
         case 1:
             [cell.status setText:@"通过"];
             [cell.status setTextColor:[UIColor colorWithRed:28/255.0 green:181/255.0 blue:235/255.0 alpha:1.0]];
+            [cell.cancleBtn setHidden:NO];
+            [cell.cancleBtn setEnabled:YES];
             break;
         case -2:
             [cell.status setText:@"预约已取消"];
             [cell.status setTextColor:[UIColor colorWithRed:193/255.0 green:193/255.0 blue:193/255.0 alpha:1.0]];
+            [cell.cancleBtn setHidden:YES];
+            [cell.cancleBtn setEnabled:NO];
             break;
         default:
             break;

@@ -11,6 +11,7 @@
 #import "AFNetworking.h"
 #import "UIColor+Extend.h"
 #import "MBProgressHUD.h"
+#import "Header.h"
 
 #define DELETBOOKINFO @"http://www.yjoof.com/ygapi/deletemyBespeaks?"
 #define CANCLEBOOKINFO @"http://www.yjoof.com/ygapi/cancelmyBespeaks?"
@@ -28,10 +29,10 @@
         [view setBackgroundColor:[UIColor whiteColor]];
         [self.contentView addSubview:view];
         [view mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(10);
-            make.left.equalTo(self.contentView).offset(40/4.0);
+            make.top.equalTo(self.contentView);
+            make.left.equalTo(self.contentView);
             make.right.equalTo(self.contentView);
-        
+            make.height.equalTo(self.contentView).multipliedBy(0.3);
         }];
         UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchDown)];
         [view addGestureRecognizer:gestureRecognizer];
@@ -76,7 +77,7 @@
             make.left.equalTo(_classRoom);
             make.right.equalTo(self.contentView);
             //make.top.equalTo(self.contentView).offset(94/4.0);
-            make.top.equalTo(view.mas_bottom).offset(5);
+            make.top.equalTo(view.mas_bottom);
             make.height.equalTo(@(1));
             
         }];
@@ -97,10 +98,10 @@
         [_time setText:[NSString stringWithFormat:@"预约时间：%@",self.startTime]];
         [self.contentView addSubview:_time];
         [_time mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_date.mas_bottom).offset(40/4.0);
+            make.top.equalTo(_date.mas_bottom).offset(35/4.0);
             make.left.equalTo(_date);
+            
         }];
-        
         
         self.classCount = [[UILabel alloc] init];
         [_classCount setFont:[UIFont systemFontOfSize:13.0]];
@@ -126,9 +127,9 @@
         
         [self.contentView addSubview:_cancleBtn];
         [_cancleBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self.contentView).offset(-85/4.0);
+            make.right.equalTo(self.contentView).offset(-85*ScreenWidth/(4.0*320.0));
             make.centerY.equalTo(_time);
-            make.width.equalTo(@60);
+            make.width.equalTo(@(60*ScreenWidth/320.0));
         }];
         
         [_cancleBtn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
@@ -163,13 +164,14 @@
 }
 - (void)cancleButtonClick:(UIButton *)sender{
     [sender setEnabled:NO];
-//    [sender setBackgroundColor:[UIColor clearColor]];
-//    [sender setTitleColor:[UIColor colorWithRed:28/255.0 green:181/255.0 blue:235/255.0 alpha:1.0] forState:UIControlStateNormal];
+    [sender setBackgroundColor:[UIColor clearColor]];
+    [sender setTitleColor:[UIColor colorWithRed:28/255.0 green:181/255.0 blue:235/255.0 alpha:1.0] forState:UIControlStateNormal];
     [sender setHidden:YES];
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
     NSDictionary *parameters = @{@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"ids":[NSString stringWithFormat:@"%zd",self.ids],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    NSLog(@"<??>%@",parameters);
     [manager POST:CANCLEBOOKINFO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"%@",responseObject);
         if(self.block1 && [responseObject[@"result"] isEqual:@1]      ){

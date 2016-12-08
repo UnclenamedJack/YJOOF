@@ -84,7 +84,7 @@
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
      MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [hud.label setText:@"正在加载"];
-     NSDictionary *parameters = @{@"starttime":[NSString stringWithFormat:@"%@ %@",_date,_beginTime],@"endtime":[NSString stringWithFormat:@"%@ %@",_date,_endTime],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+     NSDictionary *parameters = @{@"starttime":[NSString stringWithFormat:@"%@ %@",_date,_beginTime],@"endtime":[NSString stringWithFormat:@"%@ %@",_date,_endTime],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"]};
     [manager POST:ROOMURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"网络连接成功！");
         NSLog(@"%@",responseObject);

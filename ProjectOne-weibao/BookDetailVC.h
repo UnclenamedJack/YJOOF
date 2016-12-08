@@ -13,4 +13,6 @@
 @property(nonatomic,strong)NSArray *data;
 @property(nonatomic,strong)NSNumber *bookId;
 @property(nonatomic,strong)NSArray *data2;
+@property(nonatomic,strong)NSNumber *classRoomCapacity;
+@property(nonatomic,strong)NSArray *deviceArr;
 @end
