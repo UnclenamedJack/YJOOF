@@ -15,11 +15,8 @@
 #import "DIYCalendarVC.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "Header.h"
 
-
-#define UPLOADDELAYTIME1 @"http://192.168.5.10:8080/wuxin/ygapi/updatebespeak?"
-
-#define UPLOADDELAYTIME @"http://www.yjoof.com/ygapi/updatebespeak?"
 
 @interface secondBookVC ()<UIPickerViewDelegate,UIPickerViewDataSource,UITextViewDelegate>
 @property(nonatomic,strong)UIWindow *alertWindow;
@@ -333,6 +330,7 @@
     
     _label = [[CMInputView alloc] init];
     _label.delegate = self;
+    [_label setTintColor:[UIColor hexChangeFloat:@"9fa0a0"]];
     [_label setFont:[UIFont systemFontOfSize:14.0]];
     [_label setPlaceholder:string];
     [_label setText:@"使用原因"];

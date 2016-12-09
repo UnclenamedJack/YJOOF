@@ -11,13 +11,11 @@
 #import "AFNetworking.h"
 #import "UIColor+Extend.h"
 #import "MBProgressHUD.h"
+#import "Header.h"
 
 
 
-#define kHeight [UIScreen mainScreen].bounds.size.height
-#define kWidth  [UIScreen mainScreen].bounds.size.width
-#define CHANGEPASSURL1   @"http://192.168.5.10:8080/wuxin/api/changepass?"
-#define CHANGEPASSURL   @"http://www.yjoof.com/ygapi/changepass?"
+
 
 
 

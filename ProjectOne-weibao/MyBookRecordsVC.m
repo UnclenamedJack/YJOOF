@@ -15,9 +15,9 @@
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
 #import "UIColor+Extend.h"
+#import "MJRefresh.h"
 
-#define BOOKDETAILINFO @"http://www.yjoof.com/ygapi/myBespeaks?"
-#define DELETBOOKINFO @"http://www.yjoof.com/ygapi/deletemyBespeaks?"
+
 
 
 @interface MyBookRecordsVC ()<UITableViewDelegate,UITableViewDataSource>
@@ -61,6 +61,10 @@
     _tabView.dataSource = self;
     _tabView.allowsSelection = NO;
     [_tabView setRowHeight:120];
+    
+    _tabView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        [self downDatas];
+    }];
     // Do any additional setup after loading the view.
 }
 //编辑
@@ -225,9 +229,6 @@
         NSMutableDictionary *mutDict = [NSMutableDictionary dictionaryWithDictionary:weakSelf.datas[indexPath.section]];
         [mutDict setValue:@"-2" forKey:@"state"];
         [weakSelf.datas replaceObjectAtIndex:indexPath.section withObject:mutDict];
-//        NSDictionary *dict = weakSelf.datas[indexPath.section];
-//        [dict setValue:@"-2" forKey:@"state"];
-//        [weakSelf.datas replaceObjectAtIndex:indexPath.section withObject:dict];
         [tableView reloadData];
         
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
@@ -251,6 +252,8 @@
         if ([[weakSelf.datas[indexPath.section] allKeys] containsObject:@"checktime"] ) {
             [arry2 addObject:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"checktime"] doubleValue] byState:[weakSelf.datas[indexPath.section][@"state"] integerValue]]];
         }
+        
+        
 //        NSMutableArray *arry2 = [NSMutableArray arrayWithObjects:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"creattime"] doubleValue]],, nil];
         BookDetailVC *vc = [[BookDetailVC alloc] init];
         vc.state = [weakSelf.datas[indexPath.section][@"state"] integerValue];
@@ -258,7 +261,7 @@
         vc.bookId = weakSelf.datas[indexPath.section][@"bespeakid"];
         vc.data2 = arry2;
         vc.classRoomCapacity = weakSelf.datas[indexPath.section][@"capacity"];
-        vc.deviceArr = weakSelf.datas[indexPath.section][@"assets"];
+        vc.deviceArr = weakSelf.datas[indexPath.section][@"assetList"];
         
         UIBarButtonItem *returnItem = [[UIBarButtonItem alloc] init];
         [returnItem setTitle:@""];
@@ -336,6 +339,52 @@
     }
 }
 -(void)viewWillAppear:(BOOL)animated {
+    
+    [self downDatas];
+//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
+//    NSDictionary *parameters = @{@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [manager POST:BOOKDETAILINFO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+//        [MBProgressHUD hideHUDForView:self.view animated:YES];
+//        NSLog(@"%@",responseObject);
+//        NSLog(@"%@",responseObject[@"msg"]);
+//        if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+//            }];
+//            [alert addAction:action];
+//            [self presentViewController:alert animated:YES completion:nil];
+//        }
+//
+//        /**
+//         *  注意这两种写法的区别（提示：深拷贝VS浅拷贝）
+//         */
+//        if (self.datas) {
+//            [self.datas removeAllObjects];
+//        }
+//        [self.datas addObjectsFromArray:responseObject[@"obj"]];//可行
+////        self.datas = [responseObject[@"obj"] mutableCopy];//可行
+////        self.datas = (NSMutableArray *)responseObject[@"obj"];//不可行
+////        self.datas = [responseObject[@"obj"] copy];//不可行
+//        if (self.datas.count == 0) {
+//            __weak MyBookRecordsVC *weakSelf = self;
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                [weakSelf.navigationController popViewControllerAnimated:YES];
+//            }];
+//            [alert addAction:action];
+//            [self presentViewController:alert animated:YES completion:nil];
+//        }
+//        [self.tabView reloadData];
+//    
+//    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+//        NSLog(@"%@",error);
+//    }];
+    
+}
+- (void)downDatas {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
     NSDictionary *parameters = @{@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
@@ -352,7 +401,7 @@
             [alert addAction:action];
             [self presentViewController:alert animated:YES completion:nil];
         }
-
+        [_tabView.mj_header endRefreshing];
         /**
          *  注意这两种写法的区别（提示：深拷贝VS浅拷贝）
          */
@@ -360,9 +409,9 @@
             [self.datas removeAllObjects];
         }
         [self.datas addObjectsFromArray:responseObject[@"obj"]];//可行
-//        self.datas = [responseObject[@"obj"] mutableCopy];//可行
-//        self.datas = (NSMutableArray *)responseObject[@"obj"];//不可行
-//        self.datas = [responseObject[@"obj"] copy];//不可行
+        //        self.datas = [responseObject[@"obj"] mutableCopy];//可行
+        //        self.datas = (NSMutableArray *)responseObject[@"obj"];//不可行
+        //        self.datas = [responseObject[@"obj"] copy];//不可行
         if (self.datas.count == 0) {
             __weak MyBookRecordsVC *weakSelf = self;
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
@@ -373,12 +422,12 @@
             [self presentViewController:alert animated:YES completion:nil];
         }
         [self.tabView reloadData];
-    
+        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",error);
     }];
-}
 
+}
 -(NSString *)dateFromTimeInterval:(double)interval {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd"];

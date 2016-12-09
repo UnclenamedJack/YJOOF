@@ -15,7 +15,7 @@
 #import "UIColor+Extend.h"
 #import "MBProgressHUD.h"
 
-#define DELETBOOKINFO @"http://www.yjoof.com/ygapi/deletemyBespeaks?"
+
 
 @interface BookDetailVC ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)NSArray *datas;
@@ -128,7 +128,7 @@
     }
     
 //    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 140,ScreenWidth,188) style:UITableViewStyleGrouped];
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 140*ScreenHeight/568.0,ScreenWidth,(self.data2.count+4)*30+8) style:UITableViewStyleGrouped];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 140*ScreenHeight/568.0,ScreenWidth,(self.data2.count+4)*30*ScreenHeight/568.0+8) style:UITableViewStyleGrouped];
 
     [tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     [tableView setAllowsSelection:YES];
@@ -173,7 +173,7 @@
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
     NSDictionary *parameters = @{@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"ids":[NSString stringWithFormat:@"%@",self.bookId],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [manager POST:DELETBOOKINFO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:CANCLEBOOKINFO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         NSLog(@"%@",responseObject);
         if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {

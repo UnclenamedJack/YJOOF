@@ -16,10 +16,7 @@
 #import "UIColor+Extend.h"
 #import "Header.h"
 
-#define UPLOADDELAYTIME1 @"http://192.168.5.10:8080/wuxin/ygapi/updatebespeak?"
-#define UPLOADDELAYTIME @"http://www.yjoof.com/ygapi/updatebespeak?"
-#define ROOMURL @"http://www.yjoof.com/ygapi/getrooms?"
-#define BOOKURL @"http://www.yjoof.com/ygapi/savebespeak?"
+
 
 @interface roomVC ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)NSArray *datas;

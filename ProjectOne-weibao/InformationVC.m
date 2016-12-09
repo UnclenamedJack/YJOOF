@@ -13,14 +13,9 @@
 #import "UIColor+Extend.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "Header.h"
 
-#define Kwidth [UIScreen mainScreen].bounds.size.width
-#define Kheight [UIScreen mainScreen].bounds.size.height
-#define POSTURL1 @"http://192.168.5.10:8080/wuxin/ygapi/savefkbg?"
-#define POSTURL @"http://www.yjoof.com/ygapi/savefkbg?"
-#define UPLOADDELAYTIME1 @"http://192.168.5.10:8080/wuxin/ygapi/updatebespeak?"
 
-#define UPLOADDELAYTIME @"http://www.yjoof.com/ygapi/updatebespeak?"
 @interface InformationVC ()<UITextViewDelegate>
 @property(nonatomic,strong) UITextView *textView;
 @end
@@ -32,7 +27,7 @@
     
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"next" options:NSKeyValueObservingOptionNew context:nil];
     
-    UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Kwidth, 20)];
+    UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kWidth, 20)];
     [statusView setBackgroundColor:[UIColor grayColor]];
     [self.view addSubview:statusView];
     
@@ -58,22 +53,22 @@
     UILabel *USEInformationLabel = [[UILabel alloc] init];
     [self.view addSubview:USEInformationLabel];
     [USEInformationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(naviBar.mas_bottom).offset(20*Kheight/667.0);
-        make.left.equalTo(self.view).offset(20*Kwidth/375.0);
-        if (Kheight == 480.0) {
-            make.height.equalTo(@(25*Kheight/667.0));
-        }else if (Kheight == 568.0){
-            make.height.equalTo(@(30*Kheight/667.0));
+        make.top.equalTo(naviBar.mas_bottom).offset(20*kHeight/667.0);
+        make.left.equalTo(self.view).offset(20*kWidth/375.0);
+        if (kHeight == 480.0) {
+            make.height.equalTo(@(25*kHeight/667.0));
+        }else if (kHeight == 568.0){
+            make.height.equalTo(@(30*kHeight/667.0));
         }else{
-            make.height.equalTo(@(40*Kheight/667.0));
+            make.height.equalTo(@(40*kHeight/667.0));
         }
         
-        make.right.greaterThanOrEqualTo(self.view).offset(-20*Kwidth/375.0);
+        make.right.greaterThanOrEqualTo(self.view).offset(-20*kWidth/375.0);
     }];
     [USEInformationLabel setText:@"使用信息:"];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [USEInformationLabel setFont:[UIFont systemFontOfSize:14.0]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
           [USEInformationLabel setFont:[UIFont systemFontOfSize:15.0]];
     }
     [USEInformationLabel.layer setBorderColor:[UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0].CGColor];
@@ -94,36 +89,36 @@
     UIImageView *BorderView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"box-text"]];
     [self.view addSubview:BorderView];
     [BorderView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.view).offset(20*Kwidth/375.0);
+        make.left.equalTo(self.view).offset(20*kWidth/375.0);
         make.top.equalTo(USEInformationLabel.mas_bottom).offset(-1);
-        make.right.equalTo(self.view).offset(-20*Kwidth/375.0);
+        make.right.equalTo(self.view).offset(-20*kWidth/375.0);
         make.height.equalTo(self.view).multipliedBy(0.2);
     }];
 
     UIImageView *littleImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"头像-拷贝-8"]];
     [BorderView addSubview:littleImgView];
     [littleImgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(BorderView).offset(19*Kheight/(2.0*667.0));
+        make.top.equalTo(BorderView).offset(19*kHeight/(2.0*667.0));
         //make.bottom.equalTo(BorderView).offset(-72/2.0);
         make.height.equalTo(BorderView).multipliedBy(112/203.0);
         make.width.equalTo(littleImgView.mas_height).multipliedBy(37/66.0);
-        make.centerX.equalTo(BorderView.mas_left).offset(180*Kwidth/(4.0*375));
+        make.centerX.equalTo(BorderView.mas_left).offset(180*kWidth/(4.0*375));
     }];
     
     UILabel *userName = [[UILabel alloc] init];
     [BorderView addSubview:userName];
     [userName mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(littleImgView);
-        make.top.equalTo(littleImgView.mas_bottom).offset(10*Kheight/667.0);
-        make.width.equalTo(@(60*Kwidth/375.0));
-        make.height.equalTo(@(21*Kheight/667.0));
+        make.top.equalTo(littleImgView.mas_bottom).offset(10*kHeight/667.0);
+        make.width.equalTo(@(60*kWidth/375.0));
+        make.height.equalTo(@(21*kHeight/667.0));
     }];
     //[userName setText:@"周虾米"];
     [userName setText:[[NSUserDefaults standardUserDefaults] objectForKey:@"username"]];
     [userName setTextAlignment:NSTextAlignmentCenter];
-    if (Kheight == 568.0) {
+    if (kHeight == 568.0) {
         [userName setFont:[UIFont systemFontOfSize:16.0f]];
-    }else if(Kheight == 480.0){
+    }else if(kHeight == 480.0){
         [userName setFont:[UIFont systemFontOfSize:13.0f]];
     }else{
         [userName setFont:[UIFont systemFontOfSize:17.0f]];
@@ -134,19 +129,19 @@
     [BorderView addSubview:dateLabel];
     [dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         //make.left.equalTo(littleImgView.mas_right).offset(10/2.0);
-        if (Kheight == 480.0) {
+        if (kHeight == 480.0) {
             make.top.equalTo(BorderView).offset(15);
         }else{
-            make.top.equalTo(BorderView).offset(52*Kheight/(2.0*667.0));
+            make.top.equalTo(BorderView).offset(52*kHeight/(2.0*667.0));
         }
         make.height.equalTo(@21);
-        make.left.equalTo(BorderView).offset(181*Kwidth/(2.0*375));
+        make.left.equalTo(BorderView).offset(181*kWidth/(2.0*375));
     }];
     //[dateLabel setText:@"2016年05月24日"];
     [dateLabel setText:[self getCurrentDate]];
-    if (Kheight == 568.0) {
+    if (kHeight == 568.0) {
         [dateLabel setFont:[UIFont systemFontOfSize:15.0f]];
-    }else if(Kheight == 480.0){
+    }else if(kHeight == 480.0) {
         [dateLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else{
         [dateLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -167,9 +162,9 @@
     }];
     //[weekLabel setText:@"星期二"];
     [weekLabel setText:[self getWeekDate]];
-    if (Kheight == 568.0) {
+    if (kHeight == 568.0) {
         [weekLabel setFont:[UIFont systemFontOfSize:15.0]];
-    }else if(Kheight == 480.0){
+    }else if(kHeight == 480.0){
         [weekLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else{
         [weekLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -181,14 +176,14 @@
     [BorderView addSubview:deviceNumberLabel];
     [deviceNumberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(dateLabel);
-        make.top.equalTo(dateLabel.mas_bottom).offset(5*Kheight/667.0);
+        make.top.equalTo(dateLabel.mas_bottom).offset(5*kHeight/667.0);
         make.height.equalTo(@21);
         //make.width.equalTo(@85);
     }];
     [deviceNumberLabel setText:@"设备编码:"];
-    if (Kheight == 568.0) {
+    if (kHeight == 568.0) {
         [deviceNumberLabel setFont:[UIFont systemFontOfSize:15.0f]];
-    }else if(Kheight == 480.0){
+    }else if(kHeight == 480.0){
         [deviceNumberLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else{
         [deviceNumberLabel setFont:[UIFont systemFontOfSize:17.0f]];
@@ -199,17 +194,17 @@
     UILabel *DeviceNum = [[UILabel alloc] init];
     [BorderView addSubview:DeviceNum];
     [DeviceNum mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(deviceNumberLabel.mas_trailing).offset(5*Kheight/667.0);
+        make.leading.equalTo(deviceNumberLabel.mas_trailing).offset(5*kHeight/667.0);
         make.top.equalTo(deviceNumberLabel.mas_top);
         make.height.equalTo(deviceNumberLabel);
-        make.trailing.lessThanOrEqualTo(BorderView).offset(-8*Kwidth/375.0);
+        make.trailing.lessThanOrEqualTo(BorderView).offset(-8*kWidth/375.0);
     }];
     //[DeviceNum setText:@"00000000"];
     [DeviceNum setText:[[NSUserDefaults standardUserDefaults] objectForKey:@"deviceNum"]];
     //[DeviceNum setFont:[UIFont systemFontOfSize:15.0f]];
-    if (Kheight == 568.0) {
+    if (kHeight == 568.0) {
         [DeviceNum setFont:[UIFont systemFontOfSize:15.0f]];
-    }else if (Kheight == 480.0){
+    }else if (kHeight == 480.0){
         [DeviceNum setFont:[UIFont systemFontOfSize:13.0f]];
     }else{
         [DeviceNum setFont:[UIFont systemFontOfSize:17.0f]];
@@ -219,9 +214,9 @@
     [BorderView addSubview:bookTimeLabel];
     [bookTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(deviceNumberLabel);
-        make.right.greaterThanOrEqualTo(BorderView).offset(-8*Kwidth/375.0);
-        make.top.equalTo(deviceNumberLabel.mas_bottom).offset(15*Kheight/667.0);
-        make.bottom.greaterThanOrEqualTo(BorderView).offset(-63*Kheight/(2.0*667.0));
+        make.right.greaterThanOrEqualTo(BorderView).offset(-8*kWidth/375.0);
+        make.top.equalTo(deviceNumberLabel.mas_bottom).offset(15*kHeight/667.0);
+        make.bottom.greaterThanOrEqualTo(BorderView).offset(-63*kHeight/(2.0*667.0));
     }];
 //    NSString *begin = [[NSUserDefaults standardUserDefaults] objectForKey:@"beginTime"];
 //    NSString *end = [[NSUserDefaults standardUserDefaults] objectForKey:@"endtime"];
@@ -229,10 +224,10 @@
     [bookTimeLabel setText:[NSString stringWithFormat:@"%@~%@,共计%@",self.beginTime,self.endTime,self.totalTime]];
     //[bookTimeLabel setText:@"09:00~10:00,共计60分钟"];
     [bookTimeLabel setTextColor:[UIColor colorWithRed:5/255.0 green:125/255.0 blue:194/255.0 alpha:1.0]];
-    if (Kheight == 568.0) {
+    if (kHeight == 568.0) {
         [bookTimeLabel setFont:[UIFont systemFontOfSize:16.0]];
 
-    }else if (Kheight == 480.0){
+    }else if (kHeight == 480.0){
         [bookTimeLabel setFont:[UIFont systemFontOfSize:15.0]];
     }else{
         [bookTimeLabel setFont:[UIFont systemFontOfSize:18.0]];
@@ -278,21 +273,21 @@
     [adviceLabel.layer setBorderColor:[UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0].CGColor];
     [self.view addSubview:adviceLabel];
     [adviceLabel setText:@"填写反馈意见:"];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [adviceLabel setFont:[UIFont systemFontOfSize:14.0]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
            [adviceLabel setFont:[UIFont systemFontOfSize:15.0]];
     }
     [adviceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(USEInformationLabel);
         make.right.equalTo(USEInformationLabel);
-        make.top.equalTo(BorderView.mas_bottom).offset(20*Kheight/667.0);
-        if (Kheight == 480.0) {
-            make.height.equalTo(@(25*Kheight/667.0));
-        }else if(Kheight == 568.0){
-            make.height.equalTo(@(30*Kheight/667.0));
+        make.top.equalTo(BorderView.mas_bottom).offset(20*kHeight/667.0);
+        if (kHeight == 480.0) {
+            make.height.equalTo(@(25*kHeight/667.0));
+        }else if(kHeight == 568.0){
+            make.height.equalTo(@(30*kHeight/667.0));
         }else{
-            make.height.equalTo(@(40*Kheight/667.0));
+            make.height.equalTo(@(40*kHeight/667.0));
         }
     }];
     UIView *view3 = [[UIView alloc] init];
@@ -301,8 +296,8 @@
     [view3 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(adviceLabel.mas_bottom).offset(-1);
         make.height.equalTo(self.view).multipliedBy(0.4);
-        make.left.equalTo(self.view).offset(20*Kwidth/375.0);
-        make.right.equalTo(self.view).offset(-20*Kwidth/375.0);
+        make.left.equalTo(self.view).offset(20*kWidth/375.0);
+        make.right.equalTo(self.view).offset(-20*kWidth/375.0);
     }];
     UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn1 setTitle:@"非常差" forState:UIControlStateNormal];
@@ -311,9 +306,9 @@
     [btn1.layer setBorderWidth:1.0];
     [btn1.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
     [btn1.titleLabel setTextColor:[UIColor grayColor]];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [btn1.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [btn1.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [btn1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
@@ -321,8 +316,8 @@
     [btn1 setHidden:NO];
     [view3 addSubview:btn1];
     [btn1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(view3).offset(5*Kheight/667.0);
-        make.left.equalTo(view3).offset(8*Kwidth/375.0);
+        make.top.equalTo(view3).offset(5*kHeight/667.0);
+        make.left.equalTo(view3).offset(8*kWidth/375.0);
     }];
     [btn1 addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -332,9 +327,9 @@
     [bt2 setBackgroundColor:[UIColor hexChangeFloat:@"fee8d0"]];
     [bt2.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
     [bt2.layer setBorderWidth:1.0];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [bt2.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [bt2.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [bt2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
@@ -343,7 +338,7 @@
     [bt2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(btn1);
         make.height.equalTo(btn1);
-        make.left.equalTo(btn1.mas_right).offset(5*Kwidth/375.0);
+        make.left.equalTo(btn1.mas_right).offset(5*kWidth/375.0);
         make.width.equalTo(btn1);
         make.top.equalTo(btn1);
     }];
@@ -355,9 +350,9 @@
     [btn3 setBackgroundColor:[UIColor hexChangeFloat:@"fee8d0"]];
     [btn3.layer setBorderWidth:1.0];
     [btn3.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [btn3.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [btn3.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [btn3.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
@@ -365,7 +360,7 @@
     [view3 addSubview:btn3];
     [btn3 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(btn1);
-        make.left.equalTo(bt2.mas_right).offset(5*Kwidth/375.0);
+        make.left.equalTo(bt2.mas_right).offset(5*kWidth/375.0);
        // make.right.equalTo(view3).offset(-10);
         make.width.equalTo(bt2);
     }];
@@ -377,9 +372,9 @@
     [btn4 setBackgroundColor:[UIColor hexChangeFloat:@"fee8d0"]];
     [btn4.layer setBorderWidth:1.0];
     [btn4.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [btn4.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [btn4.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [btn4.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
@@ -387,8 +382,8 @@
     [view3 addSubview:btn4];
     [btn4 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(btn1);
-        make.left.equalTo(btn3.mas_right).offset(5*Kwidth/375.0);
-        make.right.equalTo(view3).offset(-8*Kwidth/375.0);
+        make.left.equalTo(btn3.mas_right).offset(5*kWidth/375.0);
+        make.right.equalTo(view3).offset(-8*kWidth/375.0);
         make.width.equalTo(bt2);
     }];
     [btn4 addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
@@ -399,9 +394,9 @@
     [btn5 setBackgroundColor:[UIColor hexChangeFloat:@"fee8d0"]];
     [btn5.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
     [btn5.layer setBorderWidth:1.0];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [btn5.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [btn5.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [btn5.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
@@ -409,7 +404,7 @@
     [view3 addSubview:btn5];
     [btn5 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(btn1);
-        make.top.equalTo(btn1.mas_bottom).offset(5*Kheight/667.0);
+        make.top.equalTo(btn1.mas_bottom).offset(5*kHeight/667.0);
     }];
     [btn5 addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -420,17 +415,17 @@
     [btn6 setBackgroundColor:[UIColor hexChangeFloat:@"fee8d0"]];
     [btn6.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
     [btn6.layer setBorderWidth:1.0];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [btn6.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [btn6.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [btn6.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     }
     [view3 addSubview:btn6];
     [btn6 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(btn5.mas_right).offset(5*Kwidth/375.0);
-        make.top.equalTo(bt2.mas_bottom).offset(5*Kheight/667.0);
+        make.left.equalTo(btn5.mas_right).offset(5*kWidth/375.0);
+        make.top.equalTo(bt2.mas_bottom).offset(5*kHeight/667.0);
         make.width.equalTo(btn5);
     }];
     [btn6 addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
@@ -441,17 +436,17 @@
     [btn7 setBackgroundColor:[UIColor hexChangeFloat:@"fee8d0"]];
     [btn7.layer setBorderWidth:1.0];
     [btn7.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [btn7.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [btn7.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [btn7.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     }
     [view3 addSubview:btn7];
     [btn7 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(btn3.mas_bottom).offset(5*Kheight/667.0);
-        make.left.equalTo(btn6.mas_right).offset(5*Kwidth/375.0);
+        make.top.equalTo(btn3.mas_bottom).offset(5*kHeight/667.0);
+        make.left.equalTo(btn6.mas_right).offset(5*kWidth/375.0);
         make.width.equalTo(btn5);
     }];
     [btn7 addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
@@ -462,18 +457,18 @@
     [btn8 setBackgroundColor:[UIColor hexChangeFloat:@"fee8d0"]];
     [btn8.layer setBorderColor:[UIColor hexChangeFloat:@"ffb779"].CGColor];
     [btn8.layer setBorderWidth:1];
-    if (Kheight == 480.0) {
+    if (kHeight == 480.0) {
         [btn8.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-    }else if(Kheight == 568.0){
+    }else if(kHeight == 568.0){
         [btn8.titleLabel setFont:[UIFont systemFontOfSize:13.0f]];
     }else {
         [btn8.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     }
     [view3 addSubview:btn8];
     [btn8 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(btn7.mas_right).offset(5*Kwidth/375.0);
-        make.top.equalTo(btn4.mas_bottom).offset(5*Kheight/667.0);
-        make.right.equalTo(view3).offset(-8*Kwidth/375.0);
+        make.left.equalTo(btn7.mas_right).offset(5*kWidth/375.0);
+        make.top.equalTo(btn4.mas_bottom).offset(5*kHeight/667.0);
+        make.right.equalTo(view3).offset(-8*kWidth/375.0);
         make.width.equalTo(btn5);
     }];
     [btn8 addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
@@ -482,10 +477,10 @@
     [_textView setBackgroundColor:[UIColor hexChangeFloat:@"eeeeee"]];
     [view3 addSubview:_textView];
     [_textView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(btn5.mas_bottom).offset(5*Kheight/667.0);
-        make.left.equalTo(view3).offset(5*Kwidth/375.0);
-        make.right.equalTo(view3).offset(-5*Kwidth/375.0);
-        make.bottom.equalTo(view3).offset(-10*Kheight/667.0);
+        make.top.equalTo(btn5.mas_bottom).offset(5*kHeight/667.0);
+        make.left.equalTo(view3).offset(5*kWidth/375.0);
+        make.right.equalTo(view3).offset(-5*kWidth/375.0);
+        make.bottom.equalTo(view3).offset(-10*kHeight/667.0);
     }];
     
     UIButton *postButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -496,10 +491,10 @@
     [self.view addSubview:postButton];
     
     [postButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(view3.mas_bottom).offset(20*Kheight/667.0);
+        make.top.equalTo(view3.mas_bottom).offset(20*kHeight/667.0);
         make.left.equalTo(_textView);
         make.right.equalTo(_textView);
-        make.bottom.lessThanOrEqualTo(self.view).offset(-5*Kheight/667.0);
+        make.bottom.lessThanOrEqualTo(self.view).offset(-5*kHeight/667.0);
     }];
     [postButton addTarget:self action:@selector(POSTInformation) forControlEvents:UIControlEventTouchUpInside];
     //Do any additional setup after loading the view.

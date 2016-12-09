@@ -14,18 +14,12 @@
 #import "MBProgressHUD.h"
 #import "JPUSHService.h"
 #import "UIColor+Extend.h"
-
-
-#define LoginURL @"http://www.yjoof.com/ygapi/phonelogin?"
-#define FindURL @"http://www.yjoof.com/ygapi/changepass?"
-
-
-#define LoginURL1 @"http://192.168.5.10:8080/wuxin/ygapi/phonelogin?"
-#define FindURL1 @"http://192.168.5.10:8080/wuxin/ygapi/changepass?"
+#import "Header.h"
 
 
 
-#define kHeight [UIScreen mainScreen].bounds.size.height
+
+
 
 @interface loginViewController ()<UITextFieldDelegate>
 @property (strong, nonatomic) UITextField *PhoneTextFiled;
@@ -195,12 +189,8 @@
     // Do any additional setup after loading the view.
 }
 -(void)forgetClick {
-//    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"RegisterVC"];
-//    [self presentViewController:vc animated:YES completion:nil];
-    
     UINavigationController *navc = [self.storyboard instantiateViewControllerWithIdentifier:@"registerNAVC"];
     [self showViewController:navc sender:nil];
-    
 }
 -(void)fastLogin {
     if (!_manager) {
@@ -224,23 +214,21 @@
             if (![responseObject[@"logo"] isKindOfClass:[NSNull class]]) {
                 [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"logo"] forKey:@"logoImage"];
             }
-            
             [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"yktname"] forKey:@"username"];
             [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"token"] forKey:@"accesstoken"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isLogin"];
             [[NSUserDefaults standardUserDefaults] setObject:yktid forKey:@"yktid"];
-            
-            
             int ykt = [yktid intValue];
             NSString *ykd = [NSString stringWithFormat:@"%zd",ykt];
             
             [JPUSHService setTags:[NSSet setWithObject:ykd] alias:ykd fetchCompletionHandle:^(int iResCode, NSSet *iTags, NSString *iAlias) {
                 NSLog(@"注册别名=======%zd,%@,%@",iResCode,iTags,iAlias);
             }];
-            
+//            [JPUSHService setTags:nil alias:nil fetchCompletionHandle:^(int iResCode, NSSet *iTags, NSString *iAlias) {
+//                NSLog(@"注册别名=======%zd,%@,%@",iResCode,iTags,iAlias);
+//            }];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
-            
             //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
             [self presentViewController:navigationController animated:YES completion:nil];
         }else{
@@ -249,19 +237,15 @@
             [alert addAction:action];
             [self presentViewController:alert animated:YES completion:nil];
         }
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"网络连接失败！");
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self showOkayCancelAlert];
-        
     }];
-
 }
 - (void)clickDown:(UIButton *)sender {
     [sender setBackgroundColor:[UIColor hexChangeFloat:@"00a0e9"]];
     [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    
 }
 - (void)loginClick:(UIButton *)sender {
     [sender setBackgroundColor:[UIColor clearColor]];
@@ -305,7 +289,6 @@
             [[NSUserDefaults standardUserDefaults] setObject:yktid forKey:@"yktid"];
             if (![responseObject[@"logo"] isKindOfClass:[NSNull class]]) {
                 [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"logo"] forKey:@"logoImage"];
-
             }
             
              int ykt = [yktid intValue];
@@ -330,13 +313,7 @@
         NSLog(@"网络连接失败！");
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self showOkayCancelAlert];
-//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-//        HomeVC *homeVC = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
-//        [self.navigationController presentViewController:homeVC animated:YES completion:nil];
-
     }];
-    
-    
 }
 //解析失败之后的提示框
 - (void)showOkayCancelAlert {
@@ -344,9 +321,7 @@
     NSString *message = NSLocalizedString(@"您的网络不是很好,检查一下吧,亲", nil);
     NSString *cancelButtonTitle = NSLocalizedString(@"取消", nil);
     NSString *otherButtonTitle = NSLocalizedString(@"确定", nil);
-    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    
     // Create the actions.
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];

@@ -15,8 +15,6 @@
 #import "MBProgressHUD.h"
 
 
-#define UPLOADDELAYTIME1 @"http://192.168.5.10:8080/wuxin/ygapi/updatebespeak?"
-#define UPLOADDELAYTIME @"http://www.yjoof.com/ygapi/updatebespeak?"
 
 @interface ThirdVC ()
 @property(nonatomic,strong)UILabel *timeLabel;
@@ -110,12 +108,46 @@
 }
 - (void)changeColorAfterHighLight:(UIButton *)sender {
     [sender setBackgroundColor:[UIColor clearColor]];
-    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    InformationVC *vc = [storyBoard instantiateViewControllerWithIdentifier:@"informationVC"];
-    vc.beginTime = [self.timeLabel.text substringToIndex:5];
-    vc.endTime = [[self getCurrentTime] substringToIndex:5];
-    vc.totalTime = [self totalTime];
-    [self presentViewController:vc animated:YES completion:nil];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"text/html",@"application/json", nil]];
+    NSDictionary *parameters = @{@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"usageid":[[NSUserDefaults standardUserDefaults] objectForKey:@"usagesid"]};
+    NSLog(@"<>%@",parameters);
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [manager POST:TIMEREND parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"网络连接成功！");
+        NSLog(@"%@",responseObject);
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        InformationVC *vc = [storyBoard instantiateViewControllerWithIdentifier:@"informationVC"];
+        if ([responseObject[@"result"] isEqualToString:@"-1"]) {
+            
+            vc.beginTime = [self.timeLabel.text substringToIndex:5];
+            vc.endTime = [[self getCurrentTime] substringToIndex:5];
+            vc.totalTime = [self totalTime];
+            [self presentViewController:vc animated:YES completion:nil];
+        }else{
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"关机提示" message:@"友情提醒：您先关闭使用设备，再进入反馈意见！" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"未关闭" style:UIAlertActionStyleDefault handler:nil];
+            UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"已关闭" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                vc.beginTime = [self.timeLabel.text substringToIndex:5];
+                vc.endTime = [[self getCurrentTime] substringToIndex:5];
+                vc.totalTime = [self totalTime];
+                [self presentViewController:vc animated:YES completion:nil];
+            }];
+            [alert addAction:action1];
+            [alert addAction:action2];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"网络连接失败！");
+        NSLog(@"%@",error);
+//        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [hud setMode:MBProgressHUDModeCustomView];
+        [hud.label setText:@"网络连接失败"];
+        [hud showAnimated:YES];
+        [hud hideAnimated:YES afterDelay:2.0];
+    }];
+    
     
 }
 - (NSString *)getCurrentTime {

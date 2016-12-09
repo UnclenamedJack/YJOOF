@@ -13,9 +13,7 @@
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
 
-#define UPLOADDELAYTIME1 @"http://192.168.5.10:8080/wuxin/ygapi/updatebespeak?"
 
-#define UPLOADDELAYTIME @"http://www.yjoof.com/ygapi/updatebespeak?"
 
 
 @interface ClassRoomVC ()

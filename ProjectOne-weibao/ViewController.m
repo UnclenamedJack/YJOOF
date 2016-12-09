@@ -20,16 +20,10 @@
 #import "MBProgressHUD.h"
 #import "ThreeCell.h"
 #import "forthCell.h"
-
-
+#import "Header.h"
 #import <objc/runtime.h>
 
-#define BOOKURL1 @"http://192.168.5.10:8080/wuxin/ygapi/savebespeak?"
-#define ROOMURL1 @"http://192.168.5.10:8080/wuxin/ygapi/getrooms?"
 
-
-#define BOOKURL @"http://www.yjoof.com/ygapi/savebespeak?"
-#define ROOMURL @"http://www.yjoof.com/ygapi/getrooms?"
 
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>

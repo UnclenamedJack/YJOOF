@@ -12,20 +12,11 @@
 #import "Masonry.h"
 #import "UIColor+Extend.h"
 #import "MBProgressHUD.h"
+#import "Header.h"
 
 
-#define YANURL1 @"http://192.168.5.10:8080/wuxin/ygapi/getcode?"
-#define RESETURL1 @"http://192.168.5.10:8080/wuxin/ygapi/changepass?"
-#define MESSAGE1 @"http://192.168.5.10:8080/wuxin/ygapi/sendmsg?"
-#define FORGETPASSWORD1 @"http://192.168.5.10:8080/wuxin/ygapi/wjmm?"
 
-#define YANURL @"http://www.yjoof.com/ygapi/getcode?"
-#define RESETURL @"http://www.yjoof.com/ygapi/changepass?"
-#define MESSAGE @"http://www.yjoof.com/ygapi/sendmsg?"
-#define FORGETPASSWORD @"http://www.yjoof.com/ygapi/wjmm?"
 
-#define kHeight [UIScreen mainScreen].bounds.size.height
-#define kWidth [UIScreen mainScreen].bounds.size.width
 @interface RegisterVC ()<UITextFieldDelegate>
 @property(strong,nonatomic) UITextField *phone;
 @property(strong,nonatomic) UITextField *yanzhengma;

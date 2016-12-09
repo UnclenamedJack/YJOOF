@@ -72,7 +72,7 @@
         <!--计时-->
         <scene sceneID="0QH-oc-7BC">
             <objects>
-                <viewController storyboardIdentifier="TimerVC" id="PvI-cB-TBP" customClass="ThirdVC" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="thirdVC" id="PvI-cB-TBP" customClass="ThirdVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Pog-Q7-EI7"/>
                         <viewControllerLayoutGuide type="bottom" id="d8d-cT-tZF"/>
