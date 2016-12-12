@@ -189,13 +189,13 @@
 //        [self presentViewController:alert animated:YES completion:nil];
 //        
 //    }
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0) {
         reSetPassWordVC *VC = [[reSetPassWordVC alloc] init];
         [self.navigationController pushViewController:VC animated:YES];
     }else if (indexPath.section == 2){
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"退出登录" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zhanghao"];
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"mima"];
@@ -211,6 +211,11 @@
 //            }];
         }];
         [alert addAction:action1];
+        [alert addAction:action];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else if (indexPath.section == 1){
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"此功能暂未开放！" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
         [alert addAction:action];
         [self presentViewController:alert animated:YES completion:nil];
     }

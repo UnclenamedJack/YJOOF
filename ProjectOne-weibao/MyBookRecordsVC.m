@@ -31,7 +31,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor redColor]];
     self.navigationItem.title = @"预约记录";
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"编辑" style:UIBarButtonItemStylePlain target:self action:@selector(editCell:)]];
     if (ScreenHeight==568 || ScreenHeight ==480) {
@@ -46,6 +45,9 @@
     
 //    self.automaticallyAdjustsScrollViewInsets = NO;
 //    self.navigationController.navigationBar.translucent = NO;
+    //请求数据
+    [self downDatas];
+    
     
     self.selectedInterms = [NSMutableArray array];
     self.datas = [NSMutableArray array];
@@ -335,8 +337,10 @@
     }
 }
 -(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+//    [self downDatas];
     
-    [self downDatas];
+    
 //    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
 //    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
 //    NSDictionary *parameters = @{@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
