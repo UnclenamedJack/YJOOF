@@ -110,8 +110,7 @@
     [sender setBackgroundColor:[UIColor clearColor]];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"text/html",@"application/json", nil]];
-    NSDictionary *parameters = @{@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"usageid":[[NSUserDefaults standardUserDefaults] objectForKey:@"usagesid"]};
-    NSLog(@"<>%@",parameters);
+    NSDictionary *parameters = @{@"usageid":[[NSUserDefaults standardUserDefaults] objectForKey:@"usagesid"]};
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [manager POST:TIMEREND parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"网络连接成功！");

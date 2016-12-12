@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-
-
-
 @interface HomeVC : UIViewController
+
 @property(nonatomic,strong)NSString *deviceNum;
 @property(nonatomic,assign) BOOL isCodeSuccess;
 @property(nonatomic,copy) NSString *logo;
+
 @end

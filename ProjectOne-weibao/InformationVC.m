@@ -232,41 +232,6 @@
     }else{
         [bookTimeLabel setFont:[UIFont systemFontOfSize:18.0]];
     }
-
-//    UILabel *userName = [[UILabel alloc] init];
-//    [BorderView addSubview:userName];
-//    [userName mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.leading.equalTo(deviceNumberLabel);
-//        make.bottom.equalTo(BorderView.mas_bottom).offset(-10);
-//        make.width.equalTo(@60);
-//        make.height.equalTo(@21);
-//    }];
-//    [userName setText:@"周虾米"];
-//    [userName setFont:[UIFont systemFontOfSize:15.0f]];
-//    
-//    UILabel *totalUse = [[UILabel alloc] init];
-//    [BorderView addSubview:totalUse];
-//    [totalUse mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(userName);
-//        make.leading.equalTo(userName.mas_trailing).offset(8);
-//        make.height.equalTo(@21);
-//        make.width.equalTo(@68);
-//    }];
-//    [totalUse setText:@"总共使用"];
-//    [totalUse setFont:[UIFont systemFontOfSize:15.0f]];
-//    [totalUse setTextColor:[UIColor lightGrayColor]];
-//    
-//    UILabel *totalTimeLabel = [[UILabel alloc] init];
-//    [BorderView addSubview:totalTimeLabel];
-//    [totalTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        //make.centerX.equalTo(weekLabel);
-//        make.centerY.equalTo(userName);
-//        make.height.equalTo(@50);
-//        make.leading.greaterThanOrEqualTo(totalUse.mas_trailing).offset(8);
-//        make.trailing.equalTo(BorderView).offset(-5);
-//    }];
-//    [totalTimeLabel setFont:[UIFont systemFontOfSize:22.0f]];
-//    [totalTimeLabel setText:@"145分钟"];
     
     UILabel *adviceLabel = [[UILabel alloc] init];
     [adviceLabel.layer setBorderWidth:1.0];

@@ -364,12 +364,7 @@
                 NSLog(@"%@",error);
                 NSLog(@"网络连接失败！");
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请检查网络！" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                }];
-                [alert addAction:action];
-                [self presentViewController:alert animated:YES completion:^{
-                }];
+                [self showOkayCancelAlert];
             }];
         }else if ([responseObject[@"usetype"] integerValue] == 4){
             [self DIYAlert];
@@ -381,7 +376,6 @@
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
             [alert addAction:action];
             [self presentViewController:alert animated:YES completion:nil];
-
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"网络连接失败！");
@@ -443,11 +437,22 @@
 //    }];
 }
 -(void)saoMiaoClick {
-    [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:@"isCodeSuccess"];
-    //点击二维码扫描的时候开始定位，获取当前的经纬度
-    [self.locationManager startUpdatingLocation];
-    UINavigationController *navc = [self.storyboard instantiateViewControllerWithIdentifier:@"coder"];
-    [self.navigationController showViewController:navc sender:nil];
+    if ([self judgeLocationEnabledOrNot]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:@"isCodeSuccess"];
+        //点击二维码扫描的时候开始定位，获取当前的经纬度
+        [self.locationManager startUpdatingLocation];
+        UINavigationController *navc = [self.storyboard instantiateViewControllerWithIdentifier:@"coder"];
+        [self.navigationController showViewController:navc sender:nil];
+    }else{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请打开定位功能！" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil];
+        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
+        }];
+        [alert addAction:action1];
+        [alert addAction:action2];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 - (NSString *)getCurrentDate {
     NSDate *date = [NSDate date];
@@ -470,7 +475,6 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy年MM月dd日 HH点mm分"];
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval/1000];
-    NSLog(@"????<<<>>>>%@",date);
     NSString *dateStr = [formatter stringFromDate:date];
     return dateStr;
 }
@@ -490,20 +494,12 @@
 //    if (_longitude && _latitude) {
 //         parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":_deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
 //    }
-   
-    NSLog(@"??%@",parameters);
     [manager POST:CHECKBOOK parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"网络连接成功！");
-        NSLog(@"%@",responseObject);
-        NSLog(@"%@",responseObject[@"msg"]);
         if ([responseObject[@"usetype"] integerValue] == 3) {
             NSDictionary *parameter = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"bespeakid":responseObject[@"bespeakid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [manager POST:READURL parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                NSLog(@"查询预约网络连接成功！");
-                NSLog(@"%@",responseObject);
-                NSLog(@"%@",responseObject[@"msg"]);
                 if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -512,11 +508,11 @@
                     [alert addAction:action];
                     [self presentViewController:alert animated:YES completion:nil];
                 }
-                NSTimeInterval bookTotalTime = [responseObject[@"endtime"] doubleValue] - [responseObject[@"starttime"] doubleValue];
-                
-                [[NSUserDefaults standardUserDefaults] setInteger:[responseObject[@"endtime"] integerValue] forKey:@"endTime"];
-                
-                [[NSUserDefaults standardUserDefaults] setInteger:bookTotalTime forKey:@"AllTime"];
+//                NSTimeInterval bookTotalTime = [responseObject[@"endtime"] doubleValue] - [responseObject[@"starttime"] doubleValue];
+//                
+//                [[NSUserDefaults standardUserDefaults] setInteger:[responseObject[@"endtime"] integerValue] forKey:@"endTime"];
+//                
+//                [[NSUserDefaults standardUserDefaults] setInteger:bookTotalTime forKey:@"AllTime"];
                 
                 [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"bespeakid"] forKey:@"bookid"];
                 
@@ -525,9 +521,7 @@
                     if ([responseObject[@"used"] isEqual: @1]) {
                         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
                         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                            
                             [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-                            [[NSUserDefaults standardUserDefaults] setObject:[self getCurrentDate] forKey:@"beginTime"];
                             [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
                             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
                             [self presentViewController:vc animated:YES completion:nil];
@@ -540,7 +534,6 @@
                         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                             
                             [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-                            [[NSUserDefaults standardUserDefaults] setObject:[self getCurrentDate] forKey:@"beginTime"];
                             [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
                             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
                             [self presentViewController:vc animated:YES completion:nil];
@@ -559,23 +552,14 @@
                     }];
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                NSLog(@"%@",error);
-                NSLog(@"网络连接失败！");
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请检查网络！" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    
-                }];
-                [alert addAction:action];
-                [self presentViewController:alert animated:YES completion:^{
-                }];
+                [self showOkayCancelAlert];
             }];
         }else if ([responseObject[@"usetype"] integerValue] == 4){
             [self DIYAlert];
         }else if ([responseObject[@"usetype"] integerValue] == 5){
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
             [self presentViewController:vc animated:YES completion:nil];
-
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"警告" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -584,19 +568,9 @@
             [alert addAction:action];
             [self presentViewController:alert animated:YES completion:^{
             }];
-
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"网络连接失败！");
-        NSLog(@"%@",error);
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请检查网络！" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            
-        }];
-        [alert addAction:action];
-        [self presentViewController:alert animated:YES completion:^{
-        }];
-        
+        [self showOkayCancelAlert];
     }];
     
 //    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -704,7 +678,6 @@
     pickVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     pickVC.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:pickVC.sourceType];
     pickVC.allowsEditing = YES;
-    
     pickVC.delegate = self;
     [self presentViewController:pickVC animated:YES completion:nil];
 }
@@ -734,8 +707,6 @@
         NSString *string = [formatter stringFromDate:[NSDate date]];
         [formData appendPartWithFileData:imageData name:[NSString stringWithFormat:@"image%zd",0] fileName:[NSString stringWithFormat:@"%@.png",string] mimeType:@"image/png"];
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"网络连接成功！");
-        NSLog(@"??>>>%@",responseObject);
         //把上传成功的图片的二进制数据保存到本地
         [[NSUserDefaults standardUserDefaults] setObject:imageData forKey:@"icon"];
         //保存头像上传成功后返回的头像在服务器中的地址
@@ -743,16 +714,12 @@
         NSDictionary *parameters = @{@"logo":responseObject[@"image0"],@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"]};
         //调用这个API是在头像图片上传成功后把高该头像图片和用户账号绑定起来 绑定成功以后登录服务器返回
         [manager POST:SAVELOGO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            NSLog(@"网络连接成功！");
-            NSLog(@"%@",responseObject);
             _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [_hud setMode:MBProgressHUDModeCustomView];
             [_hud.label setText:@"头像上传成功"];
             [_hud hideAnimated:YES afterDelay:2.0];
             
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"网络连接失败");
-            NSLog(@"%@",error);
             _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [_hud setMode:MBProgressHUDModeCustomView];
             [_hud.label setText:@"头像上传失败！"];
@@ -761,8 +728,6 @@
 //            [self showOkayCancelAlert];
         }];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"网络连接失败！");
-        NSLog(@"%@",error);
         _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [_hud setMode:MBProgressHUDModeCustomView];
         [_hud.label setText:@"头像上传失败！"];
@@ -777,9 +742,7 @@
     NSString *message = NSLocalizedString(@"您的网络不是很好,检查一下吧,亲", nil);
     NSString *cancelButtonTitle = NSLocalizedString(@"取消", nil);
     NSString *otherButtonTitle = NSLocalizedString(@"确定", nil);
-    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    
     // Create the actions.
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -796,7 +759,15 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (BOOL)judgeLocationEnabledOrNot {
+    if ([CLLocationManager authorizationStatus] ==kCLAuthorizationStatusDenied) {
+        
+        //定位不能用
+        return NO;
+    }else{
+        return YES;
+    }
+}
 #pragma mark textFiledDelegate 
 
 //用户手动输入的时候 ，开始按钮显示出来
@@ -804,7 +775,19 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     [self.begin setHidden:NO];
     [self.book setHidden:YES];
-    [self.locationManager startUpdatingLocation];
+    
+    if ([self judgeLocationEnabledOrNot]) {
+        [self.locationManager startUpdatingLocation];
+    }else{
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请打开定位功能！" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:nil];
+        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
+        }];
+        [alert addAction:action1];
+        [alert addAction:action2];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
 }
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self.deviceNumber resignFirstResponder];
@@ -863,8 +846,6 @@
                 NSDictionary *parameters = @{@"bespeakid":[[NSUserDefaults standardUserDefaults] objectForKey:@"bookid"],@"extend":@(delay)};
                 [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 [manager POST:UPLOADDELAYTIME parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                    NSLog(@"延时连接成功！");
-                    NSLog(@"%@",responseObject);
                     [MBProgressHUD hideHUDForView:self.view animated:YES];
                     if ([responseObject[@"result"] intValue] == 0) {
                         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
@@ -886,10 +867,7 @@
                                 
                             }];
                         }];
-                        
                     }
-
-                    
                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                     NSLog(@"延时连接失败！");
                     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -898,7 +876,6 @@
                     [alert addAction:action];
                     [self presentViewController:alert animated:YES completion:^{
                     }];
-
                 }];
             }];
             [alert1 addAction:action3];
@@ -908,15 +885,12 @@
         [alert addAction:action2];
         [self presentViewController:alert animated:YES completion:nil];
     }
-    
     self.isCodeSuccess = [[NSUserDefaults standardUserDefaults] boolForKey:@"isCodeSuccess"];
     if (self.isCodeSuccess) {
         self.deviceNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceNum"];
         self.deviceNumber.text = self.deviceNum;
         [self lookOutBookInformation];
     }
-    
-    
 }
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -996,7 +970,6 @@
         make.height.equalTo(@100);
     }];
 }
-
 -(void)ThreeTwoOne{
     self.a  = self.a - 1;
     [self.littleLabel setText:[NSString stringWithFormat:@"%zd",self.a]];
@@ -1163,13 +1136,10 @@
 //    [_timeL2 setFont:[UIFont systemFontOfSize:13.0]];
     if (ScreenHeight==568) {
         [_timeL2 setFont:[UIFont systemFontOfSize:13.0]];
-        
     }else if (ScreenHeight == 667){
         [_timeL2 setFont:[UIFont systemFontOfSize:15.0]];
-        
     }else if (ScreenHeight == 736){
         [_timeL2 setFont:[UIFont systemFontOfSize:17.0]];
-        
     }
     [littleView addSubview:_timeL2];
     [_timeL2 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -1269,7 +1239,6 @@
     }else if (ScreenHeight == 736){
         string = [[NSAttributedString alloc] initWithString:@"  (自定义)" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10.0],NSForegroundColorAttributeName:[UIColor hexChangeFloat:@"9fa0a0"]}];
         str = [[NSMutableAttributedString alloc] initWithString:@"分钟" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17.0],NSForegroundColorAttributeName:[UIColor hexChangeFloat:@"727171"]}];
-        
     }
     [str appendAttributedString:string];
     [timeL setAttributedText:str];
@@ -1293,7 +1262,6 @@
         
     }else if (ScreenHeight == 736){
         [beginBtn.titleLabel setFont:[UIFont systemFontOfSize:17]];
-        
     }
 //    [beginBtn.titleLabel setFont:[UIFont systemFontOfSize:13.0]];
     [beginBtn setTitleColor:[UIColor hexChangeFloat:@"00a0e9"] forState:UIControlStateNormal];
@@ -1427,45 +1395,60 @@
 }
 - (void)alertStart:(UIButton *)sender {
     [sender setBackgroundColor:[UIColor clearColor]];
-    [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self DIYDismiss];
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-    NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"starttime":self.beginTime ,@"endtime":self.endTime,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
-    NSLog(@"<>%@",parameters);
-    [manager POST:READURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"网络连接成功！");
-        NSLog(@"%@",responseObject);
-        NSLog(@"%@",responseObject[@"msg"]);
-        if ([responseObject[@"result"] integerValue] == 1) {
-            [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNum"];
-            [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-            ThirdVC *vc = [[ThirdVC alloc] init];
-            [self.navigationController pushViewController:vc animated:YES];
-            
-        }else {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]){
-                    [self.navigationController dismissViewControllerAnimated:YES completion:^{
-                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zhanghao"];
-                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"mima"];
-                    }];
-                }else{
-                    //[self DIYAlert];
-                }
-            }];
-            [alert addAction:action];
-            [self presentViewController:alert animated:YES completion:^{
-                [self DIYDismiss];
-            }];
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"网络连接失败！");
-        NSLog(@"%@",error);
-        [self DIYDismiss];
-        [self showOkayCancelAlert];
-    }];
+    [sender setTitleColor:[UIColor hexChangeFloat:@"00a0e9"] forState:UIControlStateNormal];
+    
+    if (!self.seletedTime) {
+        
+        _hud = [MBProgressHUD showHUDAddedTo:self.alertView animated:YES];
+        [_hud setMode:MBProgressHUDModeCustomView];
+        [_hud.label setText:@"请选择预约时长"];
+        [_hud setRemoveFromSuperViewOnHide:YES];
+        [_hud hideAnimated:YES afterDelay:2.0];
+    }else{
+       [self DIYDismiss];
+        AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+        manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
+        NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"starttime":self.beginTime ,@"endtime":self.endTime,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        NSLog(@"<>%@",parameters);
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [manager POST:READURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [hud hideAnimated:YES];
+            [hud setRemoveFromSuperViewOnHide:YES];
+            if ([responseObject[@"result"] integerValue] == 1) {
+                [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNum"];
+                [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
+                
+                ThirdVC *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
+                [self presentViewController:vc animated:YES completion:nil];
+                
+            }else {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]){
+                        [self.navigationController dismissViewControllerAnimated:YES completion:^{
+                            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zhanghao"];
+                            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"mima"];
+                        }];
+                    }else{
+                        //[self DIYAlert];
+                        [hud setMode:MBProgressHUDModeCustomView];
+                        [hud.label setText:responseObject[@"message"]];
+                        [hud setRemoveFromSuperViewOnHide:YES];
+                        [hud hideAnimated:YES afterDelay:2.0];
+                    }
+                }];
+                [alert addAction:action];
+                [self presentViewController:alert animated:YES completion:^{
+                    [self DIYDismiss];
+                }];
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"网络连接失败！");
+            NSLog(@"%@",error);
+            [self DIYDismiss];
+            [self showOkayCancelAlert];
+        }];
+    }
 }
 //git分支学习测试
 -(void)dealloc {

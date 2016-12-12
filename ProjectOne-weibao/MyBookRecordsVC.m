@@ -17,9 +17,6 @@
 #import "UIColor+Extend.h"
 #import "MJRefresh.h"
 
-
-
-
 @interface MyBookRecordsVC ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)UITableView *tabView;
 @property(nonatomic,strong)UIView *deleteView;
@@ -50,7 +47,6 @@
 //    self.automaticallyAdjustsScrollViewInsets = NO;
 //    self.navigationController.navigationBar.translucent = NO;
     
-    
     self.selectedInterms = [NSMutableArray array];
     self.datas = [NSMutableArray array];
     self.indexPathArr = [NSMutableArray array];
@@ -71,8 +67,6 @@
 -(void)editCell:(UIBarButtonItem *)sender{
     if ([sender.title isEqualToString:@"编辑"]) {
         [sender setTitle:@"全选"];
-        
-        
         /**
          *  发送通知 把cell中得控件的颜色变灰、button点击失效.
          */
@@ -217,7 +211,7 @@
     [self changeColorByState:[self.datas[indexPath.section][@"state"] integerValue] cell:cell];
     cell.ids = [self.datas[indexPath.section][@"bespeakid"] integerValue];
     
-        __weak MyBookRecordsVC *weakSelf = self;
+    __weak MyBookRecordsVC *weakSelf = self;
     __weak BookCell *weakcell = cell;
     //block的精髓
     cell.block1 = ^(NSString *str){
@@ -249,10 +243,12 @@
          */
         NSMutableArray *arry2 = [NSMutableArray array];
         [arry2 addObject:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"createtime"] doubleValue]]];
-        if ([[weakSelf.datas[indexPath.section] allKeys] containsObject:@"checktime"] ) {
+        if ([weakSelf.datas[indexPath.section][@"state"] isEqual:@(-2)] && ![weakSelf.datas[indexPath.section][@"canceltime"] isKindOfClass:[NSNull class]]) {
+            
+            [arry2 addObject:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"canceltime"] doubleValue] byState:[weakSelf.datas[indexPath.section][@"state"] integerValue]]];
+        }else if ([[weakSelf.datas[indexPath.section] allKeys] containsObject:@"checktime"] ){
             [arry2 addObject:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"checktime"] doubleValue] byState:[weakSelf.datas[indexPath.section][@"state"] integerValue]]];
         }
-        
         
 //        NSMutableArray *arry2 = [NSMutableArray arrayWithObjects:[weakSelf produceBookInfoTime:[weakSelf.datas[indexPath.section][@"creattime"] doubleValue]],, nil];
         BookDetailVC *vc = [[BookDetailVC alloc] init];
