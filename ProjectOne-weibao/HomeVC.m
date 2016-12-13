@@ -368,7 +368,7 @@
             }];
         }else if ([responseObject[@"usetype"] integerValue] == 4){
             [self DIYAlert];
-        }if ([responseObject[@"usetype"] integerValue] == 5) {
+        }else if ([responseObject[@"usetype"] integerValue] == 5) {
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
             [self presentViewController:vc animated:YES completion:nil];
         }else{
