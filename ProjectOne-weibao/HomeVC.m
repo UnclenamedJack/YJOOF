@@ -40,6 +40,7 @@
 @property (nonatomic,strong) UIView *alertView;
 @property (nonatomic,strong) NSMutableArray *btnArr;
 @property (nonatomic,copy) NSString *beginTime;
+@property (nonatomic,assign)NSTimeInterval beginTimeInterval;
 @property (nonatomic,copy) NSString *endTime;
 @property (nonatomic,copy) NSString *seletedTime;
 @property (nonatomic,strong) UILabel *timeL1;
@@ -279,10 +280,12 @@
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *string = [DOWNLOADAIMAGE stringByAppendingString:[[NSUserDefaults standardUserDefaults] objectForKey:@"logoImage"]];
     NSLog(@"%@",string);
-    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"text/html",@"image/png", nil]];
-    [manager POST:string parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",@"image/jpeg",@"image/png",@"text/json", nil]];
+    [manager GET:string parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+#if Debug
         NSLog(@"网络连接成功！");
         NSLog(@"????????????%@",responseObject);
+#endif
         NSData *data = responseObject;
         UIImage *image = [UIImage imageWithData:data];
         [self.iconButton setImage:image forState:UIControlStateNormal];
@@ -291,8 +294,10 @@
         [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"icon"];
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if Debug
         NSLog(@"网络连接失败！");
         NSLog(@"%@",error);
+#endif
     }];
 }
 -(void)MyBookRecords{
@@ -312,129 +317,104 @@
     [sender setBackgroundColor:[UIColor clearColor]];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"tag"];
     //UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"bookVC"];
+    UIBarButtonItem *returnItem = [[UIBarButtonItem alloc] init];
+    [returnItem setTitle:@""];
+    self.navigationItem.backBarButtonItem = returnItem;
     UIViewController *vc = [[secondBookVC alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 -(void)lookOutBookInformation {
+    
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
     NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
+    _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [manager POST:CHECKBOOK parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+#if Debug
         NSLog(@"网络连接成功！");
         NSLog(@"%@",responseObject);
+#endif
         if ([responseObject[@"usetype"] integerValue] == 3) {
             
             //注意：这里的参数machineid  到底是getroom 返回的id字段 还是设备编码？
             NSDictionary *parameter = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"bespeakid":responseObject[@"bespeakid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [manager POST:READURL parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+#if Debug
                 NSLog(@"查询预约网络连接成功！");
                 NSLog(@"%@",responseObject);
                 NSLog(@"%@",responseObject[@"msg"]);
-                if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-                    }];
-                    [alert addAction:action];
-                    [self presentViewController:alert animated:YES completion:nil];
-                }
+#endif
+                
                 
                 if ([responseObject[@"result"] isEqual:@1]) {
-                    //UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"您的预约" message:@"2016年05月24日 星期二 13:00\n\n信息学院A102\n\n预约设备使用，13:00~14:00" preferredStyle:UIAlertControllerStyleAlert];
-                    NSString *string = [NSString stringWithFormat:@"%@\n%@\n%@", [self changeTimeInterval:[responseObject[@"starttime"] doubleValue]],[self changeTimeInterval:[responseObject[@"endtime"] doubleValue]],responseObject[@"roomname"]];
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"bespeakid"] forKey:@"bookid"];
+                    [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
+                    [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
+                    [[NSUserDefaults standardUserDefaults] setDouble:[responseObject[@"starttime"] doubleValue] forKey:@"starttime"];
+                    NSString *string = [NSString stringWithFormat:@"%@\n%@\n%@",responseObject[@"roomname"],[self changeTimeInterval:[responseObject[@"starttime"] doubleValue]],[self changeTimeInterval:[responseObject[@"endtime"] doubleValue]]];
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"您的 预约" message:string preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"bespeakid"] forKey:@"bookid"];
-                        [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-                        [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
-                        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
-                        [self presentViewController:vc animated:YES completion:nil];
-                    }];
-                    [alert addAction:action];
+//                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                        [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"bespeakid"] forKey:@"bookid"];
+//                        [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
+//                        [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
+//                        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
+//                        [self presentViewController:vc animated:YES completion:nil];
+//                    }];
+//                    [alert addAction:action];
                     [self presentViewController:alert animated:YES completion:^{
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [alert dismissViewControllerAnimated:YES completion:^{
+                                UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
+                                [self presentViewController:vc animated:YES completion:nil];
+                            }];
+                        });
                     }];
                 }else {
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
+                            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                        }
+                    }];
                     [alert addAction:action];
                     [self presentViewController:alert animated:YES completion:nil];
                 }
             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if Debug
                 NSLog(@"%@",error);
                 NSLog(@"网络连接失败！");
+#endif
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                 [self showOkayCancelAlert];
             }];
         }else if ([responseObject[@"usetype"] integerValue] == 4){
             [self DIYAlert];
         }else if ([responseObject[@"usetype"] integerValue] == 5) {
+            [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
             [self presentViewController:vc animated:YES completion:nil];
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
+                    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                }
+            }];
             [alert addAction:action];
             [self presentViewController:alert animated:YES completion:nil];
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if Debug
         NSLog(@"网络连接失败！");
         NSLog(@"%@",error);
+#endif
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self showOkayCancelAlert];
     }];
-    
-    
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    //注意：这里的参数machineid  到底是getroom 返回的id字段 还是设备编码？
-//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-//    NSDictionary *parameter = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
-//    [manager POST:READURL parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//        [MBProgressHUD hideHUDForView:self.view animated:YES];
-//        NSLog(@"查询预约网络连接成功！");
-//        NSLog(@"%@",responseObject);
-//        NSLog(@"%@",responseObject[@"msg"]);
-//        if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-//            }];
-//            [alert addAction:action];
-//            [self presentViewController:alert animated:YES completion:nil];
-//        }
-//
-//        if ([responseObject[@"result"] isEqual:@1]) {
-//          
-//            //UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"您的预约" message:@"2016年05月24日 星期二 13:00\n\n信息学院A102\n\n预约设备使用，13:00~14:00" preferredStyle:UIAlertControllerStyleAlert];
-//            NSString *string = [NSString stringWithFormat:@"%@\n%@\n%@", [self changeTimeInterval:[responseObject[@"starttime"] doubleValue]],[self changeTimeInterval:[responseObject[@"endtime"] doubleValue]],responseObject[@"roomname"]];
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"您的 预约" message:string preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"bespeakid"] forKey:@"bookid"];
-//                [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-//                [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
-//                UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"TimerVC"];
-//                [self presentViewController:vc animated:YES completion:nil];
-//            }];
-//            [alert addAction:action];
-//            [self presentViewController:alert animated:YES completion:^{
-//            }];
-//
-//        }else {
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
-//            [alert addAction:action];
-//            [self presentViewController:alert animated:YES completion:nil];
-//        }
-//    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//        NSLog(@"%@",error);
-//        NSLog(@"网络连接失败！");
-//        [MBProgressHUD hideHUDForView:self.view animated:YES];
-//        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请检查网络！" preferredStyle:UIAlertControllerStyleAlert];
-//        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        }];
-//        [alert addAction:action];
-//        [self presentViewController:alert animated:YES completion:^{
-//        }];
-//    }];
 }
 -(void)saoMiaoClick {
     if ([self judgeLocationEnabledOrNot]) {
@@ -460,7 +440,9 @@
     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT+0800"]];
     [formatter setDateFormat:@"HH:mm"];
     NSString *currentDate = [formatter stringFromDate:date];
+#if Debug
     NSLog(@"%@",currentDate);
+#endif
     return currentDate;
 }
 - (NSDate *)getCurrentDateAndTime {
@@ -469,6 +451,7 @@
     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"GMT+0800"]];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
     self.beginTime = [formatter stringFromDate:date];
+    self.beginTimeInterval = [date timeIntervalSince1970];
     return date;
 }
 - (NSString *)changeTimeInterval:(NSTimeInterval)interval {
@@ -494,40 +477,42 @@
 //    if (_longitude && _latitude) {
 //         parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":_deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"lon":[NSNumber numberWithDouble:self.longitude],@"lat":[NSNumber numberWithDouble:self.latitude]};
 //    }
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [manager POST:CHECKBOOK parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         if ([responseObject[@"usetype"] integerValue] == 3) {
             NSDictionary *parameter = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"bespeakid":responseObject[@"bespeakid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
             [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             [manager POST:READURL parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-                    }];
-                    [alert addAction:action];
-                    [self presentViewController:alert animated:YES completion:nil];
-                }
-//                NSTimeInterval bookTotalTime = [responseObject[@"endtime"] doubleValue] - [responseObject[@"starttime"] doubleValue];
-//                
-//                [[NSUserDefaults standardUserDefaults] setInteger:[responseObject[@"endtime"] integerValue] forKey:@"endTime"];
-//                
+                //                NSTimeInterval bookTotalTime = [responseObject[@"endtime"] doubleValue] - [responseObject[@"starttime"] doubleValue];
+                [[NSUserDefaults standardUserDefaults] setDouble:[responseObject[@"starttime"] doubleValue] forKey:@"starttime"];
+                [[NSUserDefaults standardUserDefaults] setDouble:[responseObject[@"endtime"] doubleValue] forKey:@"endTime"];
+
 //                [[NSUserDefaults standardUserDefaults] setInteger:bookTotalTime forKey:@"AllTime"];
                 
                 [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"bespeakid"] forKey:@"bookid"];
                 
-                NSString *string = [NSString stringWithFormat:@"%@\n%@\n%@", [self changeTimeInterval:[responseObject[@"starttime"] doubleValue]],[self changeTimeInterval:[responseObject[@"endtime"] doubleValue]],responseObject[@"roomname"]];
+                NSString *string = [NSString stringWithFormat:@"%@\n%@\n%@",responseObject[@"roomname"], [self changeTimeInterval:[responseObject[@"starttime"] doubleValue]],[self changeTimeInterval:[responseObject[@"endtime"] doubleValue]]];
                 if ([responseObject[@"result"] isEqual: @1]) {
                     if ([responseObject[@"used"] isEqual: @1]) {
                         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-                        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                            [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-                            [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
-                            UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
-                            [self presentViewController:vc animated:YES completion:nil];
-                        }];
-                        [alert addAction:action];
+//                        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                            [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
+//                            [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
+//                            UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
+//                            [self presentViewController:vc animated:YES completion:nil];
+//                        }];
+//                        [alert addAction:action];
                         [self presentViewController:alert animated:YES completion:^{
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                [alert dismissViewControllerAnimated:YES completion:^{
+                                    [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
+                                    [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
+                                    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
+                                    [self presentViewController:vc animated:YES completion:nil];
+                                }];
+                            });
                         }];
                     }else{
                         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"您的预约" message:string preferredStyle:UIAlertControllerStyleAlert];
@@ -540,12 +525,22 @@
                         }];
                         [alert addAction:action];
                         [self presentViewController:alert animated:YES completion:^{
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                [alert dismissViewControllerAnimated:YES completion:^{
+                                    [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
+                                    [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
+                                    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
+                                    [self presentViewController:vc animated:YES completion:nil];
+                                }];
+                            });
                         }];
                     }
                 }else{
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"警告" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        
+                        if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
+                            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                        }
                     }];
                     [alert addAction:action];
                     [self presentViewController:alert animated:YES completion:^{
@@ -558,101 +553,30 @@
         }else if ([responseObject[@"usetype"] integerValue] == 4){
             [self DIYAlert];
         }else if ([responseObject[@"usetype"] integerValue] == 5){
+            [[NSUserDefaults standardUserDefaults] setDouble:[responseObject[@"starttime"] doubleValue] forKey:@"starttime"];
+            [[NSUserDefaults standardUserDefaults] setDouble:[responseObject[@"endtime"] doubleValue] forKey:@"endTime"];
+            [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
             UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"thirdVC"];
             [self presentViewController:vc animated:YES completion:nil];
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"警告" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self.deviceNumber setText:nil];
+                if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
+                    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+                }else{
+                    [self.deviceNumber setText:nil];
+                    [self.book setHidden:NO];
+                    [self.begin setHidden:YES];
+                }
             }];
             [alert addAction:action];
             [self presentViewController:alert animated:YES completion:^{
             }];
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [self showOkayCancelAlert];
     }];
-    
-//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-//        //crash 原因是machineid  为空！
-//    NSLog(@"====================%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"]);
-//    NSLog(@">>>>>>>>>>>>>>>>>>>>>>%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]);
-    //看这里
-//    NSDictionary *parameter = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//        [manager POST:READURL parameters:parameter progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//            [MBProgressHUD hideHUDForView:self.view animated:YES];
-//            NSLog(@"查询预约网络连接成功！");
-//            NSLog(@"%@",responseObject);
-//            NSLog(@"%@",responseObject[@"msg"]);
-//            if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
-//                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-//                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-//                }];
-//                [alert addAction:action];
-//                [self presentViewController:alert animated:YES completion:nil];
-//            }
-//            NSTimeInterval bookTotalTime = [responseObject[@"endtime"] doubleValue] - [responseObject[@"starttime"] doubleValue];
-//            
-//            [[NSUserDefaults standardUserDefaults] setInteger:[responseObject[@"endtime"] integerValue] forKey:@"endTime"];
-//            
-//            [[NSUserDefaults standardUserDefaults] setInteger:bookTotalTime forKey:@"AllTime"];
-//            
-//            [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"bespeakid"] forKey:@"bookid"];
-//            
-//            NSString *string = [NSString stringWithFormat:@"%@\n%@\n%@", [self changeTimeInterval:[responseObject[@"starttime"] doubleValue]],[self changeTimeInterval:[responseObject[@"endtime"] doubleValue]],responseObject[@"roomname"]];
-//            if ([responseObject[@"result"] isEqual: @1]) {
-//                if ([responseObject[@"used"] isEqual: @1]) {
-//                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-//                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                        
-//                        [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-//                        [[NSUserDefaults standardUserDefaults] setObject:[self getCurrentDate] forKey:@"beginTime"];
-//                        [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
-//                        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"TimerVC"];
-//                        [self presentViewController:vc animated:YES completion:nil];
-//                    }];
-//                    [alert addAction:action];
-//                    [self presentViewController:alert animated:YES completion:^{
-//                    }];
-//                }else{
-//                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"您的预约" message:string preferredStyle:UIAlertControllerStyleAlert];
-//                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                        
-//                        [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
-//                        [[NSUserDefaults standardUserDefaults] setObject:[self getCurrentDate] forKey:@"beginTime"];
-//                        [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNumber"];
-//                        UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"TimerVC"];
-//                        [self presentViewController:vc animated:YES completion:nil];
-//                    }];
-//                    [alert addAction:action];
-//                    [self presentViewController:alert animated:YES completion:^{
-//                    }];
-//                }
-//            }else{
-//                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"警告" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-//                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                
-//                }];
-//                [alert addAction:action];
-//                [self presentViewController:alert animated:YES completion:^{
-//                }];
-//            }
-//        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//            NSLog(@"%@",error);
-//            NSLog(@"网络连接失败！");
-//            [MBProgressHUD hideHUDForView:self.view animated:YES];
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请检查网络！" preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//
-//            }];
-//            [alert addAction:action];
-//            [self presentViewController:alert animated:YES completion:^{
-//            }];
-//    
-//        }];
 }
 - (void)iconButtonClick {
     [self handExchangeHeadPortrait];
@@ -698,6 +622,7 @@
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     [self.iconButton setImage:image forState:UIControlStateNormal];
+    [self.iconButton.imageView.layer setCornerRadius:self.iconButton.bounds.size.height/2.0];
     NSData *imageData = UIImagePNGRepresentation(image);
     [self dismissViewControllerAnimated:YES completion:nil];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -816,7 +741,8 @@
     [self.locationManager requestAlwaysAuthorization];
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
     if ([[UIDevice currentDevice].systemVersion floatValue]>= 8.0) {
-        [_locationManager requestAlwaysAuthorization];
+//        [_locationManager requestAlwaysAuthorization];
+        [_locationManager requestWhenInUseAuthorization];
     }
 
      //[self.locationManager startUpdatingLocation];
@@ -869,7 +795,9 @@
                         }];
                     }
                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if Debug
                     NSLog(@"延时连接失败！");
+#endif
                     [MBProgressHUD hideHUDForView:self.view animated:YES];
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请检查网络！" preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:nil];
@@ -887,8 +815,11 @@
     }
     self.isCodeSuccess = [[NSUserDefaults standardUserDefaults] boolForKey:@"isCodeSuccess"];
     if (self.isCodeSuccess) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"isCodeSuccess"];
         self.deviceNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceNum"];
         self.deviceNumber.text = self.deviceNum;
+        [self.book setHidden:YES];
+        [self.begin setHidden:NO];
         [self lookOutBookInformation];
     }
 }
@@ -904,10 +835,11 @@
     
     CLLocation *newLocation = locations[0];
     CLLocationCoordinate2D oCoordinate = newLocation.coordinate;
+#if Debug
     NSLog(@"旧的经度：%f,旧的纬度:%f",oCoordinate.longitude,oCoordinate.latitude);
+#endif
     self.longitude = oCoordinate.longitude;
     self.latitude = oCoordinate.latitude;
-    
     
 //    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
 //    [geocoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
@@ -994,8 +926,10 @@
                     NSDictionary *parameters = @{@"bespeakid":[[NSUserDefaults standardUserDefaults] objectForKey:@"bookid"],@"extend":@(delay)};
                     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                     [manager POST:UPLOADDELAYTIME parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+#if Debug
                         NSLog(@"延时连接成功！");
                         NSLog(@"%@",responseObject);
+#endif
                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                         if ([responseObject[@"result"] intValue] == 0) {
                             UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
@@ -1016,7 +950,9 @@
                             }];
                         }
                     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if Debug
                         NSLog(@"延时连接失败！");
+#endif
                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请检查网络！" preferredStyle:UIAlertControllerStyleAlert];
                         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"  style:UIAlertActionStyleDefault handler:nil];
@@ -1062,7 +998,11 @@
         make.left.equalTo(_alertView).offset(20*ScreenWidth/320.0);
         make.right.equalTo(_alertView).offset(-20*ScreenWidth/320.0);
         make.center.equalTo(_alertView);
-        make.height.equalTo(_alertView).multipliedBy(0.3);
+        if (ScreenHeight == 480.0) {
+            make.height.equalTo(_alertView).multipliedBy(0.4);
+        }else{
+            make.height.equalTo(_alertView).multipliedBy(0.3);
+        }
     }];
     [littleView setBackgroundColor:[UIColor whiteColor]];
     [littleView.layer setCornerRadius:5];
@@ -1269,14 +1209,47 @@
     [beginBtn.layer setBorderWidth:0.5];
     [littleView addSubview:beginBtn];
     [beginBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(littleView);
+        make.centerX.equalTo(littleView).multipliedBy(1.5);
         make.top.equalTo(btnLeft2.mas_bottom).offset(25*ScreenHeight/568.0);
         make.height.equalTo(@(25*ScreenHeight/568.0));
         make.width.equalTo(@(70*ScreenWidth/320.0));
     }];
     [beginBtn addTarget:self action:@selector(alertStart:) forControlEvents:UIControlEventTouchUpInside];
     [beginBtn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
+    
+    UIButton *cancleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [cancleBtn.layer setCornerRadius:5];
+    [cancleBtn setBackgroundColor:[UIColor clearColor]];
+    [cancleBtn setTitle:@"取消" forState:UIControlStateNormal];
+    if (ScreenHeight==568) {
+        [cancleBtn.titleLabel setFont:[UIFont systemFontOfSize:13]];
+        
+    }else if (ScreenHeight == 667){
+        [cancleBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 736){
+        [cancleBtn.titleLabel setFont:[UIFont systemFontOfSize:17]];
+    }
+    [cancleBtn setTitleColor:[UIColor hexChangeFloat:@"00a0e9"] forState:UIControlStateNormal];
+    [cancleBtn.layer setBorderColor:[UIColor hexChangeFloat:@"00a0e9"].CGColor];
+    [cancleBtn.layer setBorderWidth:0.5];
+    [littleView addSubview:cancleBtn];
+    [cancleBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(littleView).multipliedBy(0.5);
+        make.top.equalTo(beginBtn);
+        make.height.equalTo(beginBtn);
+        make.width.equalTo(beginBtn);
+    }];
+    [cancleBtn addTarget:self action:@selector(cancleDIYAlert:) forControlEvents:UIControlEventTouchUpInside];
+    [cancleBtn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
+    
+    
     [self.btnArr addObjectsFromArray:@[btnleft1,btnLeft2,btnRight1,btnRight2]];
+}
+- (void)cancleDIYAlert:(UIButton *)sender {
+    self.seletedTime = nil;
+    self.endTime = nil;
+    [self DIYDismiss];
 }
 - (void)btnClickDown:(UIButton *)sender {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -1330,14 +1303,19 @@
         case 4:{
             sender.tag = sender.tag + 100;
             if (self.timeInput.text.length == 0) {
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请先输入预约时长！" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                    [self DIYAlert];
-                }];
-                [alert addAction:action];
-                [self presentViewController:alert animated:YES completion:^{
-                    [self DIYDismiss];
-                }];
+//                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请先输入预约时长！" preferredStyle:UIAlertControllerStyleAlert];
+//                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                    [self DIYAlert];
+//                }];
+//                [alert addAction:action];
+//                [self presentViewController:alert animated:YES completion:^{
+//                    [self DIYDismiss];
+//                }];
+                _hud = [MBProgressHUD showHUDAddedTo:self.alertView animated:YES];
+                [_hud setMode:MBProgressHUDModeText];
+                [_hud.label setText:@"请先输入预约时长"];
+                [_hud setRemoveFromSuperViewOnHide:YES];
+                [_hud hideAnimated:YES afterDelay:1.5];
             }else {
                 self.seletedTime = _timeInput.text;
                 //            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -1409,12 +1387,12 @@
         AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
         manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
         NSDictionary *parameters = @{@"yktid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"machinenum":self.deviceNumber.text,@"starttime":self.beginTime ,@"endtime":self.endTime,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
-        NSLog(@"<>%@",parameters);
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [manager POST:READURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             [hud hideAnimated:YES];
             [hud setRemoveFromSuperViewOnHide:YES];
             if ([responseObject[@"result"] integerValue] == 1) {
+                [[NSUserDefaults standardUserDefaults] setDouble:self.beginTimeInterval forKey:@"starttime"];
                 [[NSUserDefaults standardUserDefaults] setObject:self.deviceNumber.text forKey:@"deviceNum"];
                 [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"usagesid"] forKey:@"usagesid"];
                 
@@ -1443,8 +1421,10 @@
                 }];
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if Debug
             NSLog(@"网络连接失败！");
             NSLog(@"%@",error);
+#endif
             [self DIYDismiss];
             [self showOkayCancelAlert];
         }];

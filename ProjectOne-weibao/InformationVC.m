@@ -500,6 +500,7 @@
         NSLog(@"提交反馈网络连接成功！");
         NSLog(@"%@",responseObject);
         if ([responseObject[@"result"] integerValue] == 1) {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"firstStartTime"];
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"信息反馈成功！" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                     UINavigationController *navc = [self.storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
@@ -511,14 +512,10 @@
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zhanghao"];
-                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"mima"];
-                        [self presentViewController:[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"InformationVC"] animated:YES completion:nil];
-                    }];
-                    [alert addAction:action];
-                    [self presentViewController:alert animated:YES completion:nil];
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"zhanghao"];
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"mima"];
+                    UINavigationController *navc = [self.storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
+                    [self presentViewController:navc animated:YES completion:nil];
                 }
             }];
             [alert addAction:action];
@@ -686,7 +683,7 @@
     }
 }
 - (void)dealloc {
-    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"next"];
+//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"next"];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

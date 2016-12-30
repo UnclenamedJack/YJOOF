@@ -15,7 +15,7 @@
 #import "JPUSHService.h"
 #import "UIColor+Extend.h"
 #import "Header.h"
-
+#import "IndexVC.h"
 
 
 
@@ -182,8 +182,7 @@
     [loginBtn addTarget:self action:@selector(loginClick:) forControlEvents:UIControlEventTouchUpInside];
     [loginBtn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
     
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"zhanghao"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"mima"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"logoImage"]) {
-        
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"zhanghao"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"mima"]) {
         [self fastLogin];
     }
     // Do any additional setup after loading the view.
@@ -200,7 +199,7 @@
     //别忘了  把参数切回来
     NSLog(@"<><><>><<>%@",[[[UIDevice currentDevice] identifierForVendor] UUIDString]);
     //@"3C2576E7-418A-4896-8D9E-4C465A8538C3"
-    NSDictionary *parameters = @{@"phone":[[NSUserDefaults standardUserDefaults] objectForKey:@"zhanghao"],@"pass":[[NSUserDefaults standardUserDefaults] objectForKey:@"mima"],@"uuid":[[[UIDevice currentDevice] identifierForVendor] UUIDString]};
+    NSDictionary *parameters = @{@"phone":[[NSUserDefaults standardUserDefaults] objectForKey:@"zhanghao"],@"pass":[[NSUserDefaults standardUserDefaults] objectForKey:@"mima"],@"uuid":[[[UIDevice currentDevice] identifierForVendor] UUIDString],@"type":@"ios"};
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [_manager POST:LoginURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -213,6 +212,8 @@
 //            [[NSUserDefaults standardUserDefaults] setObject:self.PassWordTextField.text forKey:@"mima"];
             if (![responseObject[@"logo"] isKindOfClass:[NSNull class]]) {
                 [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"logo"] forKey:@"logoImage"];
+            }else{
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"logoImage"];
             }
             [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"yktname"] forKey:@"username"];
             [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"token"] forKey:@"accesstoken"];
@@ -227,10 +228,12 @@
 //            [JPUSHService setTags:nil alias:nil fetchCompletionHandle:^(int iResCode, NSSet *iTags, NSString *iAlias) {
 //                NSLog(@"注册别名=======%zd,%@,%@",iResCode,iTags,iAlias);
 //            }];
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
-            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
-            [self presentViewController:navigationController animated:YES completion:nil];
+//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
+//            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
+//            [self presentViewController:navigationController animated:YES completion:nil];
+            IndexVC *vc = [[IndexVC alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
@@ -271,7 +274,7 @@
     //别忘了  把参数切回来  
     NSLog(@"<><><>><<>%@",[[[UIDevice currentDevice] identifierForVendor] UUIDString]);
     //3C2576E7-418A-4896-8D9E-4C465A8538C3
-    NSDictionary *parameters = @{@"phone":self.PhoneTextFiled.text,@"pass":self.PassWordTextField.text,@"uuid":[[[UIDevice currentDevice] identifierForVendor] UUIDString]};
+    NSDictionary *parameters = @{@"phone":self.PhoneTextFiled.text,@"pass":self.PassWordTextField.text,@"uuid":[[[UIDevice currentDevice] identifierForVendor] UUIDString],@"type":@"ios"};
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [_manager POST:LoginURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -289,6 +292,8 @@
             [[NSUserDefaults standardUserDefaults] setObject:yktid forKey:@"yktid"];
             if (![responseObject[@"logo"] isKindOfClass:[NSNull class]]) {
                 [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"logo"] forKey:@"logoImage"];
+            }else{
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"logoImage"];
             }
             
              int ykt = [yktid intValue];
@@ -297,11 +302,13 @@
             [JPUSHService setTags:[NSSet setWithObject:ykd] alias:ykd fetchCompletionHandle:^(int iResCode, NSSet *iTags, NSString *iAlias) {
                 NSLog(@"注册别名=======%zd,%@,%@",iResCode,iTags,iAlias);
             }];
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
-            
-            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
-            [self presentViewController:navigationController animated:YES completion:nil];
+//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
+//            
+//            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
+//            [self presentViewController:navigationController animated:YES completion:nil];
+            IndexVC *vc = [[IndexVC alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];

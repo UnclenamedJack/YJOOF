@@ -284,7 +284,6 @@
 //        [cell.status setTextColor:[UIColor grayColor]];
 //        
 //    }
-    
 //    [self.indexPathArr addObject:indexPath];
     return cell;
 }
@@ -471,7 +470,6 @@
         default:
             break;
     };
-    
     return str;
 }
 -(void)changeColorByState:(NSInteger)nub cell:(BookCell *)cell {
@@ -569,7 +567,6 @@
             [alert addAction:action];
             [self presentViewController:alert animated:YES completion:nil];
         }
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",error);
     }];

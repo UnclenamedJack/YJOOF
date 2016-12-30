@@ -154,8 +154,6 @@
         }];
     };
     
-    
-    
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn setTitle:@"查询可用教室" forState:UIControlStateNormal];
     [btn.layer setBorderWidth:1.0];
@@ -415,7 +413,11 @@
         make.bottom.equalTo(_alertWindow);
         make.left.equalTo(_alertWindow);
         make.right.equalTo(_alertWindow);
-        make.height.equalTo(@((ScreenHeight-64)/3.0));
+        if (ScreenHeight == 480) {
+            make.height.equalTo(@(180));
+        }else{
+            make.height.equalTo(@((ScreenHeight-64)/3.0));
+        }
     }];
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftBtn setTag:0];
@@ -479,7 +481,11 @@
         make.bottom.equalTo(_alertWindow);
         make.left.equalTo(_alertWindow);
         make.right.equalTo(_alertWindow);
-        make.height.equalTo(@((ScreenHeight-64)/3.0));
+        if (ScreenHeight == 480) {
+            make.height.equalTo(@(180));
+        }else{
+            make.height.equalTo(@((ScreenHeight-64)/3.0));
+        }
     }];
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftBtn setTag:0];
@@ -549,7 +555,12 @@
         make.bottom.equalTo(_alertWindow);
         make.left.equalTo(_alertWindow);
         make.right.equalTo(_alertWindow);
-        make.height.equalTo(@((ScreenHeight-64)/3.0));
+        if (ScreenHeight == 480.0) {
+            make.height.equalTo(@(ScreenHeight/2.5));
+        }else{
+            make.height.equalTo(@(ScreenHeight/3.0));
+        }
+        
     }];
     UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftBtn setTag:0];

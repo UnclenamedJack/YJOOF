@@ -27,10 +27,15 @@
 }
 
 // 重写来编辑区域，可以改变光标起始位置，以及光标最右到什么地方，placeHolder的位置也会改变
--(CGRect)editingRectForBounds:(CGRect)bounds
+- (CGRect)editingRectForBounds:(CGRect)bounds
 {
     CGRect inset = CGRectMake(bounds.origin.x+5, bounds.origin.y, bounds.size.width-25, bounds.size.height);//更好理解些
     return inset;
 }
+
+//- (CGRect)leftViewRectForBounds:(CGRect)bounds {
+//    CGRect inset = CGRectMake(bounds.origin.x + 5, bounds.origin.y + 2, bounds.size.height - 6 , bounds.size.height - 6);
+//    return inset;
+//}
 
 @end

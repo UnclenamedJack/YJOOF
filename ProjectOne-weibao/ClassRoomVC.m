@@ -39,14 +39,31 @@
     [bgView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:bgView];
     [bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).offset(40);
+        if (ScreenHeight == 480.0) {
+            make.top.equalTo(self.view).offset(25);
+        }else{
+            make.top.equalTo(self.view).offset(40);
+        }
         make.left.equalTo(self.view).offset(30);
         make.right.equalTo(self.view).offset(-30);
-        make.height.equalTo(self.view).multipliedBy(0.3);
+        if (ScreenHeight == 480.0) {
+            make.height.equalTo(self.view).multipliedBy(0.4);
+        }else{
+            make.height.equalTo(self.view).multipliedBy(0.3);
+        }
     }];
-    
     UILabel *locationL = [[UILabel alloc] init];
-    [locationL setFont:[UIFont systemFontOfSize:13.0]];
+    if (ScreenHeight == 480.0) {
+        [locationL setFont:[UIFont systemFontOfSize:14]];
+        
+    }else if (ScreenHeight==568) {
+        [locationL setFont:[UIFont systemFontOfSize:15]];
+    }else if (ScreenHeight == 667){
+        [locationL setFont:[UIFont systemFontOfSize:17]];
+    }else{
+        [locationL setFont:[UIFont systemFontOfSize:18]];
+    }
+//    [locationL setFont:[UIFont systemFontOfSize:13.0]];
     [locationL setTextAlignment:NSTextAlignmentCenter];
     [locationL setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
     [locationL setText:@"地点:"];
@@ -58,7 +75,17 @@
     }];
     
     UILabel *detailLocationL = [[UILabel alloc] init];
-    [detailLocationL setFont:[UIFont systemFontOfSize:13.0]];
+    if(ScreenHeight == 480.0){
+        [detailLocationL setFont:[UIFont systemFontOfSize:14]];
+    }else if (ScreenHeight==568) {
+        [detailLocationL setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 667){
+        [detailLocationL setFont:[UIFont systemFontOfSize:17]];
+    }else{
+        [detailLocationL setFont:[UIFont systemFontOfSize:18]];
+    }
+//    [detailLocationL setFont:[UIFont systemFontOfSize:13.0]];
     [detailLocationL setText:@"青山湾校区创业路逸夫楼B栋302A"];
     [detailLocationL setText:self.roomDress];
     [detailLocationL setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
@@ -73,7 +100,19 @@
     }];
     
     UILabel *contain = [[UILabel alloc] init];
-    [contain setFont:[UIFont systemFontOfSize:13.0]];
+    if(ScreenHeight == 480.0){
+        [contain setFont:[UIFont systemFontOfSize:14]];
+    }else if (ScreenHeight==568) {
+        [contain setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 667){
+        [contain setFont:[UIFont systemFontOfSize:17]];
+        
+    }else{
+        [contain setFont:[UIFont systemFontOfSize:18]];
+        
+    }
+//    [contain setFont:[UIFont systemFontOfSize:13.0]];
     [contain setTextAlignment:NSTextAlignmentCenter];
     [contain setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
     [contain setText:@"容纳:"];
@@ -86,7 +125,19 @@
     }];
     
     UILabel *peopleNum = [[UILabel alloc] init];
-    [peopleNum setFont:[UIFont systemFontOfSize:13.0]];
+    if(ScreenHeight == 480.0){
+        [peopleNum setFont:[UIFont systemFontOfSize:14]];
+    }else if (ScreenHeight==568) {
+        [peopleNum setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 667){
+        [peopleNum setFont:[UIFont systemFontOfSize:17]];
+        
+    }else{
+        [peopleNum setFont:[UIFont systemFontOfSize:18]];
+        
+    }
+//    [peopleNum setFont:[UIFont systemFontOfSize:13.0]];
     [peopleNum setTextAlignment:NSTextAlignmentCenter];
     [peopleNum setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
     [peopleNum setText:@"20人"];
@@ -101,7 +152,19 @@
     }];
     
     UILabel *devcie = [[UILabel alloc] init];
-    [devcie setFont:[UIFont systemFontOfSize:13.0]];
+    if(ScreenHeight == 480.0){
+        [devcie setFont:[UIFont systemFontOfSize:14]];
+    }else if (ScreenHeight==568) {
+        [devcie setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 667){
+        [devcie setFont:[UIFont systemFontOfSize:17]];
+        
+    }else{
+        [devcie setFont:[UIFont systemFontOfSize:18]];
+        
+    }
+//    [devcie setFont:[UIFont systemFontOfSize:13.0]];
     [devcie setText:@"设备:"];
     [devcie setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
     [devcie setTextAlignment:NSTextAlignmentCenter];
@@ -114,7 +177,19 @@
     }];
     
     UILabel *computer = [[UILabel alloc] init];
-    [computer setFont:[UIFont systemFontOfSize:13.0]];
+    if(ScreenHeight == 480.0){
+        [computer setFont:[UIFont systemFontOfSize:14]];
+    }else if (ScreenHeight==568) {
+        [computer setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 667){
+        [computer setFont:[UIFont systemFontOfSize:17]];
+        
+    }else{
+        [computer setFont:[UIFont systemFontOfSize:18]];
+        
+    }
+//    [computer setFont:[UIFont systemFontOfSize:13.0]];
     [computer setTextAlignment:NSTextAlignmentCenter];
     [computer setTextColor:[UIColor colorWithRed:108/255.0 green:108/255.0 blue:108/255.0 alpha:1.0]];
 //    [computer setText:@"苹果电脑 (编码XKAI1236586M)"];
@@ -133,7 +208,19 @@
     }];
     
     UILabel *touyingyi = [[UILabel alloc] init];
-    [touyingyi setFont:[UIFont systemFontOfSize:13.0]];
+    if(ScreenHeight == 480.0){
+        [touyingyi setFont:[UIFont systemFontOfSize:14]];
+    }else if (ScreenHeight==568) {
+        [touyingyi setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 667){
+        [touyingyi setFont:[UIFont systemFontOfSize:17]];
+        
+    }else{
+        [touyingyi setFont:[UIFont systemFontOfSize:18]];
+        
+    }
+//    [touyingyi setFont:[UIFont systemFontOfSize:13.0]];
 //    [touyingyi setText:@"投影仪 (编码MKI58H)"];
     if (_assets.count >= 2) {
         [touyingyi setText:[NSString stringWithFormat:@"%@(编码%@)",_assets[1][@"name"],_assets[1][@"num"]]];
@@ -151,7 +238,19 @@
     }];
     
     UILabel *speakDevice = [[UILabel alloc] init];
-    [speakDevice setFont:[UIFont systemFontOfSize:13.0]];
+    if(ScreenHeight == 480.0){
+        [speakDevice setFont:[UIFont systemFontOfSize:14]];
+    }else if (ScreenHeight==568) {
+        [speakDevice setFont:[UIFont systemFontOfSize:15]];
+        
+    }else if (ScreenHeight == 667){
+        [speakDevice setFont:[UIFont systemFontOfSize:17]];
+        
+    }else{
+        [speakDevice setFont:[UIFont systemFontOfSize:18]];
+        
+    }
+//    [speakDevice setFont:[UIFont systemFontOfSize:13.0]];
 //    [speakDevice setText:@"话筒 (编码NH1236987)"];
     if (_assets.count >= 3) {
         [speakDevice setText:[NSString stringWithFormat:@"%@(编码%@)",_assets[2][@"name"],_assets[2][@"num"]]];

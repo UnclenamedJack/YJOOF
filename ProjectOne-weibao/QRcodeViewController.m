@@ -8,6 +8,13 @@
 
 #import "QRcodeViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "saomiaoVC.h"
+#import "AttachVC.h"
+#import "Header.h"
+#import "AFNetworking.h"
+#import "MBProgressHUD.h"
+#import "bindingOrHistroyBindViewController.h"
+#import "searchModel.h"
 
 @interface QRcodeViewController ()<AVCaptureMetadataOutputObjectsDelegate>
 @property(nonatomic,strong) AVCaptureDevice *device;
@@ -159,13 +166,26 @@
 //       UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"home"];
 //        [vc setValue:str forKey:@"deviceNum"];
 //        [vc setValue:@1 forKey:@"isCodeSuccess"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isCodeSuccess"];
-        [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"deviceNum"];
-        //这里曾经有一bug  原因定位于  一个模态过来的视图 是dismiss 回去 还是 模态回去 ！
+        if ([self.presentingViewController isMemberOfClass:[saomiaoVC class]]) {
+#if DEBUG
+            NSLog(@"<><><>绑定插座扫描");
+#endif
+            [self checkBindingOrNot:str];
+            
+//            AttachVC *vc = [[AttachVC alloc] init];
+//            vc.mac = str;
+//            [self presentViewController:vc animated:YES completion:nil];
+                    }else{
+#if DEBUG
+            NSLog(@"<><><>app扫描");
+#endif
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"isCodeSuccess"];
+            [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"deviceNum"];
+            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+        }
+//        这里曾经有一bug  原因定位于  一个模态过来的视图 是dismiss 回去 还是 模态回去 ！
         //[self presentViewController:vc animated:YES completion:nil];
-        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-        
-        
+//        [self.navigationController dismissViewControllerAnimated:YES completion:nil];------
         
 //        if (self.navigationController.viewControllers.count > 1) {
 //            return;
@@ -181,6 +201,53 @@
     }
     
     
+}
+
+- (void)checkBindingOrNot:(NSString *)macDress {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/json",@"text/json",@"text/javascript", nil];
+    NSDictionary *parameters = @{@"mac":macDress,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [HUD setRemoveFromSuperViewOnHide:YES];
+    [manager POST:SAOMIAOCHAZUO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+#if DEBUG
+        NSLog(@"网路连接成功！");
+        NSLog(@"%@",responseObject);
+#endif
+        
+        if ([responseObject[@"result"] integerValue] == 1) {
+            [HUD hideAnimated:YES];
+            [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"obj"][@"machineid"] forKey:@"machineid"];
+            if ([[responseObject[@"obj"] allKeys] containsObject:@"bdasset"] || [[responseObject[@"obj"] allKeys] containsObject:@"bdmachineid"]) {
+                bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+//                vc.num = responseObject[@"obj"][@"bdasset"][@"num"];
+//                vc.name = responseObject[@"obj"][@"bdasset"][@"name"];
+//                vc.departName = responseObject[@"obj"][@"bdasset"][@"deptname"];
+//                vc.address = responseObject[@"obj"][@"bdasset"][@"address"];
+                vc.model = [searchModel modelWithDictionary:responseObject[@"obj"][@"bdasset"]];
+                [self presentViewController:vc animated:YES completion:nil];
+            }else if ([[responseObject[@"obj"] allKeys] containsObject:@"hbdasset"] || [[responseObject[@"obj"] allKeys] containsObject:@"hbdmachineid"]){
+               
+            }else{
+                AttachVC *vc = [[AttachVC alloc] init];
+                vc.mac = macDress;
+                [self presentViewController:vc animated:YES completion:nil];
+            }
+        }else{
+            [HUD setMode:MBProgressHUDModeCustomView];
+            [HUD hideAnimated:YES afterDelay:2.0];
+            [HUD.label setText:responseObject[@"msg"]];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if DEBUG
+        NSLog(@"网络连接失败！");
+        NSLog(@"%@",error);
+#endif
+        [HUD setMode:MBProgressHUDModeCustomView];
+        [HUD hideAnimated:YES afterDelay:2.0];
+        [HUD.label setText:@"网络连接失败！"];
+    }];
+
 }
 #pragma AVCapture
 -(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {

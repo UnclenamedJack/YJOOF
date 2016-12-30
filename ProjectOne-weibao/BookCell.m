@@ -13,8 +13,6 @@
 #import "MBProgressHUD.h"
 #import "Header.h"
 
-#define DELETBOOKINFO @"http://www.yjoof.com/ygapi/deletemyBespeaks?"
-#define CANCLEBOOKINFO @"http://www.yjoof.com/ygapi/cancelmyBespeaks?"
 
 @interface BookCell ()
 

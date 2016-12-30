@@ -126,7 +126,9 @@
             [self presentViewController:vc animated:YES completion:nil];
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"关机提示" message:@"友情提醒：您先关闭使用设备，再进入反馈意见！" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"未关闭" style:UIAlertActionStyleDefault handler:nil];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"未关闭" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                nil;
+            }];
             UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"已关闭" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 vc.beginTime = [self.timeLabel.text substringToIndex:5];
                 vc.endTime = [[self getCurrentTime] substringToIndex:5];
@@ -146,22 +148,27 @@
         [hud showAnimated:YES];
         [hud hideAnimated:YES afterDelay:2.0];
     }];
-    
-    
 }
 - (NSString *)getCurrentTime {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"HH:mm:ss"];
-    NSDate *date = [NSDate date];
-    self.beginDate = date;
-    return [formatter stringFromDate:date];
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"firstStartTime"]){
+        NSDate *date = [NSDate date];
+        NSString *dateStr =[formatter stringFromDate:date];
+        [[NSUserDefaults standardUserDefaults] setObject:dateStr forKey:@"firstStartTime"];
+        return dateStr;
+    }else{
+        NSDate *date = [formatter dateFromString:[[NSUserDefaults standardUserDefaults] objectForKey:@"firstStartTime"]];
+        if ([date laterDate:[NSDate dateWithTimeIntervalSince1970:[[[NSUserDefaults standardUserDefaults] objectForKey:@"starttime"] doubleValue]]]) {
+            return [[NSUserDefaults standardUserDefaults] objectForKey:@"firstStartTime"];
+        }else{
+            NSString *dateStr = [formatter stringFromDate:[NSDate date]];
+            [[NSUserDefaults standardUserDefaults] setObject:dateStr forKey:@"firstStartTime"];
+            return dateStr;
+        }
+    }
 }
 - (NSString *)totalTime {
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//    [formatter setDateFormat:@"HH:mm:ss"];
-//    NSDate *endDate = [NSDate date];
-//    NSTimeInterval value = [endDate timeIntervalSinceDate:self.beginDate];
-//    return [NSString stringWithFormat:@"%zd",value];
     [self.timer invalidate];
     if (_i<60) {
         return [NSString stringWithFormat:@"%zd秒",_i];;
@@ -252,9 +259,12 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
+}
 - (void)dealloc {
-
-    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"next"];
+    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"next" context:nil];
+//    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"next"];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

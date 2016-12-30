@@ -16,6 +16,7 @@
 #import "BGLogation.h"
 #import "MBProgressHUD.h"
 #import "NAVC.h"
+#import "IndexVC.h"
 
 #define APP_KEY @"9ff9365f9af539abe9c68b41"
 #define Version_IOS9 ([[UIDevice currentDevice].systemVersion doubleValue]>= 9.0)
@@ -41,7 +42,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-
+    
+//    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//    self.window.rootViewController = [[IndexVC alloc] init];
+//    [self.window makeKeyAndVisible];
 
     
        //定位服务（目的是保证APP后台运行不被kill掉！）

@@ -26,7 +26,7 @@
 @property(nonatomic,strong)NSNumber *roomid;
 @property(nonatomic,strong)NSString *classRoomName;
 @property(nonatomic,assign)BOOL hasSelecetd;
-
+@property(nonatomic,strong)UIButton *bookBtn;
 @property(nonatomic,strong)NSMutableArray *selectedCellIndex;
 @end
 
@@ -43,6 +43,8 @@
     self.title = @"查询可用教室";
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
+    [self downLoadData];
+    
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"next" options:NSKeyValueObservingOptionNew context:nil];
     
     self.selectedCellIndex = [NSMutableArray array];
@@ -54,41 +56,56 @@
     [_tableView registerNib:[UINib nibWithNibName:@"ThreeCell" bundle:nil] forCellReuseIdentifier:@"cell0"];
     
     
-    UIButton *bookBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [bookBtn setBackgroundColor:[UIColor clearColor]];
-    [bookBtn setTitleColor:[UIColor hexChangeFloat:@"00a0e9"] forState:UIControlStateNormal];
-    [bookBtn.layer setBorderColor:[UIColor hexChangeFloat:@"00a0e9"].CGColor];
-    [bookBtn.layer setBorderWidth:1.0];
-    [bookBtn.layer setCornerRadius:18];
-    [bookBtn setTitle:@"预约" forState:UIControlStateNormal];
-    [self.view addSubview:bookBtn];
-    [bookBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    _bookBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_bookBtn setHidden:YES];
+    [_bookBtn setBackgroundColor:[UIColor clearColor]];
+    [_bookBtn setTitleColor:[UIColor hexChangeFloat:@"00a0e9"] forState:UIControlStateNormal];
+    [_bookBtn.layer setBorderColor:[UIColor hexChangeFloat:@"00a0e9"].CGColor];
+    [_bookBtn.layer setBorderWidth:1.0];
+    [_bookBtn.layer setCornerRadius:18];
+    [_bookBtn setTitle:@"预约" forState:UIControlStateNormal];
+    [self.view addSubview:_bookBtn];
+    [_bookBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.view).offset(40);
         make.right.equalTo(self.view).offset(-40);
         make.bottom.equalTo(self.view).offset(-50);
     }];
-    [bookBtn addTarget:self action:@selector(bookBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [bookBtn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
+    [_bookBtn addTarget:self action:@selector(bookBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_bookBtn addTarget:self action:@selector(clickDown:) forControlEvents:UIControlEventTouchDown];
     // Do any additional setup after loading the view.
 }
 - (void)clickDown:(UIButton *)sender {
     [sender setBackgroundColor:[UIColor hexChangeFloat:@"00a0e9"]];
     [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 }
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    [self downLoadData];
+//}
+- (void)downLoadData {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html",@"application/json", nil];
-     MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud =[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [hud.label setText:@"正在加载"];
-     NSDictionary *parameters = @{@"starttime":[NSString stringWithFormat:@"%@ %@",_date,_beginTime],@"endtime":[NSString stringWithFormat:@"%@ %@",_date,_endTime],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"]};
+    NSDictionary *parameters = @{@"starttime":[NSString stringWithFormat:@"%@ %@",_date,_beginTime],@"endtime":[NSString stringWithFormat:@"%@ %@",_date,_endTime],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"],@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"]};
     [manager POST:ROOMURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"网络连接成功！");
         NSLog(@"%@",responseObject);
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         self.datas = responseObject[@"obj"];
-        [self.tableView reloadData];
-         if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]){
+        if (self.datas.count == 0) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"暂无可预约教室" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }];
+            [alert addAction:action];
+            [self presentViewController:alert animated:YES completion:nil];
+        }else{
+            [self.tableView reloadData];
+            [self.bookBtn setHidden:NO];
+        }
+        
+        if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]){
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.navigationController dismissViewControllerAnimated:YES completion:^{
@@ -104,6 +121,7 @@
         NSLog(@"%@",error);
         [self showOkayCancelAlert];
     }];
+
 }
 //解析失败之后的提示框
 - (void)showOkayCancelAlert {
@@ -224,6 +242,9 @@
         vc.roomDress = _datas[indexPath.row][@"name"];
         vc.capacity = _datas[indexPath.row][@"capacity"];
         vc.assets = _datas[indexPath.row][@"assets"];
+        UIBarButtonItem *returnItem = [[UIBarButtonItem alloc] init];
+        [returnItem setTitle:@""];
+        weakself.navigationItem.backBarButtonItem = returnItem;
         [weakself.navigationController pushViewController:vc animated:YES];
     };
     cell.block2 = ^{
@@ -237,6 +258,7 @@
     };
     cell.block3 = ^{
         [weakself.selectedCellIndex removeObject:indexPath];
+        _hasSelecetd =  NO;
     };
     
     [cell setSeparatorInset:UIEdgeInsetsZero];
@@ -284,20 +306,23 @@
             make.centerY.equalTo(_bgView).multipliedBy(4/5.0);
             make.left.equalTo(_bgView).offset(20*ScreenWidth/480.0);
             make.right.equalTo(_bgView).offset(-20*ScreenWidth/480.0);
-            make.height.equalTo(_bgView).multipliedBy(1/3.0);
+            if (ScreenHeight == 480.0) {
+                make.height.equalTo(_bgView).multipliedBy(1/2.5);
+            }else{
+                make.height.equalTo(_bgView).multipliedBy(1/3.0);
+            }
         }];
         
         UILabel *titleL = [[UILabel alloc] init];
         [titleL setText:@"预约详情"];
-        if (ScreenHeight==568) {
+        if (ScreenHeight == 480) {
+            [titleL setFont:[UIFont systemFontOfSize:13.0]];
+        }else if (ScreenHeight==568) {
             [titleL setFont:[UIFont systemFontOfSize:14.0]];
-            
         }else if (ScreenHeight == 667){
             [titleL setFont:[UIFont systemFontOfSize:16.0]];
-            
         }else{
             [titleL setFont:[UIFont systemFontOfSize:18.0]];
-            
         }
 //        [titleL setFont:[UIFont systemFontOfSize:14.0]];
         [titleL setTextColor:[UIColor hexChangeFloat:@"00a0e9"]];
@@ -308,15 +333,14 @@
         }];
         
         UILabel *bookDateL = [[UILabel alloc] init];
-        if (ScreenHeight==568) {
+        if (ScreenHeight == 480) {
             [bookDateL setFont:[UIFont systemFontOfSize:12.0]];
-            
+        }else if (ScreenHeight==568) {
+            [bookDateL setFont:[UIFont systemFontOfSize:12.0]];
         }else if (ScreenHeight == 667){
             [bookDateL setFont:[UIFont systemFontOfSize:14.0]];
-            
         }else{
             [bookDateL setFont:[UIFont systemFontOfSize:16.0]];
-            
         }
 //        [bookDateL setFont:[UIFont systemFontOfSize:12.0]];
         [bookDateL setTextColor:[UIColor hexChangeFloat:@"9fa0a0"]];
@@ -331,15 +355,14 @@
         }];
         
         UILabel *bookTimeL = [[UILabel alloc] init];
-        if (ScreenHeight==568) {
+        if (ScreenHeight == 480) {
             [bookTimeL setFont:[UIFont systemFontOfSize:12.0]];
-            
+        }else if (ScreenHeight==568) {
+            [bookTimeL setFont:[UIFont systemFontOfSize:12.0]];
         }else if (ScreenHeight == 667){
             [bookTimeL setFont:[UIFont systemFontOfSize:14.0]];
-            
         }else{
             [bookTimeL setFont:[UIFont systemFontOfSize:16.0]];
-            
         }
 //        [bookTimeL setFont:[UIFont systemFontOfSize:12.0]];
         [bookTimeL setTextColor:[UIColor hexChangeFloat:@"9fa0a0"]];
@@ -352,15 +375,14 @@
         }];
         
         UILabel *useCauseL = [[UILabel alloc] init];
-        if (ScreenHeight==568) {
+        if (ScreenHeight == 480) {
             [useCauseL setFont:[UIFont systemFontOfSize:12.0]];
-            
+        }else if (ScreenHeight==568) {
+            [useCauseL setFont:[UIFont systemFontOfSize:12.0]];
         }else if (ScreenHeight == 667){
             [useCauseL setFont:[UIFont systemFontOfSize:14.0]];
-            
         }else{
             [useCauseL setFont:[UIFont systemFontOfSize:16.0]];
-            
         }
 //        [useCauseL setFont:[UIFont systemFontOfSize:12.0]];
         [useCauseL setTextColor:[UIColor hexChangeFloat:@"9fa0a0"]];
@@ -375,15 +397,14 @@
         }];
         
         UILabel *booKClassRoomL = [[UILabel alloc] init];
-        if (ScreenHeight==568) {
+        if (ScreenHeight == 480) {
             [booKClassRoomL setFont:[UIFont systemFontOfSize:12.0]];
-            
+        }else if (ScreenHeight==568) {
+            [booKClassRoomL setFont:[UIFont systemFontOfSize:12.0]];
         }else if (ScreenHeight == 667){
             [booKClassRoomL setFont:[UIFont systemFontOfSize:14.0]];
-            
         }else{
             [booKClassRoomL setFont:[UIFont systemFontOfSize:16.0]];
-            
         }
 
 //        [booKClassRoomL setFont:[UIFont systemFontOfSize:12]];
@@ -398,15 +419,14 @@
         }];
         
         UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        if (ScreenHeight==568) {
+        if (ScreenHeight == 480) {
             [backBtn.titleLabel setFont:[UIFont systemFontOfSize:12.0]];
-            
+        }else if (ScreenHeight==568) {
+            [backBtn.titleLabel setFont:[UIFont systemFontOfSize:12.0]];
         }else if (ScreenHeight == 667){
             [backBtn.titleLabel setFont:[UIFont systemFontOfSize:14.0]];
-            
         }else{
             [backBtn.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
-            
         }
 //        [backBtn.titleLabel setFont:[UIFont systemFontOfSize:12.0]];
         [backBtn setTitle:@"返回" forState:UIControlStateNormal];
