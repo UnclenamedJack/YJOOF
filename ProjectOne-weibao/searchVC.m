@@ -78,7 +78,7 @@
     }
     cell.label1.text = self.datas[indexPath.row][@"num"];
     cell.label2.text = self.datas[indexPath.row][@"name"];
-    cell.label3.text = self.datas[indexPath.row][@"college"];
+    cell.label3.text = self.datas[indexPath.row][@"deptname"];
     cell.label4.text = self.datas[indexPath.row][@"address"];
     return cell;
 }

@@ -14,7 +14,7 @@
     if (self) {
         self.num = dict[@"num"];
         self.device = dict[@"name"];
-        self.college = dict[@"college"];
+        self.college = dict[@"deptname"];
         self.room = dict[@"address"];
         self.assetid = [dict[@"assetid"] doubleValue];
     }

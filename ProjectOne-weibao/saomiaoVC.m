@@ -10,6 +10,7 @@
 #import "Masonry.h"
 #import "QRcodeViewController.h"
 #import "AttachVC.h"
+#import "IndexVC.h"
 
 @interface saomiaoVC ()
 
@@ -45,13 +46,14 @@
 }
 - (void)saomiao:(UIButton *)sender {
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    
     QRcodeViewController *vc = [board instantiateViewControllerWithIdentifier:@"QRcode"];
+    if ([self.presentingViewController isMemberOfClass:[IndexVC class]]) {
+        vc.identifier = 0;
+    }else if ([self.presentingViewController isMemberOfClass:[AttachVC class]]){
+        vc.identifier = 1;
+        vc.secondMac = self.mac;
+    }
     [self presentViewController:vc animated:YES completion:nil];
-    
-    
-   
-    
 //    AttachVC *vc = [[AttachVC alloc] init];
 //    [self presentViewController:vc animated:YES completion:nil];
 }

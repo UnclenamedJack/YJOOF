@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class searchModel;
+@class binddingModel;
 @interface AttachSuccessVC : UIViewController
-
+@property(nonatomic, strong)searchModel *model;
+@property(nonatomic, strong)binddingModel *model1;
 @end

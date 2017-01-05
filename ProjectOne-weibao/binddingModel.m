@@ -16,7 +16,7 @@
         self.device = dict[@"name"];
         self.college = dict[@"deptname"];
         self.room = dict[@"address"];
-        self.assetid = dict[@"assetid"];
+        self.machineid = dict[@"machineid"];
     }
     return self;
 }

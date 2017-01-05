@@ -10,6 +10,7 @@
 #import "Masonry.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "searchModel.h"
 #import "binddingModel.h"
 #import "Header.h"
 
@@ -19,73 +20,94 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self.contentView setBackgroundColor:[UIColor clearColor]];
-        UILabel *label1 = [[UILabel alloc] init];
-        [label1 setText:@"label1"];
-        [label1 setNumberOfLines:2];
-        [self.contentView addSubview:label1];
-        [label1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.label1 = [[UILabel alloc] init];
+        [_label1 setText:@"label1"];
+        [_label1 setNumberOfLines:2];
+        [self.contentView addSubview:_label1];
+        [_label1 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.contentView).offset(5);
             make.centerY.equalTo(self.contentView);
         }];
         
-        UILabel *label2 = [[UILabel alloc] init];
-        [label2 setText:@"label2"];
-        [label2 setNumberOfLines:2];
-        [self.contentView addSubview:label2];
-        [label2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.label2 = [[UILabel alloc] init];
+        [_label2 setText:@"label2"];
+        [_label2 setNumberOfLines:2];
+        [self.contentView addSubview:_label2];
+        [_label2 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView);
-            make.width.equalTo(label1);
-            make.left.equalTo(label1.mas_right).offset(10);
+            make.width.equalTo(_label1);
+            make.left.equalTo(_label1.mas_right).offset(10);
         }];
         
-        UILabel *label3 = [[UILabel alloc] init];
-        [label3 setText:@"label3"];
-        [label3 setNumberOfLines:2];
-        [self.contentView addSubview:label3];
-        [label3 mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.label3 = [[UILabel alloc] init];
+        [_label3 setText:@"label3"];
+        [_label3 setNumberOfLines:2];
+        [self.contentView addSubview:_label3];
+        [_label3 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView);
-            make.width.equalTo(label2);
-            make.left.equalTo(label2.mas_right).offset(10);
+            make.width.equalTo(_label2);
+            make.left.equalTo(_label2.mas_right).offset(10);
         }];
         
-        UILabel *label4 = [[UILabel alloc] init];
-        [label4 setText:@"label4"];
-        [label4 setNumberOfLines:2];
-        [self.contentView addSubview:label4];
-        [label4 mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.label4 = [[UILabel alloc] init];
+        [_label4 setText:@"label4"];
+        [_label4 setNumberOfLines:2];
+        [self.contentView addSubview:_label4];
+        [_label4 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView);
-            make.width.equalTo(label3);
-            make.left.equalTo(label3.mas_right).offset(10);
+            make.width.equalTo(_label3);
+            make.left.equalTo(_label3.mas_right).offset(10);
         }];
         
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [btn setTitle:@"解绑" forState:UIControlStateNormal];
-        [btn.layer setCornerRadius:3.0];
-        [self.contentView addSubview:btn];
-        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_btn setTag:0];
+        [_btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_btn setTitle:@"解绑" forState:UIControlStateNormal];
+        [_btn.layer setCornerRadius:3.0];
+        [self.contentView addSubview:_btn];
+        [_btn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView);
-            make.width.equalTo(label4);
-            make.left.equalTo(label4.mas_right).offset(10);
+            make.width.equalTo(_label4);
+            make.left.equalTo(_label4.mas_right).offset(10);
             make.right.equalTo(self.contentView).offset(-5);
         }];
-        [btn addTarget:self action:@selector(cancelBinding:) forControlEvents:UIControlEventTouchUpInside];
+        [_btn addTarget:self action:@selector(cancelBinding:) forControlEvents:UIControlEventTouchUpInside];
         
     }
     return self;
 }
 
 - (void)cancelBinding:(UIButton *)sender {
+    NSString *url;
+    NSDictionary *parameters;
+    if (self.model) {
+        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    }else if (self.model1){
+        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdmachineid":_model1.machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    }else{
+        return;
+    }
+    
+    if (sender.tag == 0) {
+        url = JIECHUBANGDING;
+//        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    }else{
+        url = CHAZUOBANGDING;
+//        parameters =  @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    }
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":_model.assetid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+//    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.superview animated:YES];
-    [manager POST:JIECHUBANGDING parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 #if DEBUG
         NSLog(@"网路连接成功！");
         NSLog(@"%@",responseObject);
 #endif
         if ([responseObject[@"result"] intValue] == 1) {
             [hud hideAnimated:YES];
+            if (self.cancelBlock) {
+                self.cancelBlock(sender);
+            }
         }else{
             [hud setMode:MBProgressHUDModeCustomView];
             [hud.label setText:responseObject[@"msg"]];
@@ -103,6 +125,24 @@
 
 }
 
+- (void)setModel:(searchModel *)modle {
+    if (_model != modle) {
+        _model = modle;
+        _label1.text = modle.num;
+        _label2.text = modle.device;
+        _label3.text = modle.college;
+        _label4.text = modle.room;
+    }
+}
+- (void)setModel1:(binddingModel *)model1 {
+    if (_model1 != model1) {
+        _model1 = model1;
+        _label1.text = model1.num;
+        _label2.text = model1.device;
+        _label3.text = model1.college;
+        _label4.text = model1.room;
+    }
+}
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code

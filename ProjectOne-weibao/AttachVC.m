@@ -12,6 +12,7 @@
 #import "AFNetworking.h"
 #import "Header.h"
 #import "MBProgressHUD.h"
+#import "saomiaoVC.h"
 
 @interface AttachVC ()
 @end
@@ -70,6 +71,8 @@
         make.height.equalTo(@40);
         make.width.equalTo(@120);
     }];
+    [deviceCHAZUO addTarget:self action:@selector(bandingChaPai:) forControlEvents:UIControlEventTouchUpInside];
+    
     
     UIButton *deviceZICHAN = [UIButton buttonWithType:UIButtonTypeCustom];
     [deviceZICHAN setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -88,6 +91,14 @@
     [deviceZICHAN addTarget:self action:@selector(attachZICHAN:) forControlEvents:UIControlEventTouchUpInside];
     
     // Do any additional setup after loading the view.
+}
+
+- (void)bandingChaPai:(UIButton *)sender {
+    saomiaoVC *vc = [[saomiaoVC alloc] init];
+    if (self.mac) {
+        vc.mac = self.mac;
+    }
+    [self presentViewController:vc animated:YES completion:nil];
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

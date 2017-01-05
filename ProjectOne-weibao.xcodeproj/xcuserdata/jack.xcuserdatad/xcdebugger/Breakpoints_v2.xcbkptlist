@@ -42,7 +42,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/reSetPassWordVC.m"
-                  timestampString = "504777631.492089"
+                  timestampString = "505275943.502728"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "184"
@@ -57,7 +57,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/reSetPassWordVC.m"
-                  timestampString = "504777631.492197"
+                  timestampString = "505275943.50303"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "184"
@@ -378,7 +378,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/loginViewController.m"
-                  timestampString = "504777631.50272"
+                  timestampString = "505275943.54101"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "302"
@@ -393,7 +393,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/loginViewController.m"
-                  timestampString = "504777631.502815"
+                  timestampString = "505275943.541106"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "303"
@@ -537,7 +537,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/ViewController.m"
-                  timestampString = "504777631.506026"
+                  timestampString = "505275943.54605"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "864"
@@ -552,7 +552,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/ViewController.m"
-                  timestampString = "504777631.50612"
+                  timestampString = "505275943.546164"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "865"
@@ -1365,7 +1365,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/ThirdVC.m"
-                  timestampString = "504777631.552283"
+                  timestampString = "505275943.569655"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "129"
@@ -1380,7 +1380,7 @@
                   moduleName = "ProjectOne-weibao"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/ThirdVC.m"
-                  timestampString = "504777631.552397"
+                  timestampString = "505275943.569762"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "131"
@@ -1476,13 +1476,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ProjectOne-weibao/ZichanVC.m"
-            timestampString = "504692419.308146"
+            filePath = "ProjectOne-weibao/bindingCell.m"
+            timestampString = "505206693.903728"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "-binding:"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "-cancelBinding:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1492,13 +1492,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ProjectOne-weibao/ZichanVC.m"
-            timestampString = "504753759.707841"
+            filePath = "ProjectOne-weibao/bindingCell.m"
+            timestampString = "505206696.016335"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "-binding:"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "-cancelBinding:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1508,46 +1508,254 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ProjectOne-weibao/AttachSuccessVC.m"
-            timestampString = "504758641.018953"
+            filePath = "ProjectOne-weibao/bindingOrHistroyBindViewController.m"
+            timestampString = "505121000.020768"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "-viewDidLoad"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[AttachSuccessVC viewDidLoad]"
-                  moduleName = "ProjectOne-weibao"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/AttachSuccessVC.m"
-                  timestampString = "504777631.55635"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "1612">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__30-[AttachSuccessVC viewDidLoad]_block_invoke.74"
-                  moduleName = "ProjectOne-weibao"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/jack/Desktop/ProjectOne-weibao/ProjectOne-weibao/AttachSuccessVC.m"
-                  timestampString = "504777631.556466"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "32">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/bindingCell.m"
+            timestampString = "505205890.18604"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
+            landmarkName = "-cancelBinding:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/bindingCell.m"
+            timestampString = "505206699.262771"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "-cancelBinding:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/bindingCell.m"
+            timestampString = "505206700.478903"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
+            landmarkName = "-cancelBinding:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/bindingCell.m"
+            timestampString = "505206707.807262"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
+            landmarkName = "-cancelBinding:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/saomiaoVC.m"
+            timestampString = "505206732.552642"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "-saomiao:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/saomiaoVC.m"
+            timestampString = "505206733.472814"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "-saomiao:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/chapaiVC.m"
+            timestampString = "505273105.569723"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "-binding:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/bindingOrHistroyBindViewController.m"
+            timestampString = "505272626.237763"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/QRcodeViewController.m"
+            timestampString = "505272866.206699"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
+            landmarkName = "-checkBindingOrNot:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/QRcodeViewController.m"
+            timestampString = "505272871.701792"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
+            landmarkName = "-checkBindingOrNot:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/QRcodeViewController.m"
+            timestampString = "505272873.8624"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
+            landmarkName = "-checkBindingOrNot:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/QRcodeViewController.m"
+            timestampString = "505272875.390355"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
+            landmarkName = "-checkBindingOrNot:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/QRcodeViewController.m"
+            timestampString = "505272884.590781"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
+            landmarkName = "-checkBindingOrNot:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/QRcodeViewController.m"
+            timestampString = "505272887.214853"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
+            landmarkName = "-checkBindingOrNot:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ProjectOne-weibao/chapaiVC.m"
+            timestampString = "505273714.459879"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "-binding:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

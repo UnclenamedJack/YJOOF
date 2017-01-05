@@ -156,7 +156,7 @@
 
 #define CHAZUOBANGDING @"http://192.168.5.10:8080/wuxin/ygapi/bindMachine?"
 
-#define JIECHUBANGDING @"http://192.168.5.10:8080/wuxin/ygapi/canclebindMachine?"
+#define JIECHUBANGDING @"http://192.168.5.10:8080/wuxin/ygapi/cancelbindMachine?"
 
 #define CHAPAICHAKONGBANDDING @"http://192.168.5.10:8080/wuxin/ygapi/bindHub?"
 

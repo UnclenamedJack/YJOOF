@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface saomiaoVC : UIViewController
-
+@property(nonatomic, copy)NSString *mac;
 @end

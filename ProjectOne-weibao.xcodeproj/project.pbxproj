@@ -125,6 +125,7 @@
 		04C1AFC51CF46248009AD47E /* InformationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C1AFC41CF46248009AD47E /* InformationVC.m */; };
 		04E19A791D0160CC0046435C /* LxxPlaySound.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E19A781D0160CB0046435C /* LxxPlaySound.m */; };
 		04E19A7B1D01614E0046435C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E19A7A1D01614E0046435C /* AudioToolbox.framework */; };
+		04E3DF5C1E1B8FA400FBE302 /* chapaiVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E3DF5B1E1B8FA400FBE302 /* chapaiVC.m */; };
 		04E4FD0C1CF7EC9D002B72E7 /* RegisterVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E4FD0B1CF7EC9D002B72E7 /* RegisterVC.m */; };
 		04EC41A31D48413200AD0AB0 /* weixuanze.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EC419C1D48413200AD0AB0 /* weixuanze.png */; };
 		04EC41A41D48413200AD0AB0 /* weixuanze@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04EC419D1D48413200AD0AB0 /* weixuanze@2x.png */; };
@@ -408,6 +409,8 @@
 		04E19A771D0160CB0046435C /* LxxPlaySound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxxPlaySound.h; sourceTree = "<group>"; };
 		04E19A781D0160CB0046435C /* LxxPlaySound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxxPlaySound.m; sourceTree = "<group>"; };
 		04E19A7A1D01614E0046435C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		04E3DF5A1E1B8FA400FBE302 /* chapaiVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chapaiVC.h; sourceTree = "<group>"; };
+		04E3DF5B1E1B8FA400FBE302 /* chapaiVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chapaiVC.m; sourceTree = "<group>"; };
 		04E4FD0A1CF7EC9D002B72E7 /* RegisterVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterVC.h; sourceTree = "<group>"; };
 		04E4FD0B1CF7EC9D002B72E7 /* RegisterVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterVC.m; sourceTree = "<group>"; };
 		04EC419C1D48413200AD0AB0 /* weixuanze.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weixuanze.png; sourceTree = "<group>"; };
@@ -640,6 +643,8 @@
 				04ECBF511E10FDE200925153 /* AttachVC.m */,
 				046EA4291E163B7A006A3342 /* bindingOrHistroyBindViewController.h */,
 				046EA42A1E163B7A006A3342 /* bindingOrHistroyBindViewController.m */,
+				04E3DF5A1E1B8FA400FBE302 /* chapaiVC.h */,
+				04E3DF5B1E1B8FA400FBE302 /* chapaiVC.m */,
 				04ECBF531E11067D00925153 /* ZichanVC.h */,
 				04ECBF541E11067D00925153 /* ZichanVC.m */,
 				04ECBF561E11121F00925153 /* searchVC.h */,
@@ -1560,6 +1565,7 @@
 				04A15A081CF6E85900980334 /* TimerVC.m in Sources */,
 				04ECBF581E11121F00925153 /* searchVC.m in Sources */,
 				0448E16A1DFA8DA9005A5C28 /* UIScrollView+MJExtension.m in Sources */,
+				04E3DF5C1E1B8FA400FBE302 /* chapaiVC.m in Sources */,
 				04F525721CFD7A9E00751A83 /* MASCompositeConstraint.m in Sources */,
 				0402B38D1D06E07400B41120 /* UIColor+Extend.m in Sources */,
 				045CA6581D2CA51600D22118 /* BGTask.m in Sources */,

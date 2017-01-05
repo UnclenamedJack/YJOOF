@@ -8,6 +8,10 @@
 
 #import "AttachSuccessVC.h"
 #import "Masonry.h"
+#import "bindingOrHistroyBindViewController.h"
+#import "chapaiVC.h"
+#import "ZichanVC.h"
+
 @interface AttachSuccessVC ()
 
 @end
@@ -51,7 +55,15 @@
     }];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self dismissViewControllerAnimated:YES completion:nil];
+//        [self dismissViewControllerAnimated:YES completion:nil];
+        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+//        vc.model = self.model;
+        if([self.presentingViewController isMemberOfClass:[chapaiVC class]]){
+            vc.model1 = self.model1;
+        }else if ([self.presentingViewController isMemberOfClass:[ZichanVC class]]){
+            vc.model = self.model;
+        }
+        [self presentViewController:vc animated:YES completion:nil];
     });
     // Do any additional setup after loading the view.
 }

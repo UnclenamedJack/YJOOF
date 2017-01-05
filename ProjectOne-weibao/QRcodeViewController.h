@@ -12,5 +12,6 @@
 
 typedef void (^BackValue)(NSString *str);
 @property(nonatomic,strong) BackValue backValue;
-
+@property(nonatomic,assign) NSInteger identifier;
+@property(nonatomic,copy) NSString *secondMac;
 @end

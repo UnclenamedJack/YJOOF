@@ -7,13 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+@class searchModel;
 @class binddingModel;
 @interface bindingOrHistroyBindViewController : UIViewController
-@property(nonatomic, copy)NSString *mac;
+@property(nonatomic,copy) NSString *mac;
 //@property(nonatomic, copy)NSString *num;
 //@property(nonatomic, copy)NSString *name;
 //@property(nonatomic, copy)NSString *departName;
 //@property(nonatomic, copy)NSString *address;
 //@property(nonatomic, copy)NSNumber *assetid;
-@property(nonatomic, strong)binddingModel *model;
+@property(nonatomic,strong) searchModel *model;
+@property(nonatomic,strong) binddingModel *model1;
+@property(nonatomic,strong) NSArray *datas;
 @end

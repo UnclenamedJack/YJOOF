@@ -13,7 +13,7 @@
 @property(nonatomic, copy)NSString *device;
 @property(nonatomic, copy)NSString *college;
 @property(nonatomic, copy)NSString *room;
-@property(nonatomic, strong)NSNumber *assetid;
+@property(nonatomic, strong)NSNumber *machineid;
 
 + (instancetype)modelWithDictionary:(NSDictionary *)dict;
 - (instancetype)initWithDictionary:(NSDictionary *)dict;

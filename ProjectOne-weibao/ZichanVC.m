@@ -19,6 +19,7 @@
 @interface ZichanVC ()<UITextFieldDelegate>
 @property(nonatomic, strong)UITextField *field;
 @property(nonatomic, assign)double assetid;
+@property(nonatomic,strong)searchModel *model;
 @end
 
 @implementation ZichanVC
@@ -38,7 +39,11 @@
     }];
     
     UILabel *macDress = [[UILabel alloc] init];
-    [macDress setText:@"MAC：5c:cf:7f:0a:11:d3"];
+    if (self.mac) {
+        [macDress setText:_mac];
+    }else{
+        [macDress setText:@"MAC：5c:cf:7f:0a:11:d3"];
+    }
     [macDress setFont:[UIFont boldSystemFontOfSize:16.0]];
     [topView addSubview:macDress];
     [macDress mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -109,6 +114,7 @@
                 if ([responseObject[@"result"] intValue] == 1) {
                     [hud hideAnimated:YES];
                     AttachSuccessVC *vc = [[AttachSuccessVC alloc] init];
+                    vc.model = self.model;
                     [self presentViewController:vc animated:YES completion:nil];
                 }else{
                     [hud setMode:MBProgressHUDModeCustomView];
@@ -153,6 +159,7 @@
             make.height.equalTo(@40);
         }];
         cell.model = model;
+        self.model = model;
     };
     [self presentViewController:vc animated:YES completion:nil];
 }
