@@ -115,14 +115,12 @@
         if ([responseObject[@"result"] intValue] == 1) {
             [hud hideAnimated:YES];
             AttachSuccessVC *vc = [[AttachSuccessVC alloc] init];
-            
             [self presentViewController:vc animated:YES completion:nil];
         }else{
             [hud setMode:MBProgressHUDModeCustomView];
             [hud.label setText:responseObject[@"msg"]];
             [hud hideAnimated:YES afterDelay:1.5];
         }
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
 #if DEBUG
         NSLog(@"网络连接失败！");

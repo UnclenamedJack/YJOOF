@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0402B38D1D06E07400B41120 /* UIColor+Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = 0402B38C1D06E07400B41120 /* UIColor+Extend.m */; };
 		04071B051DD44E0B00DA7F9E /* CMInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04071B041DD44E0B00DA7F9E /* CMInputView.m */; };
+		04072C821E1F333B003CD709 /* chapaiModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04072C811E1F333B003CD709 /* chapaiModel.m */; };
 		04077D141D13D5F40089D2E5 /* SmallScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04077D131D13D5F40089D2E5 /* SmallScrollView.m */; };
 		04077D171D13E3410089D2E5 /* jiantou@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04077D161D13E3410089D2E5 /* jiantou@2x.png */; };
 		04077D191D13F4CC0089D2E5 /* ClassView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04077D181D13F4CC0089D2E5 /* ClassView.xib */; };
@@ -20,6 +21,8 @@
 		040BAC2F1DD59C24007A1A14 /* SZCalendarPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040BAC2B1DD59C24007A1A14 /* SZCalendarPicker.xib */; };
 		040BAC301DD59C24007A1A14 /* SZCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BAC2D1DD59C24007A1A14 /* SZCalendarCell.m */; };
 		040BAC331DD59D82007A1A14 /* DIYCalendarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BAC321DD59D82007A1A14 /* DIYCalendarVC.m */; };
+		041046861E1E15A5009BB1FB /* chazuoOrchapaiVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 041046851E1E15A5009BB1FB /* chazuoOrchapaiVC.m */; };
+		0410468C1E1E2C9D009BB1FB /* bindingChaKongVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0410468B1E1E2C9D009BB1FB /* bindingChaKongVC.m */; };
 		041337791DB5EF8600D9457A /* MengTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 041337781DB5EF8600D9457A /* MengTextField.m */; };
 		0413377C1DB6071000D9457A /* ThirdVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0413377B1DB6071000D9457A /* ThirdVC.m */; };
 		04137E881E14B31300EA6A73 /* searchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04137E871E14B31300EA6A73 /* searchCell.m */; };
@@ -230,6 +233,8 @@
 		0402B38C1D06E07400B41120 /* UIColor+Extend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Extend.m"; sourceTree = "<group>"; };
 		04071B031DD44E0B00DA7F9E /* CMInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMInputView.h; sourceTree = "<group>"; };
 		04071B041DD44E0B00DA7F9E /* CMInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMInputView.m; sourceTree = "<group>"; };
+		04072C801E1F333B003CD709 /* chapaiModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chapaiModel.h; sourceTree = "<group>"; };
+		04072C811E1F333B003CD709 /* chapaiModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chapaiModel.m; sourceTree = "<group>"; };
 		04077D121D13D5F40089D2E5 /* SmallScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallScrollView.h; sourceTree = "<group>"; };
 		04077D131D13D5F40089D2E5 /* SmallScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallScrollView.m; sourceTree = "<group>"; };
 		04077D151D13D6780089D2E5 /* Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
@@ -247,6 +252,10 @@
 		040BAC2D1DD59C24007A1A14 /* SZCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SZCalendarCell.m; sourceTree = "<group>"; };
 		040BAC311DD59D82007A1A14 /* DIYCalendarVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIYCalendarVC.h; sourceTree = "<group>"; };
 		040BAC321DD59D82007A1A14 /* DIYCalendarVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIYCalendarVC.m; sourceTree = "<group>"; };
+		041046841E1E15A5009BB1FB /* chazuoOrchapaiVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chazuoOrchapaiVC.h; sourceTree = "<group>"; };
+		041046851E1E15A5009BB1FB /* chazuoOrchapaiVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chazuoOrchapaiVC.m; sourceTree = "<group>"; };
+		0410468A1E1E2C9D009BB1FB /* bindingChaKongVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bindingChaKongVC.h; sourceTree = "<group>"; };
+		0410468B1E1E2C9D009BB1FB /* bindingChaKongVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = bindingChaKongVC.m; sourceTree = "<group>"; };
 		041337771DB5EF8600D9457A /* MengTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MengTextField.h; sourceTree = "<group>"; };
 		041337781DB5EF8600D9457A /* MengTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MengTextField.m; sourceTree = "<group>"; };
 		0413377A1DB6071000D9457A /* ThirdVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdVC.h; sourceTree = "<group>"; };
@@ -637,12 +646,16 @@
 			children = (
 				04ECBF4A1E10E53B00925153 /* IndexVC.h */,
 				04ECBF4B1E10E53B00925153 /* IndexVC.m */,
+				041046841E1E15A5009BB1FB /* chazuoOrchapaiVC.h */,
+				041046851E1E15A5009BB1FB /* chazuoOrchapaiVC.m */,
 				04ECBF4D1E10F01B00925153 /* saomiaoVC.h */,
 				04ECBF4E1E10F01B00925153 /* saomiaoVC.m */,
 				04ECBF501E10FDE200925153 /* AttachVC.h */,
 				04ECBF511E10FDE200925153 /* AttachVC.m */,
 				046EA4291E163B7A006A3342 /* bindingOrHistroyBindViewController.h */,
 				046EA42A1E163B7A006A3342 /* bindingOrHistroyBindViewController.m */,
+				0410468A1E1E2C9D009BB1FB /* bindingChaKongVC.h */,
+				0410468B1E1E2C9D009BB1FB /* bindingChaKongVC.m */,
 				04E3DF5A1E1B8FA400FBE302 /* chapaiVC.h */,
 				04E3DF5B1E1B8FA400FBE302 /* chapaiVC.m */,
 				04ECBF531E11067D00925153 /* ZichanVC.h */,
@@ -662,6 +675,8 @@
 				04137E8B1E14E3CF00EA6A73 /* searchModel.m */,
 				046EA42F1E164F40006A3342 /* binddingModel.h */,
 				046EA4301E164F40006A3342 /* binddingModel.m */,
+				04072C801E1F333B003CD709 /* chapaiModel.h */,
+				04072C811E1F333B003CD709 /* chapaiModel.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -1512,6 +1527,7 @@
 				04F07EA91D360B5F00FC7715 /* reSetPassWordVC.m in Sources */,
 				040BAC2E1DD59C24007A1A14 /* SZCalendarPicker.m in Sources */,
 				04F525781CFD7A9E00751A83 /* NSArray+MASAdditions.m in Sources */,
+				04072C821E1F333B003CD709 /* chapaiModel.m in Sources */,
 				0430599C1DAC882100D4E945 /* HYBAnimationClock.m in Sources */,
 				04EC41AB1D48474900AD0AB0 /* forthCell.m in Sources */,
 				04F525AC1CFDA28700751A83 /* IQPreviousNextView.m in Sources */,
@@ -1539,11 +1555,13 @@
 				04F302A01CF5734A007C4E31 /* FMDatabase.m in Sources */,
 				0448E1591DFA8DA9005A5C28 /* MJRefreshAutoFooter.m in Sources */,
 				0471DC101CF6BCE2004BA6ED /* SettingsTVCTableViewController.m in Sources */,
+				0410468C1E1E2C9D009BB1FB /* bindingChaKongVC.m in Sources */,
 				040BAC331DD59D82007A1A14 /* DIYCalendarVC.m in Sources */,
 				0448E1641DFA8DA9005A5C28 /* MJRefreshGifHeader.m in Sources */,
 				043B83D71D1E139300305E78 /* CustomCell.m in Sources */,
 				046EA42E1E163E41006A3342 /* bindingCell.m in Sources */,
 				04C1AFC51CF46248009AD47E /* InformationVC.m in Sources */,
+				041046861E1E15A5009BB1FB /* chazuoOrchapaiVC.m in Sources */,
 				04FA0D141D15300B0072DC58 /* BtnView.m in Sources */,
 				04F302AC1CF58A47007C4E31 /* QRcodeViewController.m in Sources */,
 				04F3026A1CF5687C007C4E31 /* loginViewController.m in Sources */,

@@ -10,4 +10,5 @@
 
 @interface saomiaoVC : UIViewController
 @property(nonatomic, copy)NSString *mac;
+@property(nonatomic, copy)NSString *identifier;
 @end

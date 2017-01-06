@@ -17,6 +17,8 @@
 #import "searchModel.h"
 #import "binddingModel.h"
 #import "chapaiVC.h"
+#import "bindingChaKongVC.h"
+#import "chapaiModel.h"
 
 @interface QRcodeViewController ()<AVCaptureMetadataOutputObjectsDelegate,MBProgressHUDDelegate>
 @property(nonatomic,strong) AVCaptureDevice *device;
@@ -168,7 +170,7 @@
 //       UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"home"];
 //        [vc setValue:str forKey:@"deviceNum"];
 //        [vc setValue:@1 forKey:@"isCodeSuccess"];
-        if ([self.presentingViewController isMemberOfClass:[saomiaoVC class]]) {
+        if ([self.presentingViewController.childViewControllers.lastObject isMemberOfClass:[saomiaoVC class]]) {
 #if DEBUG
             NSLog(@"<><><>绑定插座扫描");
 #endif
@@ -221,74 +223,64 @@
         if ([responseObject[@"result"] integerValue] == 1) {
             [HUD hideAnimated:YES];
             if (self.identifier == 0) {
-                [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"obj"][@"machineinfo"][@"machineid"] forKey:@"machineid"];
-                if ([[responseObject[@"obj"] allKeys] containsObject:@"bdasset"]) {
-                    bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-                    //                vc.num = responseObject[@"obj"][@"bdasset"][@"num"];
-                    //                vc.name = responseObject[@"obj"][@"bdasset"][@"name"];
-                    //                vc.departName = responseObject[@"obj"][@"bdasset"][@"deptname"];
-                    //                vc.address = responseObject[@"obj"][@"bdasset"][@"address"];
-                    vc.mac = macDress;
-                    vc.model = [searchModel modelWithDictionary:responseObject[@"obj"][@"bdasset"]];
-                    [self presentViewController:vc animated:YES completion:nil];
-                }else if ([[responseObject[@"obj"] allKeys] containsObject:@"bdmachine"]){
-                     bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-                    vc.mac = macDress;
-                    vc.model1 = [binddingModel modelWithDictionary:responseObject[@"obj"][@"bdmachine"]];
-                    [self presentViewController:vc animated:YES completion:nil];
-                }else if ([[responseObject[@"obj"] allKeys] containsObject:@"hbdasset"]){
-                    bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-                    vc.mac = macDress;
-                    [self presentViewController:vc animated:YES completion:nil];
-                }else if ([[responseObject[@"obj"] allKeys] containsObject:@"hbdmachineid"]){
-                    bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-                    vc.mac = macDress;
-                    [self presentViewController:vc animated:YES completion:nil];
-                }else{
-                    AttachVC *vc = [[AttachVC alloc] init];
-                    vc.mac = macDress;
-                    [self presentViewController:vc animated:YES completion:nil];
+                int type = [responseObject[@"obj"][@"machineinfo"][@"type"] intValue];
+                if (type == 1) {
+                    [[NSUserDefaults standardUserDefaults] setObject:responseObject[@"obj"][@"machineinfo"][@"machineid"] forKey:@"machineid"];
+                    if ([[responseObject[@"obj"] allKeys] containsObject:@"bdasset"]) {
+                        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+                        //                vc.num = responseObject[@"obj"][@"bdasset"][@"num"];
+                        //                vc.name = responseObject[@"obj"][@"bdasset"][@"name"];
+                        //                vc.departName = responseObject[@"obj"][@"bdasset"][@"deptname"];
+                        //                vc.address = responseObject[@"obj"][@"bdasset"][@"address"];
+                        vc.mac = macDress;
+                        vc.WhatIsBinding = 1;
+                        vc.model = [searchModel modelWithDictionary:responseObject[@"obj"][@"bdasset"]];
+                        [self presentViewController:vc animated:YES completion:nil];
+                    }else if ([[responseObject[@"obj"] allKeys] containsObject:@"bdmachine"]){
+                        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+                        UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+                        vc.mac = macDress;
+                        vc.WhatIsBinding = 2;
+                        vc.model1 = [binddingModel modelWithDictionary:responseObject[@"obj"][@"bdmachine"]];
+                        [self presentViewController:navc animated:YES completion:nil];
+                    }else if ([[responseObject[@"obj"] allKeys] containsObject:@"hbdasset"]){
+                        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+                        vc.mac = macDress;
+                        [self presentViewController:vc animated:YES completion:nil];
+                    }else if ([[responseObject[@"obj"] allKeys] containsObject:@"hbdmachineid"]){
+                        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+                        vc.mac = macDress;
+                        [self presentViewController:vc animated:YES completion:nil];
+                    }else{
+                        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+                        vc.WhatIsBinding = 0;
+                        vc.mac = macDress;
+                        UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+                        [self presentViewController:navc animated:YES completion:nil];
+//                        AttachVC *vc = [[AttachVC alloc] init];
+//                        vc.mac = macDress;
+//                        [self presentViewController:vc animated:YES completion:nil];
+                    }
+                }else if (type == 2){
+                    [self binding:responseObject[@"obj"][@"machineinfo"][@"machineid"] andMac:macDress];
+                    
+                    
                 }
-
+               
             }else if (self.identifier == 1){
-                chapaiVC *vc = [[chapaiVC alloc] init];
-                vc.mac2 = macDress;
-                vc.mac1 = self.secondMac;
-                vc.hubs = responseObject[@"obj"][@"machineinfo"][@"hubs"];
-                vc.machineid = responseObject[@"obj"][@"machineinfo"][@"machineid"];
-//                vc.model = [binddingModel modelWithDictionary:responseObject[@"obj"][@"bdmachine"]];
-                [self presentViewController:vc animated:YES completion:nil];
-            }
-//            int type = [responseObject[@"obj"][@"machineinfo"][@"type"] intValue];
-//            if (type == 1) {
-//                if ([[responseObject[@"obj"] allKeys] containsObject:@"bdasset"]) {
-//                    bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-//                    //                vc.num = responseObject[@"obj"][@"bdasset"][@"num"];
-//                    //                vc.name = responseObject[@"obj"][@"bdasset"][@"name"];
-//                    //                vc.departName = responseObject[@"obj"][@"bdasset"][@"deptname"];
-//                    //                vc.address = responseObject[@"obj"][@"bdasset"][@"address"];
-//                    vc.mac = macDress;
-//                    vc.model = [searchModel modelWithDictionary:responseObject[@"obj"][@"bdasset"]];
-//                    [self presentViewController:vc animated:YES completion:nil];
-//                }else if ([[responseObject[@"obj"] allKeys] containsObject:@"bdmachineid"]){
-////                     bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-////                    vc.mac = macDress;
-////                    vc.model = [searchModel modelWithDictionary:responseObject[@"obj"][@"bdmachineid"]];
-////                    [self presentViewController:vc animated:YES completion:nil];
-//                }else if ([[responseObject[@"obj"] allKeys] containsObject:@"hbdasset"] || [[responseObject[@"obj"] allKeys] containsObject:@"hbdmachineid"]){
-//                    
-//                }else{
-//                    AttachVC *vc = [[AttachVC alloc] init];
-//                    vc.mac = macDress;
-//                    [self presentViewController:vc animated:YES completion:nil];
-//                }
-//
-//            }else if(type == 2){
 //                chapaiVC *vc = [[chapaiVC alloc] init];
-//                vc.mac2 = responseObject[@"obj"][@"machineinfo"][@"mac"];
+//                vc.mac2 = macDress;
+//                vc.mac1 = self.secondMac;
 //                vc.hubs = responseObject[@"obj"][@"machineinfo"][@"hubs"];
+//                vc.machineid = responseObject[@"obj"][@"machineinfo"][@"machineid"];
 //                [self presentViewController:vc animated:YES completion:nil];
-//            }
+                
+                
+//                bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+//                UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+//                [self presentViewController:navc animated:YES completion:nil];
+                [self binding:[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"] andMac:macDress];
+            }
         }else{
             [HUD setMode:MBProgressHUDModeCustomView];
             [HUD hideAnimated:YES afterDelay:2.0];
@@ -305,6 +297,53 @@
     }];
 
 }
+- (void)binding:(NSNumber *)machineid andMac:(NSString *)mac {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdmachineid":machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [hud setRemoveFromSuperViewOnHide:YES];
+    [manager POST:CHAZUOBANGDING parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+#if DEBUG
+        NSLog(@"网路连接成功！");
+        NSLog(@"%@",responseObject);
+#endif
+        if ([responseObject[@"result"] intValue] == 1) {
+            [hud hideAnimated:YES];
+            bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+            NSArray *hubs = responseObject[@"obj"][@"machineinfo"][@"hubs"];
+            vc.model2 =[chapaiModel modelWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:mac,@"mac",[NSString stringWithFormat:@"%zd孔智能插排",hubs.count],@"name", nil]];
+            vc.WhatIsBinding = 2;
+            UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+            [self presentViewController:navc animated:YES completion:nil];
+//            AttachSuccessVC *vc = [[AttachSuccessVC alloc] init];
+//            [self presentViewController:vc animated:YES completion:nil];
+        }else{
+            [hud setMode:MBProgressHUDModeCustomView];
+            [hud.label setText:responseObject[@"msg"]];
+            [hud hideAnimated:YES afterDelay:1.5];
+            
+            bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+            vc.WhatIsBinding = 0;
+            UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+            [self presentViewController:navc animated:YES completion:nil];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if DEBUG
+        NSLog(@"网络连接失败！");
+        NSLog(@"%@",error);
+#endif
+        [hud setMode:MBProgressHUDModeCustomView];
+        [hud.label setText:@"网络连接失败！"];
+        [hud hideAnimated:YES afterDelay:1.5];
+        
+        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+        vc.WhatIsBinding = 0;
+        UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:navc animated:YES completion:nil];
+    }];
+    
+}
+
 #pragma MBProgressHUDDelegate
 //- (void)hudWasHidden:(MBProgressHUD *)hud {
 //    [self dismissViewControllerAnimated:YES completion:nil];

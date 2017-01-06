@@ -58,7 +58,9 @@
 }
 - (void)bangding:(UIButton *)sender {
     saomiaoVC *vc = [[saomiaoVC alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
+    vc.identifier = @"IndexVC";
+    UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];;
+    [self presentViewController:navc animated:YES completion:nil];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

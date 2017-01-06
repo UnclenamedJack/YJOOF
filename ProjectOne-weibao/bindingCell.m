@@ -60,6 +60,9 @@
         }];
         
         self.btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_btn.layer setBorderColor:[UIColor blackColor].CGColor];
+        [_btn.layer setBorderWidth:1.0];
+        [_btn.layer setCornerRadius:3.0];
         [_btn setTag:0];
         [_btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_btn setTitle:@"解绑" forState:UIControlStateNormal];

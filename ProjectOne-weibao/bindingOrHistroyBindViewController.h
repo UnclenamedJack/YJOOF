@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 @class searchModel;
 @class binddingModel;
+@class chapaiModel;
 @interface bindingOrHistroyBindViewController : UIViewController
 @property(nonatomic,copy) NSString *mac;
 //@property(nonatomic, copy)NSString *num;
@@ -18,5 +19,6 @@
 //@property(nonatomic, copy)NSNumber *assetid;
 @property(nonatomic,strong) searchModel *model;
 @property(nonatomic,strong) binddingModel *model1;
-@property(nonatomic,strong) NSArray *datas;
+@property(nonatomic,strong) chapaiModel *model2;
+@property(nonatomic,assign) NSInteger WhatIsBinding;
 @end

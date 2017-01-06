@@ -47,15 +47,23 @@
 - (void)saomiao:(UIButton *)sender {
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     QRcodeViewController *vc = [board instantiateViewControllerWithIdentifier:@"QRcode"];
-    if ([self.presentingViewController isMemberOfClass:[IndexVC class]]) {
+    NSLog(@"<>%@",self.navigationController.viewControllers);
+    if ([self.identifier isEqualToString:@"IndexVC"]) {
         vc.identifier = 0;
-    }else if ([self.presentingViewController isMemberOfClass:[AttachVC class]]){
+    }else if ([self.identifier isEqualToString:@"bindingVC"]){
         vc.identifier = 1;
         vc.secondMac = self.mac;
+    }else{
+        
     }
+    
+//    if ([self.presentingViewController isMemberOfClass:[IndexVC class]]) {
+//        vc.identifier = 0;
+//    }else if ([self.presentingViewController isMemberOfClass:[AttachVC class]]){
+//        vc.identifier = 1;
+//        vc.secondMac = self.mac;
+//    }
     [self presentViewController:vc animated:YES completion:nil];
-//    AttachVC *vc = [[AttachVC alloc] init];
-//    [self presentViewController:vc animated:YES completion:nil];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
