@@ -21,4 +21,6 @@
 @property(nonatomic,strong) binddingModel *model1;
 @property(nonatomic,strong) chapaiModel *model2;
 @property(nonatomic,assign) NSInteger WhatIsBinding;
+@property(nonatomic,copy) NSString *name;
+@property(nonatomic,strong)NSDictionary *hubs;
 @end

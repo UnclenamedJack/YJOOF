@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface bindingChaKongVC : UIViewController
-
+@property(nonatomic, copy)NSString *mac;
+@property(nonatomic, copy)NSArray *hubs;
 @end

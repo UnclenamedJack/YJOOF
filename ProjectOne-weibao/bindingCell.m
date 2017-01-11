@@ -21,7 +21,8 @@
     if (self) {
         [self.contentView setBackgroundColor:[UIColor clearColor]];
         self.label1 = [[UILabel alloc] init];
-        [_label1 setText:@"label1"];
+        [_label1 setTextAlignment:NSTextAlignmentCenter];
+//        [_label1 setText:@"label1"];
         [_label1 setNumberOfLines:2];
         [self.contentView addSubview:_label1];
         [_label1 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -30,7 +31,8 @@
         }];
         
         self.label2 = [[UILabel alloc] init];
-        [_label2 setText:@"label2"];
+        [_label2 setTextAlignment:NSTextAlignmentCenter];
+//        [_label2 setText:@"label2"];
         [_label2 setNumberOfLines:2];
         [self.contentView addSubview:_label2];
         [_label2 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -40,7 +42,8 @@
         }];
         
         self.label3 = [[UILabel alloc] init];
-        [_label3 setText:@"label3"];
+        [_label3 setTextAlignment:NSTextAlignmentCenter];
+//        [_label3 setText:@"label3"];
         [_label3 setNumberOfLines:2];
         [self.contentView addSubview:_label3];
         [_label3 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -50,7 +53,8 @@
         }];
         
         self.label4 = [[UILabel alloc] init];
-        [_label4 setText:@"label4"];
+        [_label4 setTextAlignment:NSTextAlignmentCenter];
+//        [_label4 setText:@"label4"];
         [_label4 setNumberOfLines:2];
         [self.contentView addSubview:_label4];
         [_label4 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -83,23 +87,43 @@
 - (void)cancelBinding:(UIButton *)sender {
     NSString *url;
     NSDictionary *parameters;
-    if (self.model) {
-        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
-    }else if (self.model1){
-        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdmachineid":_model1.machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    if (self.hubid) {
+        if (self.model) {
+            parameters = @{@"hubid":self.hubid,@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else if (self.model1){
+            parameters = @{@"hubid":self.hubid,@"bdmachineid":_model1.machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else {
+            return;
+        }
+        
+        if (sender.tag == 0) {
+            url = CHAPAICHAKONGBANDDING;
+            //        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else{
+            url = JIECHUCHAPAICHAKONGBANDDING;
+            //        parameters =  @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }
+
     }else{
-        return;
-    }
-    
-    if (sender.tag == 0) {
-        url = JIECHUBANGDING;
-//        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
-    }else{
-        url = CHAZUOBANGDING;
-//        parameters =  @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        if (self.model) {
+            parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else if (self.model1){
+            parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdmachineid":_model1.machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else {
+            return;
+        }
+        
+        if (sender.tag == 0) {
+            url = JIECHUBANGDING;
+            //        parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else{
+            url = CHAZUOBANGDING;
+            //        parameters =  @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }
+        
     }
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    //    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.superview animated:YES];
     [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 #if DEBUG

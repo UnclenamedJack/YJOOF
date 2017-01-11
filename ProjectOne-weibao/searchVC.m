@@ -76,21 +76,74 @@
     if (!cell) {
         cell = [[searchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
-    cell.label1.text = self.datas[indexPath.row][@"num"];
-    cell.label2.text = self.datas[indexPath.row][@"name"];
-    cell.label3.text = self.datas[indexPath.row][@"deptname"];
-    cell.label4.text = self.datas[indexPath.row][@"address"];
+//    cell.label1.text = self.datas[indexPath.row][@"num"];
+//    cell.label2.text = self.datas[indexPath.row][@"name"];
+//    cell.label3.text = self.datas[indexPath.row][@"deptname"];
+//    cell.label4.text = self.datas[indexPath.row][@"address"];
+    cell.model = [searchModel modelWithDictionary:self.datas[indexPath.row]];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.block) {
-        self.block(self.datas[indexPath.row][@"num"],self.dataModelArr[indexPath.row]);
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self bind:self.dataModelArr[indexPath.row] andIndexPath:indexPath withCompleteBlock:^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
 }
 - (void)cancleClick:(UIButton *)sender {
     [_field resignFirstResponder];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (void)bind:(searchModel *)model andIndexPath:(NSIndexPath *)indexPath withCompleteBlock:(void(^)()) completeBlock{
+    NSString *url;
+    NSDictionary *parameters;
+    if (self.hubid) {
+        if (model) {
+            parameters = @{@"hubid":self.hubid,@"bdassetid":[NSNumber numberWithDouble:model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else {
+            return;
+        }
+         url = CHAPAICHAKONGBANDDING;
+        
+    }else{
+        if (model) {
+            parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        }else {
+            return;
+        }
+        url = CHAZUOBANGDING;
+    }
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    //    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdassetid":[NSNumber numberWithDouble:_model.assetid],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [hud.label setText:@"正在绑定"];
+    [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+#if DEBUG
+        NSLog(@"网路连接成功！");
+        NSLog(@"%@",responseObject);
+#endif
+        if ([responseObject[@"result"] intValue] == 1) {
+            [hud hideAnimated:YES];
+            
+            if (self.block) {
+                self.block(self.datas[indexPath.row][@"num"],self.dataModelArr[indexPath.row]);
+            }
+            if(completeBlock){
+                completeBlock();
+            }
+        }else{
+            [hud setMode:MBProgressHUDModeCustomView];
+            [hud.label setText:responseObject[@"msg"]];
+            [hud hideAnimated:YES afterDelay:1.5];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if DEBUG
+        NSLog(@"网络连接失败！");
+        NSLog(@"%@",error);
+#endif
+        [hud setMode:MBProgressHUDModeCustomView];
+        [hud.label setText:@"网络连接失败！"];
+        [hud hideAnimated:YES afterDelay:1.5];
+    }];
+
 }
 - (void)lookOutForInformation:(NSNotification *)sender {
     

@@ -10,5 +10,6 @@
 @class searchModel;
 @interface searchVC : UIViewController
 @property(nonatomic, copy)NSString *mac;
+@property(nonatomic, strong)NSNumber *hubid;
 @property(nonatomic, copy)void(^block)(NSString *,searchModel *);
 @end

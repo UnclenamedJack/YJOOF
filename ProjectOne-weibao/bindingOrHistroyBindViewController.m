@@ -22,6 +22,9 @@
 @property(nonatomic,strong)UILabel *label;
 @property(nonatomic,strong)UILabel *noBinding;
 @property(nonatomic, strong)UIView *topView;
+@property(nonatomic, strong)UITableView *tableView;
+@property(nonatomic, strong)NSArray *historyData;
+@property(nonatomic, strong)NSArray *hadBindingData;
 @end
 
 @implementation bindingOrHistroyBindViewController
@@ -57,15 +60,53 @@
     }];
     
     UILabel *macName = [[UILabel alloc] init];
-    [macName setText:@"86型智能插座"];
+    if(self.name){
+        [macName setText:_name];
+    }else{
+        [macName setText:@"86型智能插座"];
+    }
     [macName setFont:[UIFont boldSystemFontOfSize:16.0]];
     [_topView addSubview:macName];
     [macName mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_topView);
         make.top.equalTo(macDress.mas_bottom).offset(8);
     }];
+    
+//     [self creatCellOrNot];
+    
+    if (self.WhatIsBinding == 0) {
+        self.noBinding = [[UILabel alloc] init];
+        [_noBinding setText:@"暂无绑定"];
+        [_noBinding setFont:[UIFont boldSystemFontOfSize:25.0]];
+        [self.view addSubview:_noBinding];
+        [_noBinding mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.view);
+            make.centerY.equalTo(self.view).offset(30);
+        }];
+    }else{
+        UITableView *tableView = [[UITableView alloc] init];
+        [tableView setDelegate:self];
+        [tableView setDataSource:self];
+        [self.view addSubview:tableView];
+        [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(_topView.mas_bottom).offset(10);
+            make.left.equalTo(self.view);
+            make.right.equalTo(self.view);
+            make.bottom.equalTo(self.view);
+        }];
+        self.tableView = tableView;
+        NSMutableArray *arr = [NSMutableArray array];
+        if (self.model) {
+            [arr addObject:self.model];
+            self.hadBindingData = arr;
+        }else if (self.model1){
+            [arr addObject:self.model1];
+            self.hadBindingData = arr;
+        }
 
-    [self creatCellOrNot];
+    }
+    
+    
 //    if(self.WhatIsBinding){
 //        self.label = [[UILabel alloc] init];
 //        if (_WhatIsBinding == 1) {
@@ -195,21 +236,32 @@
             if (sender.tag == 0) {
                 if (_WhatIsBinding == 1) {
                     _label.text = @"历史绑定资产";
+                    self.WhatIsBinding = -1;
                 }else if (_WhatIsBinding == 2){
                     _label.text = @"历史绑定插排";
+                    self.WhatIsBinding = -2;
                 }
-                self.WhatIsBinding = 0;
-                //                [bindingNew setEnabled:YES];
-                [weakcell.btn setTitle:@"绑定" forState:UIControlStateNormal];
+                
+                weakcell.model = nil;
+                weakcell.textLabel.text = @"暂无绑定数据";
+                [weakcell.btn setHidden:YES];
+//                [weakcell.btn setTitle:@"绑定" forState:UIControlStateNormal];
+                NSMutableArray *mutArr = [NSMutableArray array];
+                [mutArr addObject:self.model];
+                self.historyData = mutArr;
+                [self.tableView reloadData];
                 sender.tag = 1;
             }else{
-                if (_WhatIsBinding == 1) {
+                if (_WhatIsBinding == -1) {
                     _label.text = @"已绑定资产";
-                }else if (_WhatIsBinding == 2){
+                    self.WhatIsBinding = 1;
+
+                }else if (_WhatIsBinding == -2){
                     _label.text = @"已绑定插排";
+                    self.WhatIsBinding = 2;
                 }
-                self.WhatIsBinding = 1;
                 //                [bindingNew setEnabled:NO];
+                
                 [weakcell.btn setTitle:@"解绑" forState:UIControlStateNormal];
                 sender.tag = 0;
             }
@@ -230,7 +282,7 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 - (void)binding:(UIBarButtonItem *)sender {
-    if (self.WhatIsBinding) {
+    if (self.WhatIsBinding > 0) {
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [hud setMode:MBProgressHUDModeCustomView];
         [hud setRemoveFromSuperViewOnHide:YES];
@@ -272,21 +324,34 @@
                 
                 self.WhatIsBinding = 1;
                 self.model = model;
-                [self creatCellOrNot];
+//                [self creatCellOrNot];
                 if (_noBinding) {
                     [_noBinding removeFromSuperview];
                 }
+                
                 UITableView *tableView = [[UITableView alloc] init];
                 [tableView setDelegate:self];
                 [tableView setDataSource:self];
                 [self.view addSubview:tableView];
                 [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.top.equalTo(_topView.mas_bottom).offset(60);
+                    make.top.equalTo(_topView.mas_bottom).offset(10);
                     make.left.equalTo(self.view);
                     make.right.equalTo(self.view);
                     make.bottom.equalTo(self.view);
                 }];
+                self.tableView = tableView;
+                NSMutableArray *arr = [NSMutableArray array];
+                if (self.model) {
+                    [arr addObject:self.model];
+                    self.hadBindingData = arr;
+                }else if (self.model1){
+                    [arr addObject:self.model1];
+                    self.hadBindingData = arr;
+                }
             };
+            if (self.hubs) {
+                vc.hubid = self.hubs[@"id"];
+            }
             [self presentViewController:vc animated:YES completion:nil];
         }];
         UIAlertAction *action3 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -301,26 +366,125 @@
 
 #pragma mark --------------------UITableViewDelegate AND UITableViewDatasource---------------------- 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    if (section == 0) {
+        return 1;
+    }else if (section == 1){
+        return self.historyData.count;
+    }else{
+        return 0;
+    }
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *view = [[UIView alloc] init];
     UILabel *label = [[UILabel alloc] init];
-    [label setText:@"历史绑定"];
-    [label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(view);
-//        make.top.equalTo(view);
-//        make.bottom.equalTo(view);
-        make.center.equalTo(view);
-    }];
-    [view addSubview:label];
-    return view;
+    if (section == 0) {
+        [view addSubview:label];
+        [label setText:@"已绑定的资产"];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(view);
+            //        make.top.equalTo(view);
+            //        make.bottom.equalTo(view);
+            make.center.equalTo(view);
+        }];
+    }else{
+        [view addSubview:label];
+        [label setText:@"历史绑定"];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(view);
+            //        make.top.equalTo(view);
+            //        make.bottom.equalTo(view);
+            make.center.equalTo(view);
+        }];
+    }
+        return view;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 50;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *identifier = @"bindingCell";
+    bindingCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (!cell) {
+        cell = [[bindingCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    }
+    if(self.hubs){
+        cell.hubid = self.hubs[@"id"];
+    }
+    
+    __weak typeof(bindingCell) *weakcell = cell;
+    cell.cancelBlock = ^(UIButton *sender){
+        if (sender.tag == 0) {
+            if (_WhatIsBinding == 1) {
+                _label.text = @"历史绑定资产";
+                self.WhatIsBinding = -1;
+            }else if (_WhatIsBinding == 2){
+                _label.text = @"历史绑定插排";
+                self.WhatIsBinding = -2;
+            }
+            
+            NSMutableArray *arr = [NSMutableArray array];
+            [arr addObjectsFromArray:self.hadBindingData];
+            [arr removeObject:weakcell.model];
+            self.hadBindingData = arr;
+
+            
+//            weakcell.model = nil;
+//            weakcell.textLabel.text = @"暂无绑定数据";
+//            [weakcell.btn setHidden:YES];
+            
+            //                [weakcell.btn setTitle:@"绑定" forState:UIControlStateNormal];
+            NSMutableArray *mutArr = [NSMutableArray array];
+            [mutArr addObject:self.model];
+            self.historyData = mutArr;
+            
+//            NSMutableArray *arr = [NSMutableArray array];
+//            [arr addObjectsFromArray:self.hadBindingData];
+//            [arr removeObject:weakcell.model];
+//            self.hadBindingData = arr;
+
+            [self.tableView reloadData];
+            sender.tag = 1;
+        }else{
+            if (_WhatIsBinding == -1) {
+                _label.text = @"已绑定资产";
+                self.WhatIsBinding = 1;
+                
+            }else if (_WhatIsBinding == -2){
+                _label.text = @"已绑定插排";
+                self.WhatIsBinding = 2;
+            }
+            //                [bindingNew setEnabled:NO];
+            
+            NSMutableArray *mutArr = [NSMutableArray array];
+            [mutArr addObject:weakcell.model];
+            self.hadBindingData  = mutArr;
+            
+            NSMutableArray *arr = [NSMutableArray arrayWithArray:self.historyData];
+            [arr removeObject:weakcell.model];
+            self.historyData = arr;
+            [self.tableView reloadData];
+
+            [weakcell.btn setTitle:@"解绑" forState:UIControlStateNormal];
+            sender.tag = 0;
+        }
+    };
+    if (indexPath.section == 0) {
+        if (self.hadBindingData.count == 0) {
+            weakcell.textLabel.text = @"暂无绑定数据";
+            [weakcell.btn setHidden:YES];
+        }else{
+            cell.model = self.hadBindingData[indexPath.row];
+        }
+    }else{
+        cell.model = self.historyData[indexPath.row];
+        [cell.btn setTitle:@"绑定" forState:UIControlStateNormal];
+        [cell.btn setTag:1];
+    }
+    
+    return cell;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -13,10 +13,14 @@
 @property(nonatomic, strong)searchModel *model;
 @property(nonatomic, strong)binddingModel *model1;
 @property(nonatomic, copy)void(^cancelBlock)(UIButton *);
+@property(nonatomic, strong)NSNumber *hubid;
+
 @property(nonatomic, strong)UILabel *label1;
 @property(nonatomic, strong)UILabel *label2;
 @property(nonatomic, strong)UILabel *label3;
 @property(nonatomic, strong)UILabel *label4;
 @property(nonatomic, strong)UIButton *btn;
+
+
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 @end

@@ -235,7 +235,8 @@
                         vc.mac = macDress;
                         vc.WhatIsBinding = 1;
                         vc.model = [searchModel modelWithDictionary:responseObject[@"obj"][@"bdasset"]];
-                        [self presentViewController:vc animated:YES completion:nil];
+                         UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+                        [self presentViewController:navc animated:YES completion:nil];
                     }else if ([[responseObject[@"obj"] allKeys] containsObject:@"bdmachine"]){
                         bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
                         UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -262,9 +263,15 @@
 //                        [self presentViewController:vc animated:YES completion:nil];
                     }
                 }else if (type == 2){
-                    [self binding:responseObject[@"obj"][@"machineinfo"][@"machineid"] andMac:macDress];
+//                    [self binding:responseObject[@"obj"][@"machineinfo"][@"machineid"] andMac:macDress];
                     
                     
+                    bindingChaKongVC *vc = [[bindingChaKongVC alloc] init];
+                    vc.mac = macDress;
+                    vc.hubs = responseObject[@"obj"][@"machineinfo"][@"hubs"];
+                    UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+                    [self presentViewController:navc animated:YES completion:nil];
+                
                 }
                
             }else if (self.identifier == 1){
