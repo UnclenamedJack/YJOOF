@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 @class searchModel;
 @class binddingModel;
+@class chapaiModel;
 @interface bindingCell : UITableViewCell
 @property(nonatomic, strong)searchModel *model;
 @property(nonatomic, strong)binddingModel *model1;
-@property(nonatomic, copy)void(^cancelBlock)(UIButton *);
+@property(nonatomic, strong)chapaiModel *model2;
+@property(nonatomic, copy)void(^cancelBlock)(UIButton *,id);
 @property(nonatomic, strong)NSNumber *hubid;
 
 @property(nonatomic, strong)UILabel *label1;

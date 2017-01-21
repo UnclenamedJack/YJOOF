@@ -21,7 +21,7 @@
 		040BAC2F1DD59C24007A1A14 /* SZCalendarPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 040BAC2B1DD59C24007A1A14 /* SZCalendarPicker.xib */; };
 		040BAC301DD59C24007A1A14 /* SZCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BAC2D1DD59C24007A1A14 /* SZCalendarCell.m */; };
 		040BAC331DD59D82007A1A14 /* DIYCalendarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 040BAC321DD59D82007A1A14 /* DIYCalendarVC.m */; };
-		041046861E1E15A5009BB1FB /* chazuoOrchapaiVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 041046851E1E15A5009BB1FB /* chazuoOrchapaiVC.m */; };
+		040C8C601E28C01700539DD3 /* DIYView.m in Sources */ = {isa = PBXBuildFile; fileRef = 040C8C5F1E28C01700539DD3 /* DIYView.m */; };
 		0410468C1E1E2C9D009BB1FB /* bindingChaKongVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0410468B1E1E2C9D009BB1FB /* bindingChaKongVC.m */; };
 		041337791DB5EF8600D9457A /* MengTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 041337781DB5EF8600D9457A /* MengTextField.m */; };
 		0413377C1DB6071000D9457A /* ThirdVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0413377B1DB6071000D9457A /* ThirdVC.m */; };
@@ -126,6 +126,8 @@
 		04C1AFAB1CF42A65009AD47E /* ProjectOne_weibaoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C1AFAA1CF42A65009AD47E /* ProjectOne_weibaoTests.m */; };
 		04C1AFB61CF42A65009AD47E /* ProjectOne_weibaoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C1AFB51CF42A65009AD47E /* ProjectOne_weibaoUITests.m */; };
 		04C1AFC51CF46248009AD47E /* InformationVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C1AFC41CF46248009AD47E /* InformationVC.m */; };
+		04CE47A21E2F5730003775CB /* DIYSearchTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CE47A11E2F5730003775CB /* DIYSearchTextField.m */; };
+		04DFCB4D1E2E069B00546320 /* ChaKongCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DFCB4C1E2E069B00546320 /* ChaKongCell.m */; };
 		04E19A791D0160CC0046435C /* LxxPlaySound.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E19A781D0160CB0046435C /* LxxPlaySound.m */; };
 		04E19A7B1D01614E0046435C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E19A7A1D01614E0046435C /* AudioToolbox.framework */; };
 		04E3DF5C1E1B8FA400FBE302 /* chapaiVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E3DF5B1E1B8FA400FBE302 /* chapaiVC.m */; };
@@ -252,8 +254,8 @@
 		040BAC2D1DD59C24007A1A14 /* SZCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SZCalendarCell.m; sourceTree = "<group>"; };
 		040BAC311DD59D82007A1A14 /* DIYCalendarVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIYCalendarVC.h; sourceTree = "<group>"; };
 		040BAC321DD59D82007A1A14 /* DIYCalendarVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIYCalendarVC.m; sourceTree = "<group>"; };
-		041046841E1E15A5009BB1FB /* chazuoOrchapaiVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chazuoOrchapaiVC.h; sourceTree = "<group>"; };
-		041046851E1E15A5009BB1FB /* chazuoOrchapaiVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chazuoOrchapaiVC.m; sourceTree = "<group>"; };
+		040C8C5E1E28C01700539DD3 /* DIYView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIYView.h; sourceTree = "<group>"; };
+		040C8C5F1E28C01700539DD3 /* DIYView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIYView.m; sourceTree = "<group>"; };
 		0410468A1E1E2C9D009BB1FB /* bindingChaKongVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bindingChaKongVC.h; sourceTree = "<group>"; };
 		0410468B1E1E2C9D009BB1FB /* bindingChaKongVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = bindingChaKongVC.m; sourceTree = "<group>"; };
 		041337771DB5EF8600D9457A /* MengTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MengTextField.h; sourceTree = "<group>"; };
@@ -415,6 +417,10 @@
 		04C1AFB71CF42A65009AD47E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04C1AFC31CF46248009AD47E /* InformationVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InformationVC.h; sourceTree = "<group>"; };
 		04C1AFC41CF46248009AD47E /* InformationVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InformationVC.m; sourceTree = "<group>"; };
+		04CE47A01E2F5730003775CB /* DIYSearchTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIYSearchTextField.h; sourceTree = "<group>"; };
+		04CE47A11E2F5730003775CB /* DIYSearchTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIYSearchTextField.m; sourceTree = "<group>"; };
+		04DFCB4B1E2E069B00546320 /* ChaKongCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChaKongCell.h; sourceTree = "<group>"; };
+		04DFCB4C1E2E069B00546320 /* ChaKongCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChaKongCell.m; sourceTree = "<group>"; };
 		04E19A771D0160CB0046435C /* LxxPlaySound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxxPlaySound.h; sourceTree = "<group>"; };
 		04E19A781D0160CB0046435C /* LxxPlaySound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxxPlaySound.m; sourceTree = "<group>"; };
 		04E19A7A1D01614E0046435C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -630,6 +636,17 @@
 			name = DIYClendar;
 			sourceTree = "<group>";
 		};
+		040C8C5D1E28BFFC00539DD3 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				040C8C5E1E28C01700539DD3 /* DIYView.h */,
+				040C8C5F1E28C01700539DD3 /* DIYView.m */,
+				04CE47A01E2F5730003775CB /* DIYSearchTextField.h */,
+				04CE47A11E2F5730003775CB /* DIYSearchTextField.m */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
 		04137E841E14B2C300EA6A73 /* cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -637,6 +654,8 @@
 				04137E871E14B31300EA6A73 /* searchCell.m */,
 				046EA42C1E163E41006A3342 /* bindingCell.h */,
 				046EA42D1E163E41006A3342 /* bindingCell.m */,
+				04DFCB4B1E2E069B00546320 /* ChaKongCell.h */,
+				04DFCB4C1E2E069B00546320 /* ChaKongCell.m */,
 			);
 			name = cell;
 			sourceTree = "<group>";
@@ -646,8 +665,6 @@
 			children = (
 				04ECBF4A1E10E53B00925153 /* IndexVC.h */,
 				04ECBF4B1E10E53B00925153 /* IndexVC.m */,
-				041046841E1E15A5009BB1FB /* chazuoOrchapaiVC.h */,
-				041046851E1E15A5009BB1FB /* chazuoOrchapaiVC.m */,
 				04ECBF4D1E10F01B00925153 /* saomiaoVC.h */,
 				04ECBF4E1E10F01B00925153 /* saomiaoVC.m */,
 				04ECBF501E10FDE200925153 /* AttachVC.h */,
@@ -1118,6 +1135,7 @@
 		04ECBF491E10E3F600925153 /* CaseTwo */ = {
 			isa = PBXGroup;
 			children = (
+				040C8C5D1E28BFFC00539DD3 /* view */,
 				04137E891E14E3AE00EA6A73 /* model */,
 				04137E841E14B2C300EA6A73 /* cell */,
 				04137E851E14B2D200EA6A73 /* viewcontrollers */,
@@ -1561,7 +1579,6 @@
 				043B83D71D1E139300305E78 /* CustomCell.m in Sources */,
 				046EA42E1E163E41006A3342 /* bindingCell.m in Sources */,
 				04C1AFC51CF46248009AD47E /* InformationVC.m in Sources */,
-				041046861E1E15A5009BB1FB /* chazuoOrchapaiVC.m in Sources */,
 				04FA0D141D15300B0072DC58 /* BtnView.m in Sources */,
 				04F302AC1CF58A47007C4E31 /* QRcodeViewController.m in Sources */,
 				04F3026A1CF5687C007C4E31 /* loginViewController.m in Sources */,
@@ -1593,6 +1610,7 @@
 				04137E881E14B31300EA6A73 /* searchCell.m in Sources */,
 				0430599B1DAC882100D4E945 /* HYBClockView.m in Sources */,
 				04F3029D1CF5734A007C4E31 /* AFURLRequestSerialization.m in Sources */,
+				04CE47A21E2F5730003775CB /* DIYSearchTextField.m in Sources */,
 				04F525A51CFDA28700751A83 /* IQUIView+Hierarchy.m in Sources */,
 				04C1AF921CF42A64009AD47E /* main.m in Sources */,
 				04F525A71CFDA28700751A83 /* IQUIWindow+Hierarchy.m in Sources */,
@@ -1614,9 +1632,11 @@
 				0448E1601DFA8DA9005A5C28 /* MJRefreshAutoStateFooter.m in Sources */,
 				0448E16C1DFA8DA9005A5C28 /* UIView+MJExtension.m in Sources */,
 				041B06221DC04B49005B8EE0 /* BookDetailVC.m in Sources */,
+				04DFCB4D1E2E069B00546320 /* ChaKongCell.m in Sources */,
 				04E4FD0C1CF7EC9D002B72E7 /* RegisterVC.m in Sources */,
 				0448E15F1DFA8DA9005A5C28 /* MJRefreshAutoNormalFooter.m in Sources */,
 				04F3029A1CF5734A007C4E31 /* AFHTTPSessionManager.m in Sources */,
+				040C8C601E28C01700539DD3 /* DIYView.m in Sources */,
 				04F525A81CFDA28700751A83 /* IQKeyboardManager.m in Sources */,
 				0448E16B1DFA8DA9005A5C28 /* UIScrollView+MJRefresh.m in Sources */,
 				04F6457E1D27A1970039B78D /* MBProgressHUD.m in Sources */,

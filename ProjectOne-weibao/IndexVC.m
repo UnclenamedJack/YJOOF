@@ -9,6 +9,7 @@
 #import "IndexVC.h"
 #import "Masonry.h"
 #import "saomiaoVC.h"
+#import "QRcodeViewController.h"
 
 @interface IndexVC ()
 
@@ -57,8 +58,10 @@
     // Do any additional setup after loading the view.
 }
 - (void)bangding:(UIButton *)sender {
-    saomiaoVC *vc = [[saomiaoVC alloc] init];
-    vc.identifier = @"IndexVC";
+//    saomiaoVC *vc = [[saomiaoVC alloc] init];
+//    vc.identifier = @"IndexVC";
+    QRcodeViewController *vc = [[QRcodeViewController alloc] init];
+    vc.identifier = 0;
     UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];;
     [self presentViewController:navc animated:YES completion:nil];
 }

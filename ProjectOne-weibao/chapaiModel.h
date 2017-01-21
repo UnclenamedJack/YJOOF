@@ -11,6 +11,8 @@
 @interface chapaiModel : NSObject
 @property(nonatomic, copy)NSString *macDress;
 @property(nonatomic, copy)NSString *name;
+@property(nonatomic, strong)NSNumber *machineid;
+@property(nonatomic, strong)NSNumber *type;
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 + (instancetype)modelWithDictionary:(NSDictionary *)dict;
 @end

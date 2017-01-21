@@ -10,7 +10,15 @@
 @class searchModel;
 @class binddingModel;
 @class chapaiModel;
+
+
 @interface bindingOrHistroyBindViewController : UIViewController
+
+typedef enum _device: NSUInteger {
+    ChaZuo = 1,
+    ChaPaiChaKong,
+} Device;
+
 @property(nonatomic,copy) NSString *mac;
 //@property(nonatomic, copy)NSString *num;
 //@property(nonatomic, copy)NSString *name;
@@ -22,5 +30,7 @@
 @property(nonatomic,strong) chapaiModel *model2;
 @property(nonatomic,assign) NSInteger WhatIsBinding;
 @property(nonatomic,copy) NSString *name;
-@property(nonatomic,strong)NSDictionary *hubs;
+@property(nonatomic,strong) NSDictionary *hubs;
+@property(nonatomic,assign) Device type;
+@property(nonatomic,strong)NSArray *hbdArr;
 @end

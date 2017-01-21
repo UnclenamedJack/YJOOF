@@ -14,6 +14,8 @@
     if (self) {
         _macDress = dict[@"mac"];
         _name = dict[@"name"];
+        _machineid = dict[@"machineid"];
+        _type = dict[@"type"];
     }
     return self;
 }

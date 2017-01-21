@@ -13,6 +13,8 @@
 #import "MBProgressHUD.h"
 #import "searchCell.h"
 #import "searchModel.h"
+#import "UIColor+Extend.h"
+#import "DIYSearchTextField.h"
 
 @interface searchVC ()<UITextFieldDelegate,UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)UITextField *field;
@@ -25,36 +27,41 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+    self.title = @"资产搜索";
+    [self.view setBackgroundColor:[UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0]];
     
-    self.field = [[UITextField alloc] init];
+    self.field = [[DIYSearchTextField alloc] init];
     [_field becomeFirstResponder];
     [_field setDelegate:self];
-    [_field setBorderStyle:UITextBorderStyleLine];
+    [_field setBorderStyle:UITextBorderStyleRoundedRect];
     [_field setPlaceholder:@"请输入资产编码"];
-    [_field setLeftView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"erweima@3x"]]];
+    [_field setClearButtonMode:UITextFieldViewModeAlways];
+    [_field setTintColor:[UIColor lightGrayColor]];
+    [_field setLeftView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fangdajing"]]];
     [_field setLeftViewMode:UITextFieldViewModeAlways];
+    
     _field.returnKeyType = UIReturnKeySearch;
     [self.view addSubview:_field];
     [_field mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).offset(25);
+        make.top.equalTo(self.view).offset(64+10);
         make.left.equalTo(self.view).offset(15);
         make.height.equalTo(@30);
+        make.right.equalTo(self.view).offset(-15);
     }];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(lookOutForInformation:) name:UITextFieldTextDidChangeNotification object:_field];
     
-    UIButton *cancleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [cancleBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [cancleBtn setTitle:@"取消" forState:UIControlStateNormal];
-    [self.view addSubview:cancleBtn];
-    [cancleBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_field.mas_right);
-        make.right.equalTo(self.view).offset(-3);
-        make.centerY.equalTo(_field);
-    }];
-    [cancleBtn addTarget:self action:@selector(cancleClick:) forControlEvents:UIControlEventTouchUpInside];
+//    UIButton *cancleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [cancleBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+//    [cancleBtn setTitle:@"取消" forState:UIControlStateNormal];
+//    [self.view addSubview:cancleBtn];
+//    [cancleBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(_field.mas_right);
+//        make.right.equalTo(self.view).offset(-3);
+//        make.centerY.equalTo(_field);
+//    }];
+//    [cancleBtn addTarget:self action:@selector(cancleClick:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,50, ScreenWidth, ScreenHeight-50) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,114, ScreenWidth, ScreenHeight-114) style:UITableViewStylePlain];
     [_tableView setHidden:YES];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -85,7 +92,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self bind:self.dataModelArr[indexPath.row] andIndexPath:indexPath withCompleteBlock:^{
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self.navigationController popViewControllerAnimated:YES];
     }];
 }
 - (void)cancleClick:(UIButton *)sender {
@@ -131,6 +138,9 @@
             }
         }else{
             [hud setMode:MBProgressHUDModeCustomView];
+            hud.bezelView.color = [UIColor colorWithRed:113/255.0 green:112/255.0 blue:113/255.0 alpha:1.0];
+            hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
+            [hud.label setTextColor:[UIColor whiteColor]];
             [hud.label setText:responseObject[@"msg"]];
             [hud hideAnimated:YES afterDelay:1.5];
         }
@@ -140,7 +150,10 @@
         NSLog(@"%@",error);
 #endif
         [hud setMode:MBProgressHUDModeCustomView];
-        [hud.label setText:@"网络连接失败！"];
+        hud.bezelView.color = [UIColor colorWithRed:113/255.0 green:112/255.0 blue:113/255.0 alpha:1.0];
+        hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
+        [hud.label setTextColor:[UIColor whiteColor]];
+        [hud.label setText:@"网络不好"];
         [hud hideAnimated:YES afterDelay:1.5];
     }];
 
