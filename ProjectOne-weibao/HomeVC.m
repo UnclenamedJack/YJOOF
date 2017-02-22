@@ -1337,7 +1337,7 @@
         }
         case 101:{
             sender.tag = sender.tag - 100;
-            self.seletedTime = @"";
+            self.seletedTime = nil;
             self.endTime = nil;
             self.beginTime = nil;
             [sender setBackgroundImage:[UIImage imageNamed:@"未选择"] forState:UIControlStateNormal];
@@ -1345,7 +1345,7 @@
         }
         case 102:{
             sender.tag = sender.tag - 100;
-            self.seletedTime = @"";
+            self.seletedTime = nil;
             self.endTime = nil;
             self.beginTime = nil;
             [sender setBackgroundImage:[UIImage imageNamed:@"未选择"] forState:UIControlStateNormal];
@@ -1353,7 +1353,7 @@
         }
             case 103:{
                 sender.tag = sender.tag - 100;
-                self.seletedTime = @"";
+                self.seletedTime = nil;
                 self.endTime = nil;
                 self.beginTime = nil;
                 [sender setBackgroundImage:[UIImage imageNamed:@"未选择"] forState:UIControlStateNormal];
@@ -1361,7 +1361,7 @@
         }
         case 104:{
             sender.tag = sender.tag - 100;
-            self.seletedTime = @"";
+            self.seletedTime = nil;
             self.endTime = nil;
             self.beginTime = nil;
             [sender setBackgroundImage:[UIImage imageNamed:@"未选择"] forState:UIControlStateNormal];

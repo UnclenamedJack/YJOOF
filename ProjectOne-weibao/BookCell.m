@@ -190,10 +190,7 @@
     NSDictionary *parameters = @{@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"],@"ids":[NSString stringWithFormat:@"%zd",self.ids],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
     [manager POST:DELETBOOKINFO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"%@",responseObject);
-        if ([responseObject[@"msg"] isEqualToString:@"请重新登录！"]) {
-            self.block2?self.block2(responseObject[@"msg"]):nil;
-        }
-        
+        self.block2?self.block2(responseObject[@"msg"]):nil;
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",error);
     }];

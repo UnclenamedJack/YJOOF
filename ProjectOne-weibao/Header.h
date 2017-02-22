@@ -64,6 +64,7 @@
 #define ROOMURL @"http://www.yjoof.com/ygapi/getrooms?"
 
 //------------------------------------------绑定API------------------------------------------------------
+
 #define SAOMIAOCHAZUO @"http://www.yjoof.com/ygapi/findbymac?"
 
 #define MOHUCHAXUN  @"http://www.yjoof.com/ygapi/findAssetbyNum?"
@@ -77,7 +78,6 @@
 #define JIECHUCHAPAICHAKONGBANDDING @"http://www.yjoof.com/ygapi/cancelbindHub?"
 
 #define CHECKBINDING @"http://www.yjoof.com/ygapi/checkbindinfo"
-
 
 #else //--------------------------------------------------------------------------------------
 
@@ -128,7 +128,7 @@
 
 #define FORGETPASSWORD @"http://192.168.5.10:8080/wuxin/ygapi/wjmm?"
 
-#define LoginURL @"http://192.168.5.10:8080/wuxin/ygapi/phonelogin?"
+#define LoginURL @"http://192.168.5.10:8080/wuxin/ygapi/phonelogin?"  //登陆表合并维码头 ygapi改成api 其他不变 （线上暂未改变）
 
 #define FindURL @"http://192.168.5.10:8080/wuxin/ygapi/changepass?"
 

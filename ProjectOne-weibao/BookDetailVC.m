@@ -186,6 +186,9 @@
         }
         if ([responseObject[@"result"] isEqual:@1]) {
             __weak BookDetailVC *weakSelf = self;
+            if (self.block) {
+                self.block(responseObject[@"msg"]);
+            }
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [weakSelf.navigationController popViewControllerAnimated:YES];

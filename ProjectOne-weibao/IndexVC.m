@@ -10,6 +10,7 @@
 #import "Masonry.h"
 #import "saomiaoVC.h"
 #import "QRcodeViewController.h"
+#import "WifiVC.h"
 
 @interface IndexVC ()
 
@@ -35,7 +36,7 @@
         make.centerY.equalTo(self.view).offset(-40);
         make.height.equalTo(@50);
     }];
-    
+    [TestingBtn addTarget:self action:@selector(wifiClick:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *attachBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [attachBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -64,6 +65,12 @@
     vc.identifier = 0;
     UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];;
     [self presentViewController:navc animated:YES completion:nil];
+}
+- (void)wifiClick:(UIButton *)sender {
+    WifiVC *vc = [[WifiVC alloc] init];
+    UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:navc animated:YES completion:nil];
+    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

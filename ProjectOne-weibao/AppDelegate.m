@@ -17,6 +17,9 @@
 #import "MBProgressHUD.h"
 #import "NAVC.h"
 #import "IndexVC.h"
+#import "WifiVC.h"
+#import "ESP_NetUtil.h"
+#import "SystemConfiguration/CaptiveNetwork.h"
 
 #define APP_KEY @"9ff9365f9af539abe9c68b41"
 #define Version_IOS9 ([[UIDevice currentDevice].systemVersion doubleValue]>= 9.0)
@@ -241,6 +244,13 @@
     [UIApplication sharedApplication].applicationIconBadgeNumber=0;//取消应用程序通知图标标记
 
     [JPUSHService resetBadge];
+    
+    NSDictionary *netInfo = [self fetchNetInfo];
+    [[NSUserDefaults standardUserDefaults] setObject:[netInfo objectForKey:@"SSID"] forKey:@"ssid"];
+    [[NSUserDefaults standardUserDefaults] setObject:[netInfo objectForKey:@"BSSID"] forKey:@"bssid"];
+
+//    vc.ssid = [netInfo objectForKey:@"SSID"];
+//    vc.bssid = [netInfo objectForKey:@"BSSID"];
 }
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
@@ -278,5 +288,39 @@
         [alert show];
 
     }
-   }
+}
+- (NSString *)fetchSsid
+{
+    NSDictionary *ssidInfo = [self fetchNetInfo];
+    
+    return [ssidInfo objectForKey:@"SSID"];
+}
+
+- (NSString *)fetchBssid
+{
+    NSDictionary *bssidInfo = [self fetchNetInfo];
+    
+    return [bssidInfo objectForKey:@"BSSID"];
+}
+
+// refer to http://stackoverflow.com/questions/5198716/iphone-get-ssid-without-private-library
+- (NSDictionary *)fetchNetInfo
+{
+    NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
+    //    NSLog(@"%s: Supported interfaces: %@", __func__, interfaceNames);
+    
+    NSDictionary *SSIDInfo;
+    for (NSString *interfaceName in interfaceNames) {
+        SSIDInfo = CFBridgingRelease(
+                                     CNCopyCurrentNetworkInfo((__bridge CFStringRef)interfaceName));
+        //        NSLog(@"%s: %@ => %@", __func__, interfaceName, SSIDInfo);
+        
+        BOOL isNotEmpty = (SSIDInfo.count > 0);
+        if (isNotEmpty) {
+            break;
+        }
+    }
+    return SSIDInfo;
+}
+
 @end

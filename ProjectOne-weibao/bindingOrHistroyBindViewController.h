@@ -32,5 +32,6 @@ typedef enum _device: NSUInteger {
 @property(nonatomic,copy) NSString *name;
 @property(nonatomic,strong) NSDictionary *hubs;
 @property(nonatomic,assign) Device type;
-@property(nonatomic,strong)NSArray *hbdArr;
+@property(nonatomic,strong) NSArray *hbdArr;
+@property(nonatomic,copy) void (^relaodCollectonBlock)(NSArray *);
 @end

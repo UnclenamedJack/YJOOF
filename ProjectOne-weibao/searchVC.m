@@ -39,7 +39,6 @@
     [_field setTintColor:[UIColor lightGrayColor]];
     [_field setLeftView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fangdajing"]]];
     [_field setLeftViewMode:UITextFieldViewModeAlways];
-    
     _field.returnKeyType = UIReturnKeySearch;
     [self.view addSubview:_field];
     [_field mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -48,7 +47,7 @@
         make.height.equalTo(@30);
         make.right.equalTo(self.view).offset(-15);
     }];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(lookOutForInformation:) name:UITextFieldTextDidChangeNotification object:_field];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(lookOutForInformation:) name:UITextFieldTextDidChangeNotification object:_field];
     
 //    UIButton *cancleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 //    [cancleBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
@@ -209,7 +208,49 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [_field resignFirstResponder];
 }
-
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html",@"text/json", nil];
+    NSDictionary *parameters = @{@"num":_field.text,@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"]};
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [manager POST:MOHUCHAXUN parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+#if DEBUG
+        NSLog(@"网路连接成功！");
+        NSLog(@"%@",responseObject);
+#endif
+        
+        if ([responseObject[@"result"] integerValue] == 1) {
+            [hud setHidden:YES];
+            self.datas = responseObject[@"obj"];
+            NSMutableArray *arry = [NSMutableArray array];
+            for (NSDictionary *dict in responseObject[@"obj"]) {
+                searchModel *model = [searchModel modelWithDictionary:dict];
+                [arry addObject:model];
+            }
+            self.dataModelArr = arry;
+            
+            [self.tableView setHidden:NO];
+            [self.tableView reloadData];
+        }else{
+            [hud setMode:MBProgressHUDModeCustomView];
+            [hud setRemoveFromSuperViewOnHide:YES];
+            [hud hideAnimated:YES afterDelay:2.0];
+            [hud.label setText:responseObject[@"msg"]];
+        }
+        
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+#if DEBUG
+        NSLog(@"网络连接失败！");
+        NSLog(@"%@",error);
+#endif
+        [hud setMode:MBProgressHUDModeCustomView];
+        [hud setRemoveFromSuperViewOnHide:YES];
+        [hud hideAnimated:YES afterDelay:2.0];
+        [hud.label setText:@"网络连接失败！"];
+    }];
+    return YES;
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

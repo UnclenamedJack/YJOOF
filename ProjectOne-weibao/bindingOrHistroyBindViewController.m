@@ -111,9 +111,11 @@
             make.height.equalTo(img.mas_width);
         }];
     }else{
-        UITableView *tableView = [[UITableView alloc] init];
+        UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         [tableView setDelegate:self];
         [tableView setDataSource:self];
+        [tableView setSectionHeaderHeight:40];
+        [tableView setSectionFooterHeight:0];
         [self.view addSubview:tableView];
         [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_topView.mas_bottom).offset(10);
@@ -312,6 +314,9 @@
         IndexVC *vc = [[IndexVC alloc] init];
         [self presentViewController:vc animated:YES completion:nil];
     }else if (self.type == ChaPaiChaKong){
+        if (self.relaodCollectonBlock) {
+            self.relaodCollectonBlock(self.hadBindingData);
+        }
         [self.navigationController popViewControllerAnimated:YES];
     }else{
         return;
@@ -375,9 +380,12 @@
                     self.hadBindingData = mutArr;
                     [self.tableView reloadData];
                 }else{
-                    UITableView *tableView = [[UITableView alloc] init];
+                    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
                     [tableView setDelegate:self];
                     [tableView setDataSource:self];
+                    [tableView setTableHeaderView:nil];
+                    [tableView setSectionHeaderHeight:40];
+                    [tableView setSectionFooterHeight:0];
                     [self.view addSubview:tableView];
                     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
                         make.top.equalTo(_topView.mas_bottom).offset(10);
@@ -397,7 +405,7 @@
                 }
             };
             if (self.hubs) {
-                vc.hubid = self.hubs[@"id"];
+                vc.hubid = self.hubs[@"hubid"];
             }
             UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
             [backItem setTitle:@""];
@@ -553,16 +561,20 @@
     }
     return view;
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (self.WhatIsBinding == 1 || self.WhatIsBinding == 2) {
-        return 50;
-    }else{
-        if (section == 0) {
-            return 0.0;
-        }else{
-            return 50;
-        }
-    }
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+////    if (self.WhatIsBinding == 1 || self.WhatIsBinding == 2) {
+////        return 40;
+////    }else{
+////        if (section == 0) {
+////            return 0.0;
+////        }else{
+////            return 40;
+////        }
+////    }
+//    return 40;
+//}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identifier = @"bindingCell";
@@ -571,17 +583,17 @@
         cell = [[bindingCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     }
     if(self.hubs){
-        cell.hubid = self.hubs[@"id"];
+        cell.hubid = self.hubs[@"hubid"];
     }
     
     __weak typeof(bindingCell) *weakcell = cell;
     cell.cancelBlock = ^(UIButton *sender,id model){
         if (sender.tag == 0) {
             if (_WhatIsBinding == 1) {
-                _label.text = @"历史绑定资产";
+//                _label.text = @"历史绑定资产";
                 self.WhatIsBinding = -1;
             }else if (_WhatIsBinding == 2){
-                _label.text = @"历史绑定插排";
+//                _label.text = @"历史绑定插排";
                 self.WhatIsBinding = -2;
             }else{
                 return ;

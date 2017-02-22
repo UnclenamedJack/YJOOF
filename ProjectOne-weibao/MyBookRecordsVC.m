@@ -227,14 +227,14 @@
         [weakSelf.datas replaceObjectAtIndex:indexPath.section withObject:mutDict];
         [tableView reloadData];
         
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            if (weakSelf.datas.count == 0){
-                [weakSelf.navigationController popViewControllerAnimated:YES];
-            }
-        }];
-        [alert addAction:action];
-        [weakSelf presentViewController:alert animated:YES completion:nil];
+//        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
+//        UIAlertAction *action = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//            if (weakSelf.datas.count == 0){
+//                [weakSelf.navigationController popViewControllerAnimated:YES];
+//            }
+//        }];
+//        [alert addAction:action];
+//        [weakSelf presentViewController:alert animated:YES completion:nil];
         
     };
     cell.block = ^{
@@ -260,18 +260,23 @@
         vc.data2 = arry2;
         vc.classRoomCapacity = weakSelf.datas[indexPath.section][@"capacity"];
         vc.deviceArr = weakSelf.datas[indexPath.section][@"assetList"];
-        
+        vc.block = weakcell.block1;
         UIBarButtonItem *returnItem = [[UIBarButtonItem alloc] init];
         [returnItem setTitle:@""];
         self.navigationItem.backBarButtonItem = returnItem;
         [weakSelf.navigationController pushViewController:vc animated:YES];
     };
 
-    
     cell.block2 = ^(NSString *str){
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:str preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf.navigationController dismissViewControllerAnimated:YES completion:nil];
+            if ([str isEqualToString:@"请重新登陆！"]) {
+                [weakSelf.navigationController dismissViewControllerAnimated:YES completion:nil];
+            }else{
+                if (self.datas.count == 0) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+            }
         }];
         [alert addAction:action];
         [weakSelf presentViewController:alert animated:YES completion:nil];

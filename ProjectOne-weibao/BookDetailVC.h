@@ -15,4 +15,5 @@
 @property(nonatomic,strong)NSArray *data2;
 @property(nonatomic,strong)NSNumber *classRoomCapacity;
 @property(nonatomic,strong)NSArray *deviceArr;
+@property(nonatomic,copy)void (^block)(NSString *);
 @end

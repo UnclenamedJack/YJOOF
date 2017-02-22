@@ -74,7 +74,7 @@
 }
 
 - (void)click:(UIButton *)sender {
-    NSLog(@"hahaha");
+    NSLog(@"两个button的点击事件！");
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     if (self.block){

@@ -9,6 +9,8 @@
 #import "ChaKongCell.h"
 #import "Masonry.h"
 #import "UIColor+Extend.h"
+#import "Header.h"
+#import "searchModel.h"
 
 @implementation ChaKongCell
 
@@ -112,26 +114,59 @@
         _isBinding = isBinding;
     }
     if (self.isBinding) {
+        if (self.contentView.subviews.count == 2) {
+            [self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        }
         UILabel *macL = [[UILabel alloc] init];
-        [macL setText:[NSString stringWithFormat:@"MAC: %@",self.mac]];
+        [macL setText:[NSString stringWithFormat:@"%@",self.model.num]];
+        if(ScreenHeight == 480.0){
+            [macL setFont:[UIFont systemFontOfSize:15]];
+        }else if (ScreenHeight==568) {
+            [macL setFont:[UIFont systemFontOfSize:16]];
+        }else if (ScreenHeight == 667){
+            [macL setFont:[UIFont systemFontOfSize:17]];
+        }else{
+            [macL setFont:[UIFont systemFontOfSize:18]];
+        }
         [macL setTextColor:[UIColor colorWithRed:119/255.0 green:117/255.0 blue:117/255.0 alpha:1.0]];
         [self.contentView addSubview:macL];
         
         UILabel *nameL = [[UILabel alloc] init];
-        [nameL setFont:[UIFont systemFontOfSize:11.0]];
+        if(ScreenHeight == 480.0){
+            [nameL setFont:[UIFont systemFontOfSize:9.0]];
+        }else if (ScreenHeight==568) {
+            [nameL setFont:[UIFont systemFontOfSize:10.0]];
+        }else if (ScreenHeight == 667){
+            [nameL setFont:[UIFont systemFontOfSize:11.0]];
+        }else{
+            [nameL setFont:[UIFont systemFontOfSize:11.0]];
+        }
+//        [nameL setFont:[UIFont systemFontOfSize:11.0]];
         [nameL setTextColor:[UIColor colorWithRed:176/255.0 green:175/255.0 blue:176/255.0 alpha:1.0]];
-        [nameL setText:[NSString stringWithFormat:@"8孔智能插座-%zd",self.index]];
+//        [nameL setText:[NSString stringWithFormat:@"8孔智能插座-%zd",self.index]];
+        [nameL setText:self.model.device];
         [self.contentView addSubview:nameL];
         
         UIButton *detatilBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [detatilBtn.layer setCornerRadius:5.0];
-        [detatilBtn.titleLabel setFont:[UIFont systemFontOfSize:13.0]];
-        [detatilBtn setBackgroundColor:[UIColor hexChangeFloat:@"0a88e7"]];
-        [detatilBtn setTitleColor:[UIColor hexChangeFloat:@"ffffff"] forState:UIControlStateNormal];
+        if(ScreenHeight == 480.0){
+            [detatilBtn.titleLabel setFont:[UIFont systemFontOfSize:11.0]];
+        }else if (ScreenHeight==568) {
+            [detatilBtn.titleLabel setFont:[UIFont systemFontOfSize:12.0]];
+        }else if (ScreenHeight == 667){
+            [detatilBtn.titleLabel setFont:[UIFont systemFontOfSize:13.0]];
+        }else{
+            [detatilBtn.titleLabel setFont:[UIFont systemFontOfSize:14.0]];
+        }
+//        [detatilBtn.titleLabel setFont:[UIFont systemFontOfSize:13.0]];
+//        [detatilBtn setBackgroundColor:[UIColor hexChangeFloat:@"0a88e7"]];
+        [detatilBtn.layer setBorderColor:[UIColor hexChangeFloat:@"0a88e7"].CGColor];
+        [detatilBtn.layer setBorderWidth:1.0];
+        [detatilBtn setTitleColor:[UIColor hexChangeFloat:@"0a88e7"] forState:UIControlStateNormal];
         [detatilBtn setTitle:@"查看详情" forState:UIControlStateNormal];
         [self.contentView addSubview:detatilBtn];
         [detatilBtn addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
-        
+        [detatilBtn addTarget:self action:@selector(touchDown:) forControlEvents:UIControlEventTouchDown];
         
         [macL mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(self.contentView);
@@ -148,9 +183,10 @@
             make.top.equalTo(nameL.mas_bottom).offset(20);
             make.width.equalTo(@80);
         }];
-        
-        
     }else{
+        if (self.contentView.subviews.count > 2) {
+            [self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        }
         UIImageView *imageV;
         if (_index < 5) {
             imageV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chakongttt"]];
@@ -166,8 +202,14 @@
     }
 }
 - (void)click:(UIButton *)sender {
+    [sender setBackgroundColor:[UIColor clearColor]];
+    [sender setTitleColor:[UIColor hexChangeFloat:@"0a88e7"] forState:UIControlStateNormal];
     if (self.blcok) {
         self.blcok();
     }
+}
+- (void)touchDown:(UIButton *)sender {
+    [sender setBackgroundColor:[UIColor hexChangeFloat:@"0a88e7"]];
+    [sender setTitleColor:[UIColor hexChangeFloat:@"ffffff"] forState:UIControlStateNormal];
 }
 @end

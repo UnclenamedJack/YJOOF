@@ -84,15 +84,18 @@
         
         self.label1 = [[UILabel alloc] init];
 //        [_label1 setText:@"label1"];
+        [self.label1 setTextAlignment:NSTextAlignmentLeft];
         [self.contentView addSubview:_label1];
         
         self.label2 = [[UILabel alloc] init];
 //        [_label2 setText:@"label2"];
+        [self.label2 setTextAlignment:NSTextAlignmentLeft];
         [_label2 setFont:[UIFont systemFontOfSize:12.0]];
         [self.contentView addSubview:_label2];
         
         self.label3 = [[UILabel alloc] init];
 //        [_label3 setText:@"label3"];
+        [self.label3 setTextAlignment:NSTextAlignmentCenter];
         [self.contentView addSubview:_label3];
         
         self.btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -103,7 +106,7 @@
         [_btn.layer setCornerRadius:5.0];
         [self.contentView addSubview:_btn];
         [_btn addTarget:self action:@selector(cancelBinding:) forControlEvents:UIControlEventTouchUpInside];
-        
+        [_btn addTarget:self action:@selector(touchDown:) forControlEvents:UIControlEventTouchDown];
         
         [_label1 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.contentView).offset(15);
@@ -126,8 +129,9 @@
         
         
         [_label3 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(_btn.mas_left).offset(-25);
-            make.centerY.equalTo(self.contentView);
+            make.left.greaterThanOrEqualTo(_label1);
+            make.right.lessThanOrEqualTo(_btn.mas_left).offset(-25);
+            make.center.equalTo(self.contentView);
         }];
         
         
@@ -135,8 +139,12 @@
     }
     return self;
 }
-
+- (void)touchDown:(UIButton *)sender {
+    [sender setBackgroundColor:[UIColor hexChangeFloat:@"0a88e7"]];
+    [sender setTitleColor:[UIColor hexChangeFloat:@"ffffff"] forState:UIControlStateNormal];
+}
 - (void)cancelBinding:(UIButton *)sender {
+    
     NSString *url;
     NSDictionary *parameters;
     NSString *HUDStr;
@@ -234,8 +242,8 @@
         _model = modle;
         _label1.text = modle.num;
         _label2.text = modle.device;
-        _label3.text = modle.college;
-        _label4.text = modle.room;
+        _label3.text = modle.room;
+//        _label4.text = modle.college;
     }
 }
 - (void)setModel1:(binddingModel *)model1 {
@@ -243,8 +251,8 @@
         _model1 = model1;
         _label1.text = model1.num;
         _label2.text = model1.device;
-        _label3.text = model1.college;
-        _label4.text = model1.room;
+        _label3.text = model1.room;
+//        _label4.text = model1.room;
     }
 }
 - (void)setModel2:(chapaiModel *)model2 {
