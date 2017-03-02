@@ -10,6 +10,6 @@
 
 @interface bindingChaKongVC : UIViewController
 @property(nonatomic, copy)NSString *mac;
-@property(nonatomic, copy)NSArray *hubs;
+@property(nonatomic, strong)NSMutableArray *hubs;
 @property(nonatomic, strong)NSArray *bindingDataArr;
 @end

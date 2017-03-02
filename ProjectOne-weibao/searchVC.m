@@ -213,6 +213,7 @@
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/html",@"text/json", nil];
     NSDictionary *parameters = @{@"num":_field.text,@"acoutid":[[NSUserDefaults standardUserDefaults] objectForKey:@"yktid"]};
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [hud.label setText:@"正在加载…"];
     [manager POST:MOHUCHAXUN parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 #if DEBUG
         NSLog(@"网路连接成功！");

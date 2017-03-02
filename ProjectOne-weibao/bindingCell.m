@@ -95,6 +95,15 @@
         
         self.label3 = [[UILabel alloc] init];
 //        [_label3 setText:@"label3"];
+        if(ScreenHeight == 480.0){
+            [_label3 setFont:[UIFont systemFontOfSize:10.0]];
+        }else if (ScreenHeight==568) {
+            [_label3 setFont:[UIFont systemFontOfSize:12.0]];
+        }else if (ScreenHeight == 667){
+            [_label3 setFont:[UIFont systemFontOfSize:14.0]];
+        }else{
+            [_label3 setFont:[UIFont systemFontOfSize:14.0]];
+        }
         [self.label3 setTextAlignment:NSTextAlignmentCenter];
         [self.contentView addSubview:_label3];
         
@@ -144,6 +153,7 @@
     [sender setTitleColor:[UIColor hexChangeFloat:@"ffffff"] forState:UIControlStateNormal];
 }
 - (void)cancelBinding:(UIButton *)sender {
+    
     
     NSString *url;
     NSDictionary *parameters;

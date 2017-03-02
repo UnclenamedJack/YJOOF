@@ -99,6 +99,7 @@
 		046EA4311E164F40006A3342 /* binddingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 046EA4301E164F40006A3342 /* binddingModel.m */; };
 		0471DC101CF6BCE2004BA6ED /* SettingsTVCTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0471DC0F1CF6BCE2004BA6ED /* SettingsTVCTableViewController.m */; };
 		04768F8D1CF52D7E003B613D /* SpecialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04768F8C1CF52D7E003B613D /* SpecialView.m */; };
+		049E9CE91E63F26900DA4530 /* QRCodeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 049E9CE81E63F26900DA4530 /* QRCodeVC.m */; };
 		04A15A081CF6E85900980334 /* TimerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A15A071CF6E85900980334 /* TimerVC.m */; };
 		04AC41891D0D508B00588EB3 /* erweima.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AC41031D0D508B00588EB3 /* erweima.png */; };
 		04AC418A1D0D508B00588EB3 /* erweima@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AC41041D0D508B00588EB3 /* erweima@2x.png */; };
@@ -404,6 +405,8 @@
 		0471DC0F1CF6BCE2004BA6ED /* SettingsTVCTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTVCTableViewController.m; sourceTree = "<group>"; };
 		04768F8B1CF52D7E003B613D /* SpecialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpecialView.h; sourceTree = "<group>"; };
 		04768F8C1CF52D7E003B613D /* SpecialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpecialView.m; sourceTree = "<group>"; };
+		049E9CE71E63F26900DA4530 /* QRCodeVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeVC.h; sourceTree = "<group>"; };
+		049E9CE81E63F26900DA4530 /* QRCodeVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeVC.m; sourceTree = "<group>"; };
 		04A15A061CF6E85900980334 /* TimerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerVC.h; sourceTree = "<group>"; };
 		04A15A071CF6E85900980334 /* TimerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerVC.m; sourceTree = "<group>"; };
 		04AC41031D0D508B00588EB3 /* erweima.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = erweima.png; sourceTree = "<group>"; };
@@ -993,6 +996,8 @@
 				046BC2A51DBEEE84004C7960 /* MyBookRecordsVC.m */,
 				041B06201DC04B49005B8EE0 /* BookDetailVC.h */,
 				041B06211DC04B49005B8EE0 /* BookDetailVC.m */,
+				049E9CE71E63F26900DA4530 /* QRCodeVC.h */,
+				049E9CE81E63F26900DA4530 /* QRCodeVC.m */,
 				04F302AA1CF58A47007C4E31 /* QRcodeViewController.h */,
 				04F302AB1CF58A47007C4E31 /* QRcodeViewController.m */,
 				04F302AF1CF59EEB007C4E31 /* resultVC.h */,
@@ -1740,6 +1745,7 @@
 				04F3029E1CF5734A007C4E31 /* AFURLResponseSerialization.m in Sources */,
 				04F3029F1CF5734A007C4E31 /* AFURLSessionManager.m in Sources */,
 				04F302A21CF5734A007C4E31 /* FMDatabasePool.m in Sources */,
+				049E9CE91E63F26900DA4530 /* QRCodeVC.m in Sources */,
 				042DC2F61E4AE8E2000DCBC1 /* ESPTouchGenerator.m in Sources */,
 				0448E1611DFA8DA9005A5C28 /* MJRefreshBackGifFooter.m in Sources */,
 				042DC3031E4AE901000DCBC1 /* ESP_ByteUtil.m in Sources */,

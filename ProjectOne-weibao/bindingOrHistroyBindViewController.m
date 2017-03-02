@@ -114,7 +114,9 @@
         UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
         [tableView setDelegate:self];
         [tableView setDataSource:self];
-        [tableView setSectionHeaderHeight:40];
+//        [tableView setSectionHeaderHeight:40];
+//        [tableView setSectionFooterHeight:0];
+        [tableView setSectionHeaderHeight:0];
         [tableView setSectionFooterHeight:0];
         [self.view addSubview:tableView];
         [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -249,20 +251,6 @@
             make.height.equalTo(@40);
         }];
         
-        //        UIButton *bindingNew = [UIButton buttonWithType:UIButtonTypeCustom];
-        //        [bindingNew setTitle:@"绑定新资产" forState:UIControlStateNormal];
-        //        [bindingNew setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        //        [bindingNew.layer setCornerRadius:3.0];
-        //        [bindingNew.layer setBorderColor:[UIColor blackColor].CGColor];
-        //        [bindingNew.layer setBorderWidth:1.0];
-        //        [self.view addSubview:bindingNew];
-        //        [bindingNew mas_makeConstraints:^(MASConstraintMaker *make) {
-        //            make.centerX.equalTo(self.view);
-        //            make.bottom.equalTo(self.view).offset(-50);
-        //            make.width.equalTo(self.view).multipliedBy(0.35);
-        //        }];
-        //        [bindingNew setEnabled:NO];
-        //        [bindingNew addTarget:self action:@selector(bindNewDevice:) forControlEvents:UIControlEventTouchUpInside];
         __weak typeof(bindingCell) *weakcell = cell;
         cell.cancelBlock = ^(UIButton *sender,id model){
             if (sender.tag == 0) {
@@ -315,7 +303,45 @@
         [self presentViewController:vc animated:YES completion:nil];
     }else if (self.type == ChaPaiChaKong){
         if (self.relaodCollectonBlock) {
-            self.relaodCollectonBlock(self.hadBindingData);
+            NSMutableArray *hbdArr = [NSMutableArray array];
+                for (id model in self.historyData) {
+                    if ([model isKindOfClass:[searchModel class]]) {
+                        NSDictionary *hbdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
+                        [hbdArr addObject:hbdDict];
+                    }else if ([model isKindOfClass:[binddingModel class]]){
+                        NSDictionary *hbdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
+                        [hbdArr addObject:hbdDict];
+                    }else{//chapaimodel
+                        
+                    }
+                }
+            
+            NSDictionary *dict;
+            if (self.hadBindingData.count == 0) {
+                if (hbdArr.count == 0) {
+                      dict = @{@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                }else{
+                     dict = @{@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                }
+              
+            }else{
+                NSDictionary *bdDict;
+                id model = self.hadBindingData[0];
+                if ([model isKindOfClass:[searchModel class]]){
+                    bdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
+                }else if ([model isKindOfClass:[binddingModel class]]){
+                    bdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
+                }else{
+                    bdDict = @{@"注意":@"注意"};
+                }
+                if (hbdArr.count == 0) {
+                    dict = @{@"bdasset":bdDict,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+
+                }else{
+                    dict = @{@"bdasset":bdDict,@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                }
+            }
+            self.relaodCollectonBlock(dict,self.row);
         }
         [self.navigationController popViewControllerAnimated:YES];
     }else{
@@ -349,25 +375,6 @@
         UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"绑定资产" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             searchVC *vc = [[searchVC alloc] init];
             vc.block = ^(NSString *num,searchModel *model){
-//                [_noBinding removeFromSuperview];
-//                _label = [[UILabel alloc] init];
-//                _label.text = @"已绑定资产";
-//                [self.view addSubview:_label];
-//                [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-//                    make.top.equalTo(_topView.mas_bottom);
-//                    make.left.equalTo(self.view).offset(5);
-//                }];
-//                bindingCell *cell = [[bindingCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-//                [self.view addSubview:cell];
-//                [cell mas_makeConstraints:^(MASConstraintMaker *make) {
-//                    make.top.equalTo(_label.mas_bottom).offset(5);
-//                    make.left.equalTo(self.view).offset(5);
-//                    make.right.equalTo(self.view).offset(-5);
-//                    make.height.equalTo(@40);
-//                }];
-//                cell.model = model;
-//                self.WhatIsBinding = 1;
-                
                 self.WhatIsBinding = 1;
                 self.model = model;
 //                [self creatCellOrNot];
@@ -383,9 +390,10 @@
                     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
                     [tableView setDelegate:self];
                     [tableView setDataSource:self];
-                    [tableView setTableHeaderView:nil];
-                    [tableView setSectionHeaderHeight:40];
+                    [tableView setSectionHeaderHeight:0];
                     [tableView setSectionFooterHeight:0];
+//                    [tableView setSectionHeaderHeight:40];
+//                    [tableView setSectionFooterHeight:0];
                     [self.view addSubview:tableView];
                     [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
                         make.top.equalTo(_topView.mas_bottom).offset(10);
@@ -412,7 +420,6 @@
             self.navigationItem.backBarButtonItem = backItem;
             
             [self.navigationController pushViewController:vc animated:YES];
-//            [self presentViewController:vc animated:YES completion:nil];
         }];
         UIAlertAction *action3 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             [alert dismissViewControllerAnimated:YES completion:nil];
@@ -436,11 +443,41 @@
     return 2;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view = [[UIView alloc] init];
-    UILabel *label = [[UILabel alloc] init];
+//
+//    UIView *view ;
+//    if (section == 0) {
+//        view = [[UIView alloc] init];
+//        UILabel *label = [[UILabel alloc] init];
+//        [view setBackgroundColor:[UIColor redColor]];
+//        [view addSubview:label];
+//        [label setText:@"已绑定的资产"];
+//        [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
+//        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.equalTo(view);
+//            //        make.top.equalTo(view);
+//            //        make.bottom.equalTo(view);
+//            make.center.equalTo(view);
+//        }];
+//    }else if(section == 1){
+//        view = [[UIView alloc] init];
+//        UILabel *label = [[UILabel alloc] init];
+//        [view addSubview:label];
+//        [label setText:@"历史绑定"];
+//        [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
+//        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.equalTo(view);
+//            //        make.top.equalTo(view);
+//            //        make.bottom.equalTo(view);
+//            make.center.equalTo(view);
+//        }];
+//    }
+//
+    UIView *view ;
     switch (_WhatIsBinding) {
         case 1:
             if (section == 0) {
+                view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"已绑定的资产"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -451,6 +488,8 @@
                     make.center.equalTo(view);
                 }];
             }else if(section == 1){
+                view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -461,10 +500,11 @@
                     make.center.equalTo(view);
                 }];
             }
-
             break;
         case 2:
             if (section == 0) {
+                view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"已绑定的插排"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -475,6 +515,8 @@
                     make.center.equalTo(view);
                 }];
             }else if(section == 1){
+                UIView *view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -485,10 +527,11 @@
                     make.center.equalTo(view);
                 }];
             }
-
             break;
         case 3:
             if (section == 1) {
+                view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -504,6 +547,9 @@
             break;
         case -4:
             if (section == 0) {
+                view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
+                [view setBackgroundColor:[UIColor orangeColor]];
                 [view addSubview:label];
                 [label setText:@"已绑定的插座"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -514,6 +560,8 @@
                     make.center.equalTo(view);
                 }];
             }else if(section == 1){
+                UIView *view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -524,10 +572,11 @@
                     make.center.equalTo(view);
                 }];
             }
-
             break;
         case -1:
             if (section == 1) {
+                view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -540,10 +589,11 @@
             }else{
                 return nil;
             }
-
             break;
         case -2:
             if (section == 1) {
+                view = [[UIView alloc] init];
+                UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
                 [label setTextColor:[UIColor hexChangeFloat:@"0a88e7"]];
@@ -556,23 +606,31 @@
             }else{
                 return nil;
             }
-
+            break;
+        default:
+            return nil;
             break;
     }
     return view;
 }
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-////    if (self.WhatIsBinding == 1 || self.WhatIsBinding == 2) {
-////        return 40;
-////    }else{
-////        if (section == 0) {
-////            return 0.0;
-////        }else{
-////            return 40;
-////        }
-////    }
-//    return 40;
-//}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+//    if (section == 0) {
+//        return 0;
+//    }else{
+//        return 20;
+//    }
+//    if (self.WhatIsBinding == 1 || self.WhatIsBinding == 2) {
+//        return 40;
+//    }else{
+//        if (section == 0) {
+//            return 0.0;
+//        }else{
+//            return 40;
+//        }
+//    }
+    return 30;
+}
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0;
 }

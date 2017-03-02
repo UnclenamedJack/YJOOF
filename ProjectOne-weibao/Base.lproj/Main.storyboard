@@ -91,7 +91,7 @@
         <!--二维码-->
         <scene sceneID="1v9-mW-ttU">
             <objects>
-                <viewController storyboardIdentifier="QRcode" id="J4Z-wU-QQd" customClass="QRcodeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="QRcode" id="J4Z-wU-QQd" customClass="QRCodeVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Vuf-U3-xAE"/>
                         <viewControllerLayoutGuide type="bottom" id="LWc-m9-qNm"/>

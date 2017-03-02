@@ -24,12 +24,12 @@
 
 @implementation bindingChaKongVC
 static NSString *identifier = @"collection";
-- (NSMutableArray *)datas{
-    if (self.hubs) {
-        _datas = [NSMutableArray arrayWithArray:self.hubs];
-    }
-    return _datas;
-}
+//- (NSMutableArray *)datas{
+//    if (self.hubs) {
+//        _datas = [NSMutableArray arrayWithArray:self.hubs];
+//    }
+//    return _datas;
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.navigationController.navigationBar setTintColor:[UIColor hexChangeFloat:@"ffffff"]];
@@ -38,6 +38,8 @@ static NSString *identifier = @"collection";
     self.title = @"插排信息";
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"left_big"] style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
+    
+    self.datas = [NSMutableArray arrayWithArray:self.hubs];
     
     UIImageView *topView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chapai"]];
     [self.view addSubview:topView];
@@ -147,98 +149,63 @@ static NSString *identifier = @"collection";
     
     ChaKongCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     [cell.contentView setBackgroundColor:[UIColor whiteColor]];
-    cell.index = indexPath.row + 1;
-//    cell.mac = self.mac;
     NSDictionary *dict;
-//    for (NSDictionary *dict1 in self.hubs) {
-//        NSUInteger i = [self.hubs indexOfObject:dict1];
-//        if (i == indexPath.row) {
-//            dict = dict1;
-//        }
-//    }
-//    dict = self.hubs[indexPath.row];
-    dict = self.datas[indexPath.row];
+    dict = self.datas[indexPath.item];
+    
+    cell.index = [dict[@"num"] integerValue] + 1;
+
     if (dict){
 //        if (dict[@"bdasset"] != [NSNull null] || dict[@"bdmachine"] != [NSNull null]) {
         if ([dict.allKeys containsObject:@"bdasset"]){
-//            cell.device = dict[@"bdasset"][@"name"];
-//            cell.number = dict[@"bdasset"][@"num"];
             cell.model = [searchModel modelWithDictionary:dict[@"bdasset"]];
             cell.isBinding = YES;
-             NSMutableArray *arr = [NSMutableArray array];
-            if ([dict.allKeys containsObject:@"hbdassetList"]) {
-//                [arr addObjectsFromArray:dict[@"hbdasset"]];
-                for (NSDictionary *dictionary in dict[@"hbdassetList"]) {
-                    searchModel *model = [searchModel modelWithDictionary:dictionary];
-                    [arr addObject:model];
-                }
-            }
-            if ([dict.allKeys containsObject:@"hbdmachineList"]) {
-//                [arr addObjectsFromArray:dict[@"hbdmachine"]];
-                for (NSDictionary *dictionary in dict[@"hbdmachineList"]) {
-                    chapaiModel *Model = [chapaiModel modelWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:dictionary[@"mac"],@"mac",dictionary[@"machineid"],@"machineid",dictionary[@"type"],@"type",[dictionary[@"type"] intValue] ==1?@"86型智能插座":@"智能插排",@"name", nil]];
-                    [arr addObject:Model];
-                }
-            }
-            __weak ChaKongCell *weakCell = cell;
-            cell.blcok = ^{
-                bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-                vc.relaodCollectonBlock = ^(NSArray *arr){
-                    if (arr.count > 0) {
-                        if ([arr[0] isKindOfClass:[searchModel class]]) {
-                            weakCell.model = arr[0]
-                            ;
-                        }else if ([arr[0] isKindOfClass:[binddingModel class]]){
-                            weakCell.model1 = arr[0];
-                        }else{//chapaimodel
-                            weakCell.model2 = arr[0];
-                        }
-                        weakCell.isBinding = YES;
-                    }else{
-                        weakCell.isBinding = NO;
-                    }
-                    weakCell.index = indexPath.row + 1;
-//                    [self.collectView reloadItemsAtIndexPaths:@[indexPath]];
 
-                };
-                vc.mac = self.mac;
-                vc.WhatIsBinding = 1;
-                vc.type = ChaPaiChaKong;
-                vc.hubs = self.hubs[indexPath.row];
-                vc.hbdArr = arr;
-                vc.model = weakCell.model;
-                vc.name = [NSString stringWithFormat:@"八孔插排-%zd号孔",indexPath.row+1];
-                vc.title = [NSString stringWithFormat:@"%zd号插孔",indexPath.row + 1];
-                [self.navigationController pushViewController:vc animated:YES];
-            };
         }else{
             cell.isBinding = NO;
         }
+        NSMutableArray *arr = [NSMutableArray array];
+        if ([dict.allKeys containsObject:@"hbdassetList"]) {
+            for (NSDictionary *dictionary in dict[@"hbdassetList"]) {
+                searchModel *model = [searchModel modelWithDictionary:dictionary];
+                [arr addObject:model];
+            }
+        }
+        if ([dict.allKeys containsObject:@"hbdmachineList"]) {
+            for (NSDictionary *dictionary in dict[@"hbdmachineList"]) {
+                chapaiModel *Model = [chapaiModel modelWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:dictionary[@"mac"],@"mac",dictionary[@"machineid"],@"machineid",dictionary[@"type"],@"type",[dictionary[@"type"] intValue] ==1?@"86型智能插座":@"智能插排",@"name", nil]];
+                [arr addObject:Model];
+            }
+        }
+        __weak ChaKongCell *weakCell = cell;
+        cell.blcok = ^{
+            bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
+            vc.relaodCollectonBlock = ^(NSDictionary *dict,NSUInteger row){
+                if ([self.datas[row] isEqual:dict]) {
+                    return;
+                }
+                //                    if ([dict.allKeys containsObject:@"bdasset"]) {
+                //                        weakCell.isBinding = YES;
+                //                    }else{
+                //                        weakCell.isBinding = NO;
+                //                    }
+                [self.datas replaceObjectAtIndex:row withObject:dict];
+                [self.collectView reloadData];
+                
+            };
+            vc.row = indexPath.row;
+            vc.mac = self.mac;
+            vc.WhatIsBinding = 1;
+            vc.type = ChaPaiChaKong;
+            vc.hubs = self.hubs[indexPath.row];
+            vc.hbdArr = arr;
+            vc.model = weakCell.model;//Problem
+            vc.name = [NSString stringWithFormat:@"八孔插排-%zd号孔",indexPath.row+1];
+            vc.title = [NSString stringWithFormat:@"%zd号插孔",indexPath.row + 1];
+            [self.navigationController pushViewController:vc animated:YES];
+        };
     }else{
         cell.isBinding = NO;
     }
-    
-    
-//    UIImageView *imageV;
-//    if(indexPath.row < 4){
-//        imageV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chakong"]];
-//    }else{
-//        imageV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chakongttt"]];
-//    }
-//    [cell.contentView addSubview:imageV];
-//    [imageV mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.center.equalTo(cell.contentView);
-//        make.top.equalTo(cell.contentView).offset(30);
-//        make.left.equalTo(cell.contentView).offset(135/2.0);
-//    }];
-//    
-//    UILabel *label = [[UILabel alloc] init];
-//    [label setText:[NSString stringWithFormat:@"%zd",indexPath.row+1]];
-//    [imageV addSubview:label];
-//    [label mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.center.equalTo(imageV);
-//    }];
-    
     return cell;
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -246,27 +213,45 @@ static NSString *identifier = @"collection";
     if (cell.isBinding) {
         return;
     }
+    NSDictionary *dict;
+    dict = self.datas[indexPath.item];
+    NSMutableArray *arr = [NSMutableArray array];
+    if ([dict.allKeys containsObject:@"hbdassetList"]) {
+        for (NSDictionary *dictionary in dict[@"hbdassetList"]) {
+            searchModel *model = [searchModel modelWithDictionary:dictionary];
+            [arr addObject:model];
+        }
+    }
+    if ([dict.allKeys containsObject:@"hbdmachineList"]) {
+        for (NSDictionary *dictionary in dict[@"hbdmachineList"]) {
+            chapaiModel *Model = [chapaiModel modelWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:dictionary[@"mac"],@"mac",dictionary[@"machineid"],@"machineid",dictionary[@"type"],@"type",[dictionary[@"type"] intValue] ==1?@"86型智能插座":@"智能插排",@"name", nil]];
+            [arr addObject:Model];
+        }
+    }
+
     bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
-    vc.relaodCollectonBlock = ^(NSArray *arr){
-        if(arr.count > 0){
-        if([arr[0] isKindOfClass:[searchModel class]]){
-            cell.model = arr[0];
-        }else if ([arr[0] isKindOfClass:[binddingModel class]]){
-            cell.model1 = arr[0];
-        }else{
-            cell.model2 = arr[0];
+    vc.relaodCollectonBlock = ^(NSDictionary *dict,NSUInteger row){
+        if ([self.datas[row] isEqual:dict]) {
+            return;
         }
-        cell.isBinding = YES;
-            cell.index = indexPath.row + 1;
-//        [self.collectView reloadItemsAtIndexPaths:@[indexPath]];
-        }else{
-            cell.isBinding = NO;
-        }
+//        if ([dict.allKeys containsObject:@"bdasset"]) {
+//            cell.isBinding = YES;
+//        }else{
+//            cell.isBinding = NO;
+//        }
+        [self.datas replaceObjectAtIndex:row withObject:dict];
+        [self.collectView reloadData];
     };
-    vc.mac = self.mac;
-    vc.WhatIsBinding = 0;
-    vc.type = ChaPaiChaKong;
+    if (arr.count == 0) {
+        vc.WhatIsBinding = 0;
+    }else{
+        vc.WhatIsBinding = 3;
+    }
     vc.hubs = self.hubs[indexPath.row];
+    vc.row = indexPath.row;
+    vc.mac = self.mac;
+    vc.type = ChaPaiChaKong;
+    vc.hbdArr = arr;
     vc.name = [NSString stringWithFormat:@"八孔插排-%zd号孔",indexPath.row+1];
     vc.title = [NSString stringWithFormat:@"%zd号插孔",indexPath.row + 1];
     [self.navigationController pushViewController:vc animated:YES];

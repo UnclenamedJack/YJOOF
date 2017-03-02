@@ -340,6 +340,7 @@
     MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [HUD setDelegate:self];
     [HUD setRemoveFromSuperViewOnHide:YES];
+    [HUD.label setText:@"正在扫描"];
     [manager POST:SAOMIAOCHAZUO parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 #if DEBUG
         NSLog(@"网路连接成功！");
@@ -383,7 +384,7 @@
                                     dictNew = [NSDictionary dictionaryWithObjectsAndKeys:dict[@"mac"],@"mac",dict[@"machineid"],@"machineid",@"86型智能插座",@"name",dict[@"type"],@"type", nil];
                                 }else{//[dict[@"type"] integerValue] == 2
                                     NSArray *hub = dict[@"hubs"];
-                                    dictNew = [NSDictionary dictionaryWithObjectsAndKeys:dict[@"mac"],@"mac",dict[@"machineid"],@"machineid",[NSString stringWithFormat:@"%ld孔智能插座",hub.count],@"name",dict[@"type"],@"type", nil];
+                                    dictNew = [NSDictionary dictionaryWithObjectsAndKeys:dict[@"mac"],@"mac",dict[@"machineid"],@"machineid",[NSString stringWithFormat:@"%zd孔智能插座",hub.count],@"name",dict[@"type"],@"type", nil];
                                 }
                                 chapaiModel *model = [chapaiModel modelWithDictionary:dictNew];
                                 [dataArr addObject:model];
@@ -414,7 +415,7 @@
                                     dictNew = [NSDictionary dictionaryWithObjectsAndKeys:dict[@"mac"],@"mac",dict[@"machineid"],@"machineid",@"86型智能插座",@"name",dict[@"type"],@"type", nil];
                                 }else{//[dict[@"type"] integerValue] == 2
                                     NSArray *hub = dict[@"hubs"];
-                                    dictNew = [NSDictionary dictionaryWithObjectsAndKeys:dict[@"mac"],@"mac",dict[@"machineid"],@"machineid",[NSString stringWithFormat:@"%ld孔智能插座",hub.count],@"name",dict[@"type"],@"type", nil];
+                                    dictNew = [NSDictionary dictionaryWithObjectsAndKeys:dict[@"mac"],@"mac",dict[@"machineid"],@"machineid",[NSString stringWithFormat:@"%zd孔智能插座",hub.count],@"name",dict[@"type"],@"type", nil];
                                 }
                                 chapaiModel *model = [chapaiModel modelWithDictionary:dictNew];
                                 [dataArr addObject:model];
@@ -449,7 +450,7 @@
                     
                     bindingChaKongVC *vc = [[bindingChaKongVC alloc] init];
                     vc.mac = macDress;
-                    vc.hubs = responseObject[@"obj"][@"machineinfo"][@"hubs"];
+                    vc.hubs = [NSMutableArray arrayWithArray:responseObject[@"obj"][@"machineinfo"][@"hubs"]];
 //                    NSMutableArray *dataArr = [NSMutableArray array];
 //                    if (responseObject[@"obj"][@"bdassetid"]) {
 //                        [dataArr addObjectsFromArray:responseObject[@"obj"][@"bdassetid"]];
@@ -481,8 +482,14 @@
             }
         }else{
             [HUD setMode:MBProgressHUDModeCustomView];
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
+            [HUD.bezelView setBackgroundColor:[UIColor blackColor]];
             [HUD hideAnimated:YES afterDelay:2.0];
             [HUD.label setText:responseObject[@"msg"]];
+            [HUD.label setTextColor:[UIColor whiteColor]];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+            });
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
 #if DEBUG
@@ -490,8 +497,14 @@
         NSLog(@"%@",error);
 #endif
         [HUD setMode:MBProgressHUDModeCustomView];
+//        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"dacha" ofType:@"png"]]];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
+        [HUD.bezelView setBackgroundColor:[UIColor blackColor]];
+        [HUD.label setText:@"网络连接失败"];
         [HUD hideAnimated:YES afterDelay:2.0];
-        [HUD.label setText:@"网络连接失败！"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+        });
     }];
 
 }
@@ -535,8 +548,12 @@
 #endif
         [hud setMode:MBProgressHUDModeCustomView];
         [hud.label setText:@"网络连接失败！"];
+        [hud.label setTextColor:[UIColor whiteColor]];
+        hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
         [hud hideAnimated:YES afterDelay:1.5];
-        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        });
 //        bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
 //        vc.WhatIsBinding = 0;
 //        UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
