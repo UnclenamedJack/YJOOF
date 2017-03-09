@@ -141,15 +141,15 @@
         if (!self.macL) {
             self.macL = [[UILabel alloc] init];
         }
-        [self.macL setText:[NSString stringWithFormat:@"%@",self.model.num]];
+//        [self.macL setText:[NSString stringWithFormat:@"%@",self.model.num]];
         if(ScreenHeight == 480.0){
-            [_macL setFont:[UIFont systemFontOfSize:15]];
+            [_macL setFont:[UIFont systemFontOfSize:11.0]];
         }else if (ScreenHeight==568) {
-            [_macL setFont:[UIFont systemFontOfSize:16]];
+            [_macL setFont:[UIFont systemFontOfSize:12.0]];
         }else if (ScreenHeight == 667){
-            [_macL setFont:[UIFont systemFontOfSize:17]];
+            [_macL setFont:[UIFont systemFontOfSize:13.0]];
         }else{
-            [_macL setFont:[UIFont systemFontOfSize:18]];
+            [_macL setFont:[UIFont systemFontOfSize:14.0]];
         }
         [_macL setTextColor:[UIColor colorWithRed:119/255.0 green:117/255.0 blue:117/255.0 alpha:1.0]];
         [self.contentView addSubview:_macL];
@@ -157,7 +157,7 @@
         if (!self.nameL) {
             self.nameL = [[UILabel alloc] init];
         }
-        [self.nameL setText:self.model.device];
+//        [self.nameL setText:self.model.device];
         if(ScreenHeight == 480.0){
             [_nameL setFont:[UIFont systemFontOfSize:9.0]];
         }else if (ScreenHeight==568) {
@@ -171,6 +171,16 @@
         [_nameL setTextColor:[UIColor colorWithRed:176/255.0 green:175/255.0 blue:176/255.0 alpha:1.0]];
 //        [nameL setText:[NSString stringWithFormat:@"8孔智能插座-%zd",self.index]];
         [self.contentView addSubview:_nameL];
+        if (self.model) {
+            [self.macL setText:[NSString stringWithFormat:@"%@",self.model.num]];
+            [self.nameL setText:self.model.device];
+        }else if (self.model2){
+            [self.macL setText:[NSString stringWithFormat:@"MAC:%@",self.model2.macDress]];
+            [self.nameL setText:self.model2.name];
+        }else{
+            return;
+        }
+        
         
         if (!self.detatilBtn) {
             self.detatilBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -298,7 +308,13 @@
         self.nameL.text = model1.device;
     }
 }
-
+- (void)setModel2:(chapaiModel *)model2 {
+    if (_model2 != model2) {
+        _model2 = model2;
+        self.macL.text = [NSString stringWithFormat:@"MAC:%@",model2.macDress];
+        self.nameL.text = model2.name;
+    }
+}
 - (void)touchDown:(UIButton *)sender {
     [sender setBackgroundColor:[UIColor hexChangeFloat:@"0a88e7"]];
     [sender setTitleColor:[UIColor hexChangeFloat:@"ffffff"] forState:UIControlStateNormal];

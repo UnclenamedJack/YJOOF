@@ -52,6 +52,7 @@
 		043B83D31D1E134800305E78 /* SecondCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 043B83D11D1E134800305E78 /* SecondCell.xib */; };
 		043B83D71D1E139300305E78 /* CustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 043B83D51D1E139300305E78 /* CustomCell.m */; };
 		043B83D81D1E139300305E78 /* CustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 043B83D61D1E139300305E78 /* CustomCell.xib */; };
+		044471E71E6905B5001554F9 /* UIButton+btnAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 044471E61E6905B5001554F9 /* UIButton+btnAction.m */; };
 		0445775C1D2A575500151661 /* ThreeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0445775A1D2A575500151661 /* ThreeCell.m */; };
 		0445775D1D2A575500151661 /* ThreeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0445775B1D2A575500151661 /* ThreeCell.xib */; };
 		0448E1591DFA8DA9005A5C28 /* MJRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0448E12D1DFA8DA9005A5C28 /* MJRefreshAutoFooter.m */; };
@@ -327,6 +328,8 @@
 		043B83D41D1E139300305E78 /* CustomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCell.h; sourceTree = "<group>"; };
 		043B83D51D1E139300305E78 /* CustomCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCell.m; sourceTree = "<group>"; };
 		043B83D61D1E139300305E78 /* CustomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomCell.xib; sourceTree = "<group>"; };
+		044471E51E6905B5001554F9 /* UIButton+btnAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+btnAction.h"; sourceTree = "<group>"; };
+		044471E61E6905B5001554F9 /* UIButton+btnAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+btnAction.m"; sourceTree = "<group>"; };
 		044577591D2A575500151661 /* ThreeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreeCell.h; sourceTree = "<group>"; };
 		0445775A1D2A575500151661 /* ThreeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreeCell.m; sourceTree = "<group>"; };
 		0445775B1D2A575500151661 /* ThreeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThreeCell.xib; sourceTree = "<group>"; };
@@ -686,6 +689,8 @@
 				040C8C5F1E28C01700539DD3 /* DIYView.m */,
 				04CE47A01E2F5730003775CB /* DIYSearchTextField.h */,
 				04CE47A11E2F5730003775CB /* DIYSearchTextField.m */,
+				044471E51E6905B5001554F9 /* UIButton+btnAction.h */,
+				044471E61E6905B5001554F9 /* UIButton+btnAction.m */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -1703,6 +1708,7 @@
 				04F3026A1CF5687C007C4E31 /* loginViewController.m in Sources */,
 				04F525AF1CFDA28700751A83 /* IQUIView+IQKeyboardToolbar.m in Sources */,
 				04F302A41CF5734A007C4E31 /* FMResultSet.m in Sources */,
+				044471E71E6905B5001554F9 /* UIButton+btnAction.m in Sources */,
 				04C1AF951CF42A64009AD47E /* AppDelegate.m in Sources */,
 				04F525731CFD7A9E00751A83 /* MASConstraint.m in Sources */,
 				046EA4311E164F40006A3342 /* binddingModel.m in Sources */,
@@ -1926,7 +1932,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.weibao.ProjectOne-weibao";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "94e09c5d-7e2f-4755-ba45-eb09fb393154";
+				PROVISIONING_PROFILE = "70520f8d-bae0-46d0-8e3c-b41560e99829";
 			};
 			name = Debug;
 		};
@@ -1947,7 +1953,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.weibao.ProjectOne-weibao";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "94e09c5d-7e2f-4755-ba45-eb09fb393154";
+				PROVISIONING_PROFILE = "70520f8d-bae0-46d0-8e3c-b41560e99829";
 			};
 			name = Release;
 		};

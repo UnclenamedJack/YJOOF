@@ -203,7 +203,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [_manager POST:LoginURL parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-#if Debug
+#if DEBUG
         NSLog(@"网络连接成功！");
         NSLog(@"%@",responseObject);
         NSLog(@"%@",responseObject[@"msg"]);
@@ -231,12 +231,12 @@
 //                NSLog(@"注册别名=======%zd,%@,%@",iResCode,iTags,iAlias);
 //            }];
             
-//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-//            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
-//            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
-//            [self presentViewController:navigationController animated:YES completion:nil];
-            IndexVC *vc = [[IndexVC alloc] init];
-            [self presentViewController:vc animated:YES completion:nil];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
+            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
+            [self presentViewController:navigationController animated:YES completion:nil];
+//            IndexVC *vc = [[IndexVC alloc] init];
+//            [self presentViewController:vc animated:YES completion:nil];
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
@@ -305,13 +305,13 @@
             [JPUSHService setTags:[NSSet setWithObject:ykd] alias:ykd fetchCompletionHandle:^(int iResCode, NSSet *iTags, NSString *iAlias) {
                 NSLog(@"注册别名=======%zd,%@,%@",iResCode,iTags,iAlias);
             }];
-//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-//            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
-//            
-//            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
-//            [self presentViewController:navigationController animated:YES completion:nil];
-            IndexVC *vc = [[IndexVC alloc] init];
-            [self presentViewController:vc animated:YES completion:nil];
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"homeVC"];
+            
+            //请注意  请注意 老少爷们儿  请注意  这里用得是模态  为什么是模态呢？ 因为故事版里有多个UINavigationController ，从一个导航控制器跳转到另一个导航控制器，其实就是self.window.rootViewController 从一个UINavigationController 切换成了另外一个UINavigationController 在这样的情况下就用模态 （个人考虑）
+            [self presentViewController:navigationController animated:YES completion:nil];
+//            IndexVC *vc = [[IndexVC alloc] init];
+//            [self presentViewController:vc animated:YES completion:nil];
         }else{
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:responseObject[@"msg"] preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];

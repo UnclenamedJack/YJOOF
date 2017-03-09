@@ -159,7 +159,11 @@ static NSString *identifier = @"collection";
         if ([dict.allKeys containsObject:@"bdasset"]){
             cell.model = [searchModel modelWithDictionary:dict[@"bdasset"]];
             cell.isBinding = YES;
-
+        }else if ([dict.allKeys containsObject:@"bdmachine"]){
+            NSDictionary *bdmachineDict = dict[@"bdmachine"];
+            NSDictionary *dictChaPai = [NSDictionary dictionaryWithObjectsAndKeys:bdmachineDict[@"mac"],@"mac",@"8孔智能插排",@"name",bdmachineDict[@"type"],@"type",bdmachineDict[@"machineid"],@"machineid", nil];
+            cell.model2 = [chapaiModel modelWithDictionary:dictChaPai];
+            cell.isBinding = YES;
         }else{
             cell.isBinding = NO;
         }
@@ -172,7 +176,7 @@ static NSString *identifier = @"collection";
         }
         if ([dict.allKeys containsObject:@"hbdmachineList"]) {
             for (NSDictionary *dictionary in dict[@"hbdmachineList"]) {
-                chapaiModel *Model = [chapaiModel modelWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:dictionary[@"mac"],@"mac",dictionary[@"machineid"],@"machineid",dictionary[@"type"],@"type",[dictionary[@"type"] intValue] ==1?@"86型智能插座":@"智能插排",@"name", nil]];
+                chapaiModel *Model = [chapaiModel modelWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:dictionary[@"mac"],@"mac",dictionary[@"machineid"],@"machineid",dictionary[@"type"],@"type",[dictionary[@"type"] intValue] ==1?@"86型智能插座":@"8孔智能插排",@"name", nil]];
                 [arr addObject:Model];
             }
         }
@@ -198,7 +202,16 @@ static NSString *identifier = @"collection";
             vc.type = ChaPaiChaKong;
             vc.hubs = self.hubs[indexPath.row];
             vc.hbdArr = arr;
-            vc.model = weakCell.model;//Problem
+            if (weakCell.model) {
+                vc.WhatIsBinding = 1;
+                vc.model = weakCell.model;
+            }else if (weakCell.model2){//chaPaiModel
+                vc.WhatIsBinding = 2;
+                vc.model2 = weakCell.model2;
+            }else{
+                return ;
+            }
+//            vc.model = weakCell.model;//Problem
             vc.name = [NSString stringWithFormat:@"八孔插排-%zd号孔",indexPath.row+1];
             vc.title = [NSString stringWithFormat:@"%zd号插孔",indexPath.row + 1];
             [self.navigationController pushViewController:vc animated:YES];

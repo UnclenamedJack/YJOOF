@@ -19,7 +19,7 @@
 
 #define kHeight [UIScreen mainScreen].bounds.size.height
 
-#if 0 //----------------------------------------------------------------------------
+#if 1 //----------------------------------------------------------------------------
 
 #define BOOKDETAILINFO @"http://www.yjoof.com/ygapi/myBespeaks?"
 
@@ -128,7 +128,7 @@
 
 #define FORGETPASSWORD @"http://192.168.5.10:8080/wuxin/ygapi/wjmm?"
 
-#define LoginURL @"http://192.168.5.10:8080/wuxin/ygapi/phonelogin?"  //登陆表合并维码头 ygapi改成api 其他不变 （线上暂未改变）
+#define LoginURL @"http://192.168.5.10:8080/wuxin/api/phonelogin?"  //登陆表合并维码头 ygapi改成api 其他不变 （线上暂未改变）
 
 #define FindURL @"http://192.168.5.10:8080/wuxin/ygapi/changepass?"
 

@@ -304,6 +304,8 @@
     }else if (self.type == ChaPaiChaKong){
         if (self.relaodCollectonBlock) {
             NSMutableArray *hbdArr = [NSMutableArray array];
+            NSMutableArray *hbdMachineArr = [NSMutableArray array];
+            
                 for (id model in self.historyData) {
                     if ([model isKindOfClass:[searchModel class]]) {
                         NSDictionary *hbdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
@@ -312,34 +314,72 @@
                         NSDictionary *hbdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
                         [hbdArr addObject:hbdDict];
                     }else{//chapaimodel
-                        
+                        NSDictionary *hbdDict = @{@"hubs":@[@{@"hubid":@0,@"mac":@"000",@"num":@0},@{@"hubid":@0,@"mac":@"111",@"num":@1},@{@"hubid":@0,@"mac":@"000",@"num":@2},@{@"hubid":@0,@"mac":@"000",@"num":@3},@{@"hubid":@0,@"mac":@"000",@"num":@4},@{@"hubid":@0,@"mac":@"000",@"num":@5},@{@"hubid":@0,@"mac":@"000",@"num":@6},@{@"hubid":@0,@"mac":@"000",@"num":@7}],@"mac":[model valueForKey:@"macDress"],@"machineid":[model valueForKey:@"machineid"],@"type":[model valueForKey:@"type"]};
+                        [hbdMachineArr addObject:hbdDict];
                     }
                 }
             
             NSDictionary *dict;
             if (self.hadBindingData.count == 0) {
-                if (hbdArr.count == 0) {
-                      dict = @{@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                if (hbdMachineArr.count == 0) {
+                    if (hbdArr.count == 0) {
+                        dict = @{@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                    }else{
+                        dict = @{@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                    }
                 }else{
-                     dict = @{@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                    if (hbdArr.count == 0) {
+                        dict = @{@"hbdmachineList":hbdMachineArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                    }else{
+                        dict = @{@"hbdmachineList":hbdMachineArr,@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                    }
                 }
-              
+                
             }else{
                 NSDictionary *bdDict;
+                NSDictionary *bdMachineDict;
                 id model = self.hadBindingData[0];
                 if ([model isKindOfClass:[searchModel class]]){
                     bdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
                 }else if ([model isKindOfClass:[binddingModel class]]){
                     bdDict = @{@"address":[model valueForKey:@"room"],@"assetid":[model valueForKey:@"assetid"],@"deptname":[model valueForKey:@"college"],@"name":[model valueForKey:@"device"],@"num":[model valueForKey:@"num"]};
-                }else{
-                    bdDict = @{@"注意":@"注意"};
+                }else{//chaPaiModel
+                    bdMachineDict = @{@"hubs":@[@{@"hubid":@0,@"mac":@"000",@"num":@0},@{@"hubid":@0,@"mac":@"111",@"num":@1},@{@"hubid":@0,@"mac":@"000",@"num":@2},@{@"hubid":@0,@"mac":@"000",@"num":@3},@{@"hubid":@0,@"mac":@"000",@"num":@4},@{@"hubid":@0,@"mac":@"000",@"num":@5},@{@"hubid":@0,@"mac":@"000",@"num":@6},@{@"hubid":@0,@"mac":@"000",@"num":@7}],@"mac":[model valueForKey:@"macDress"],@"machineid":[model valueForKey:@"machineid"],@"type":[model valueForKey:@"type"]};
                 }
-                if (hbdArr.count == 0) {
-                    dict = @{@"bdasset":bdDict,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
-
+                if (hbdMachineArr.count == 0) {
+                    if (hbdArr.count == 0) {
+                        if (bdDict) {
+                            dict = @{@"bdasset":bdDict,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }else{
+                            dict = @{@"bdmachine":bdMachineDict,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }
+                        
+                        
+                    }else{
+                        if (bdDict) {
+                             dict = @{@"bdasset":bdDict,@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }else{
+                             dict = @{@"bdmachine":bdMachineDict,@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }
+                       
+                    }
                 }else{
-                    dict = @{@"bdasset":bdDict,@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                    if (hbdArr.count == 0) {
+                        if (bdDict) {
+                             dict = @{@"hbdmachineList":[NSArray arrayWithObject:bdMachineDict],@"bdasset":bdDict,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }else{
+                             dict = @{@"hbdmachineList":[NSArray arrayWithObject:bdMachineDict],@"bdmachine":bdMachineDict,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }
+                    }else{
+                        if (bdDict) {
+                             dict = @{@"hbdmachineList":[NSArray arrayWithObject:bdMachineDict],@"bdasset":bdDict,@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }else{
+                             dict = @{@"hbdmachineList":[NSArray arrayWithObject:bdMachineDict],@"bdmachine":bdMachineDict,@"hbdassetList":hbdArr,@"hubid":self.hubs[@"hubid"],@"mac":self.hubs[@"mac"],@"num":self.hubs[@"num"]};
+                        }
+                       
+                    }
                 }
+                
             }
             self.relaodCollectonBlock(dict,self.row);
         }
@@ -366,9 +406,15 @@
 //            vc.identifier = @"bindingVC";
 //            vc.mac = self.mac;
 //            [self.navigationController pushViewController:vc animated:YES];
-            
+           
             QRcodeViewController *vc = [[QRcodeViewController alloc] init];
-            vc.identifier = 1;
+            if (self.type == ChaZuo) {
+                vc.identifier = 1;
+            }else if (self.type == ChaPaiChaKong){
+                vc.identifier = 2;
+                vc.chaKongId = self.hubs[@"hubid"];
+            }
+            vc.secondMac = self.mac;
             [self.navigationController pushViewController:vc animated:YES];
             
         }];
@@ -515,7 +561,7 @@
                     make.center.equalTo(view);
                 }];
             }else if(section == 1){
-                UIView *view = [[UIView alloc] init];
+                view = [[UIView alloc] init];
                 UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
@@ -560,7 +606,7 @@
                     make.center.equalTo(view);
                 }];
             }else if(section == 1){
-                UIView *view = [[UIView alloc] init];
+                view = [[UIView alloc] init];
                 UILabel *label = [[UILabel alloc] init];
                 [view addSubview:label];
                 [label setText:@"历史绑定"];
@@ -754,10 +800,14 @@
         [cell.btn setTitle:@"绑定" forState:UIControlStateNormal];
         [cell.btn setTag:1];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+- (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

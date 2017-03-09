@@ -97,7 +97,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LWc-m9-qNm"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Bs4-dY-Gkc">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -113,6 +113,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nog-oW-3Jw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

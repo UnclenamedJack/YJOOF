@@ -245,6 +245,9 @@
     [self.session addOutput:self.output];
     [self.output setMetadataObjectTypes:self.output.availableMetadataObjectTypes];
 //    [_output setRectOfInterest:CGRectMake(self.kuang.frame.origin.x + 5, self.kuang.frame.origin.y + 5, self.kuang.frame.size.width - 10, self.kuang.frame.size.height - 10)];
+// 设置敏感扫描区域（注意  x y颠倒，width height颠倒）
+    [_output setRectOfInterest:CGRectMake((self.kuang.frame.origin.y + 5)/ScreenHeight,(self.kuang.frame.origin.x + 5)/ScreenWidth,(self.kuang.frame.size.height - 10)/ScreenHeight,(self.kuang.frame.size.width - 10)/ScreenWidth)];
+    
     AVCaptureVideoPreviewLayer *videoLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
     [videoLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
 //    [videoLayer setFrame:self.view.frame];
@@ -296,7 +299,7 @@
 //        [vc setValue:@1 forKey:@"isCodeSuccess"];
         
 //        if ([self.presentingViewController.childViewControllers.lastObject isMemberOfClass:[saomiaoVC class]]) {
-        if ([self.navigationController.presentingViewController isMemberOfClass:[IndexVC class]] || [self.navigationController.childViewControllers.firstObject isMemberOfClass:[bindingOrHistroyBindViewController class]]){
+        if ([self.navigationController.presentingViewController isMemberOfClass:[IndexVC class]] || [self.navigationController.childViewControllers.firstObject isMemberOfClass:[bindingOrHistroyBindViewController class]] || [self.navigationController.childViewControllers.firstObject isMemberOfClass:[bindingChaKongVC class]]){
 #if DEBUG
             NSLog(@"<><><>绑定插座扫描");
 #endif
@@ -478,11 +481,18 @@
 //                bindingOrHistroyBindViewController *vc = [[bindingOrHistroyBindViewController alloc] init];
 //                UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
 //                [self presentViewController:navc animated:YES completion:nil];
-                [self binding:responseObject[@"obj"][@"machineinfo"][@"machineid"] andMac:macDress];
+                [self binding:responseObject[@"obj"][@"machineinfo"][@"machineid"] andMac:macDress and:[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"]];
+            }else{//_identifier == 2
+                /**
+                 *  明天继续写 好好想
+                 */
+                if (self.chaKongId) {
+                    [self binding:responseObject[@"obj"][@"machineinfo"][@"machineid"] andMac:macDress and:self.chaKongId];
+                }
             }
         }else{
             [HUD setMode:MBProgressHUDModeCustomView];
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
+             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
             [HUD.bezelView setBackgroundColor:[UIColor blackColor]];
             [HUD hideAnimated:YES afterDelay:2.0];
             [HUD.label setText:responseObject[@"msg"]];
@@ -501,6 +511,7 @@
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dacha"]];
         [HUD.bezelView setBackgroundColor:[UIColor blackColor]];
         [HUD.label setText:@"网络连接失败"];
+        [HUD.label setTextColor:[UIColor whiteColor]];
         [HUD hideAnimated:YES afterDelay:2.0];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -508,13 +519,23 @@
     }];
 
 }
-- (void)binding:(NSNumber *)machineid andMac:(NSString *)mac {
+- (void)binding:(NSNumber *)machineid andMac:(NSString *)mac and:(NSNumber *)bdID{
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdmachineid":machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+//    NSDictionary *parameters = @{@"machineid":[[NSUserDefaults standardUserDefaults] objectForKey:@"machineid"],@"bdmachineid":machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+//     NSDictionary *parameters = @{@"machineid":bdID,@"bdmachineid":machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+    NSDictionary *parameters;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [hud setRemoveFromSuperViewOnHide:YES];
     [hud.label setText:@"正在扫描"];
-    [manager POST:CHAZUOBANGDING parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSString *url;
+    if (self.identifier == 1) {
+         parameters = @{@"machineid":bdID,@"bdmachineid":machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        url = CHAZUOBANGDING;
+    }else{
+         parameters = @{@"hubid":bdID,@"bdmachineid":machineid,@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"accesstoken"]};
+        url = CHAPAICHAKONGBANDDING;
+    }
+    [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
 #if DEBUG
         NSLog(@"网路连接成功！");
         NSLog(@"%@",responseObject);
@@ -529,10 +550,12 @@
             vc.model2 = [chapaiModel modelWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:mac,@"mac",[NSString stringWithFormat:@"%zd孔智能插排",hubs.count],@"name",machineid,@"machineid", nil]];
             vc.WhatIsBinding = 2;
             vc.type = ChaZuo;
+            vc.mac = self.secondMac;
             UINavigationController *navc = [[UINavigationController alloc] initWithRootViewController:vc];
             [self presentViewController:navc animated:YES completion:nil];
         }else{
             [hud setMode:MBProgressHUDModeCustomView];
+            [hud.label setTextColor:[UIColor whiteColor]];
             [hud.label setText:responseObject[@"msg"]];
             [hud hideAnimated:YES afterDelay:1.5];
             
